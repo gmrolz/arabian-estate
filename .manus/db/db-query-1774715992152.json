@@ -1,0 +1,50 @@
+{
+  "query": "SELECT id, LEFT(images, 200) as img_preview FROM listings WHERE id NOT IN (4,13,14,16,20,25,27) LIMIT 10",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4Rfrbfj8FoRUBfW.7151b4472968 --database Amy8eaCEPruFwakvoHY8Wk --execute SELECT id, LEFT(images, 200) as img_preview FROM listings WHERE id NOT IN (4,13,14,16,20,25,27) LIMIT 10",
+  "rows": [
+    {
+      "id": "1",
+      "img_preview": "[\"/projects/HPC%20(Hyde%20Park%20Central)/Screenshot%202025-12-05%20015704.png\",\"/projects/HPC%20(Hyde%20Park%20Central)/Screenshot%202025-12-05%20015717.png\",\"/projects/HPC%20(Hyde%20Park%20Central)/"
+    },
+    {
+      "id": "2",
+      "img_preview": "[\"/projects/HPC%20(Hyde%20Park%20Central)/Screenshot%202025-12-05%20015704.png\",\"/projects/HPC%20(Hyde%20Park%20Central)/Screenshot%202025-12-05%20015717.png\",\"/projects/HPC%20(Hyde%20Park%20Central)/"
+    },
+    {
+      "id": "3",
+      "img_preview": "[\"/projects/Patio%20Vida/Screenshot%202025-01-30%20212656_1400x900.jpg\",\"/projects/Patio%20Vida/Screenshot%202025-01-30%20212726_1400x900.jpg\",\"/projects/Patio%20Vida/Screenshot%202025-01-30%20212743_"
+    },
+    {
+      "id": "5",
+      "img_preview": "[\"/projects/Lifewise/Screenshot%202025-11-21%20024019.png\",\"/projects/Lifewise/Screenshot%202025-11-21%20024053.png\",\"/projects/Lifewise/Screenshot%202025-11-21%20024113.png\",\"/projects/Lifewise/Scree"
+    },
+    {
+      "id": "6",
+      "img_preview": "[\"/projects/Telal%20East/Screenshot%202026-03-12%20132036.png\",\"/projects/Telal%20East/Screenshot%202026-03-12%20132056.png\",\"/projects/Telal%20East/Screenshot%202026-03-12%20132112.png\",\"/projects/Te"
+    },
+    {
+      "id": "7",
+      "img_preview": "[\"/projects/Telal%20East/Screenshot%202026-03-12%20132036.png\",\"/projects/Telal%20East/Screenshot%202026-03-12%20132056.png\",\"/projects/Telal%20East/Screenshot%202026-03-12%20132112.png\",\"/projects/Te"
+    },
+    {
+      "id": "8",
+      "img_preview": "[\"/projects/Tierra/Screenshot%202025-10-25%20030408.png\",\"/projects/Tierra/Screenshot%202025-10-25%20030428.png\",\"/projects/Tierra/Screenshot%202025-10-25%20030441.png\",\"/projects/Tierra/Screenshot%20"
+    },
+    {
+      "id": "9",
+      "img_preview": "[\"/projects/Rewaq/Screenshot%202025-10-29%20003930.png\",\"/projects/Rewaq/Screenshot%202025-10-29%20003947.png\",\"/projects/Rewaq/Screenshot%202025-10-29%20004014.png\",\"/projects/Rewaq/Screenshot%202025"
+    },
+    {
+      "id": "10",
+      "img_preview": "[\"/projects/Cavali/Screenshot%202025-12-11%20184701.png\",\"/projects/Cavali/Screenshot%202025-12-11%20184727.png\",\"/projects/Cavali/Screenshot%202025-12-11%20184738.png\",\"/projects/Cavali/Screenshot%20"
+    },
+    {
+      "id": "11",
+      "img_preview": "[\"/projects/New%20Garden%20City/WhatsApp%20Image%202025-11-17%20at%2013.23.45_d03fa1be.jpg\",\"/projects/New%20Garden%20City/WhatsApp%20Image%202025-11-17%20at%2013.23.46_572fdbfe.jpg\",\"/projects/New%20"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\timg_preview\n1\t[\"/projects/HPC%20(Hyde%20Park%20Central)/Screenshot%202025-12-05%20015704.png\",\"/projects/HPC%20(Hyde%20Park%20Central)/Screenshot%202025-12-05%20015717.png\",\"/projects/HPC%20(Hyde%20Park%20Central)/\n2\t[\"/projects/HPC%20(Hyde%20Park%20Central)/Screenshot%202025-12-05%20015704.png\",\"/projects/HPC%20(Hyde%20Park%20Central)/Screenshot%202025-12-05%20015717.png\",\"/projects/HPC%20(Hyde%20Park%20Central)/\n3\t[\"/projects/Patio%20Vida/Screenshot%202025-01-30%20212656_1400x900.jpg\",\"/projects/Patio%20Vida/Screenshot%202025-01-30%20212726_1400x900.jpg\",\"/projects/Patio%20Vida/Screenshot%202025-01-30%20212743_\n5\t[\"/projects/Lifewise/Screenshot%202025-11-21%20024019.png\",\"/projects/Lifewise/Screenshot%202025-11-21%20024053.png\",\"/projects/Lifewise/Screenshot%202025-11-21%20024113.png\",\"/projects/Lifewise/Scree\n6\t[\"/projects/Telal%20East/Screenshot%202026-03-12%20132036.png\",\"/projects/Telal%20East/Screenshot%202026-03-12%20132056.png\",\"/projects/Telal%20East/Screenshot%202026-03-12%20132112.png\",\"/projects/Te\n7\t[\"/projects/Telal%20East/Screenshot%202026-03-12%20132036.png\",\"/projects/Telal%20East/Screenshot%202026-03-12%20132056.png\",\"/projects/Telal%20East/Screenshot%202026-03-12%20132112.png\",\"/projects/Te\n8\t[\"/projects/Tierra/Screenshot%202025-10-25%20030408.png\",\"/projects/Tierra/Screenshot%202025-10-25%20030428.png\",\"/projects/Tierra/Screenshot%202025-10-25%20030441.png\",\"/projects/Tierra/Screenshot%20\n9\t[\"/projects/Rewaq/Screenshot%202025-10-29%20003930.png\",\"/projects/Rewaq/Screenshot%202025-10-29%20003947.png\",\"/projects/Rewaq/Screenshot%202025-10-29%20004014.png\",\"/projects/Rewaq/Screenshot%202025\n10\t[\"/projects/Cavali/Screenshot%202025-12-11%20184701.png\",\"/projects/Cavali/Screenshot%202025-12-11%20184727.png\",\"/projects/Cavali/Screenshot%202025-12-11%20184738.png\",\"/projects/Cavali/Screenshot%20\n11\t[\"/projects/New%20Garden%20City/WhatsApp%20Image%202025-11-17%20at%2013.23.45_d03fa1be.jpg\",\"/projects/New%20Garden%20City/WhatsApp%20Image%202025-11-17%20at%2013.23.46_572fdbfe.jpg\",\"/projects/New%20\n",
+  "stderr": "",
+  "execution_time_ms": 1703
+}

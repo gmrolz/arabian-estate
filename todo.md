@@ -1,0 +1,19 @@
+# Arabian Estate - Project TODO
+
+- [x] Design database schema for listings table
+- [x] Create backend tRPC API routes for listings CRUD (list, getById, create, update, delete)
+- [x] Seed the database with the 27 existing static listings
+- [x] Update frontend to fetch listings from the new API instead of static data
+- [x] Update admin panel to use the new API for CRUD operations
+- [x] Remove old Supabase/Google Sheets/VPS code
+- [x] Fix duplicate language bars (removed fixed ListingLangBar from App.jsx, kept inline ones in pages)
+- [x] Fix English translations to properly match Arabic titles (already correct)
+- [x] Upload listing images to S3 storage and update image URLs (using Manus storagePut)
+- [x] Write vitest tests for the API routes (11 tests passing)
+- [x] Auto-detect browser language and redirect (Arabic default, English for non-Arabic browsers)
+- [x] Upgrade filter CSS to modern luxury design with collapsible mobile view
+- [x] Update Arabic brand name to ارابيان استيت
+- [x] Force admin panel to English LTR layout
+- [x] Combine New Capital + New Cairo + Mostakbal City into single East Cairo page
+- [x] Add image upload endpoint using Manus storage helpers
+- [x] Save checkpoint and deliver to user

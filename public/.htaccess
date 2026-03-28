@@ -1,0 +1,14 @@
+# Prevent caching of index.html (forces fresh load after deploy)
+<Files "index.html">
+  Header set Cache-Control "no-cache, no-store, must-revalidate"
+</Files>
+
+# SPA fallback: serve index.html for all routes (React Router).
+# RewriteBase / for root, /arabian-estate/ for subfolder
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . index.html [L]
+</IfModule>

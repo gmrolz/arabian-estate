@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57 30" width="60" height="32">
+  <!-- 13 stripes: 7 red, 6 white -->
+  <rect width="57" height="2.31" y="0" fill="#bf0a30"/>
+  <rect width="57" height="2.31" y="2.31" fill="#fff"/>
+  <rect width="57" height="2.31" y="4.62" fill="#bf0a30"/>
+  <rect width="57" height="2.31" y="6.92" fill="#fff"/>
+  <rect width="57" height="2.31" y="9.23" fill="#bf0a30"/>
+  <rect width="57" height="2.31" y="11.54" fill="#fff"/>
+  <rect width="57" height="2.31" y="13.85" fill="#bf0a30"/>
+  <rect width="57" height="2.31" y="16.15" fill="#fff"/>
+  <rect width="57" height="2.31" y="18.46" fill="#bf0a30"/>
+  <rect width="57" height="2.31" y="20.77" fill="#fff"/>
+  <rect width="57" height="2.31" y="23.08" fill="#bf0a30"/>
+  <rect width="57" height="2.31" y="25.38" fill="#fff"/>
+  <rect width="57" height="2.31" y="27.69" fill="#bf0a30"/>
+  <!-- Blue canton (covers first 7 stripes) -->
+  <rect width="22.8" height="16.15" fill="#002868"/>
+  <!-- White stars on canton -->
+  <g fill="#fff">
+    <circle cx="2.5" cy="2.2" r="0.9"/>
+    <circle cx="6.5" cy="2.2" r="0.9"/>
+    <circle cx="10.5" cy="2.2" r="0.9"/>
+    <circle cx="14.5" cy="2.2" r="0.9"/>
+    <circle cx="18.5" cy="2.2" r="0.9"/>
+    <circle cx="4.5" cy="4.5" r="0.9"/>
+    <circle cx="8.5" cy="4.5" r="0.9"/>
+    <circle cx="12.5" cy="4.5" r="0.9"/>
+    <circle cx="16.5" cy="4.5" r="0.9"/>
+    <circle cx="2.5" cy="6.8" r="0.9"/>
+    <circle cx="6.5" cy="6.8" r="0.9"/>
+    <circle cx="10.5" cy="6.8" r="0.9"/>
+    <circle cx="14.5" cy="6.8" r="0.9"/>
+    <circle cx="18.5" cy="6.8" r="0.9"/>
+    <circle cx="4.5" cy="9.1" r="0.9"/>
+    <circle cx="8.5" cy="9.1" r="0.9"/>
+    <circle cx="12.5" cy="9.1" r="0.9"/>
+    <circle cx="16.5" cy="9.1" r="0.9"/>
+    <circle cx="2.5" cy="11.4" r="0.9"/>
+    <circle cx="6.5" cy="11.4" r="0.9"/>
+    <circle cx="10.5" cy="11.4" r="0.9"/>
+    <circle cx="14.5" cy="11.4" r="0.9"/>
+    <circle cx="18.5" cy="11.4" r="0.9"/>
+    <circle cx="4.5" cy="13.7" r="0.9"/>
+    <circle cx="8.5" cy="13.7" r="0.9"/>
+    <circle cx="12.5" cy="13.7" r="0.9"/>
+    <circle cx="16.5" cy="13.7" r="0.9"/>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE listings SET developerAr = developer, developerEn = developer, projectAr = project, projectEn = project WHERE developerAr = '' OR developerEn = '' OR projectAr = '' OR projectEn = '';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4Rfrbfj8FoRUBfW.7151b4472968 --database Amy8eaCEPruFwakvoHY8Wk --execute UPDATE listings SET developerAr = developer, developerEn = developer, projectAr = project, projectEn = project WHERE developerAr = '' OR developerEn = '' OR projectAr = '' OR projectEn = '';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1828
+}
