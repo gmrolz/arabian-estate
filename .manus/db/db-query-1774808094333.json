@@ -1,0 +1,226 @@
+{
+  "query": "DESCRIBE listings;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4Rfrbfj8FoRUBfW.7151b4472968 --database Amy8eaCEPruFwakvoHY8Wk --execute DESCRIBE listings;",
+  "rows": [
+    {
+      "Field": "id",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "PRI",
+      "Default": "NULL",
+      "Extra": "auto_increment"
+    },
+    {
+      "Field": "unitCode",
+      "Type": "varchar(32)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "titleAr",
+      "Type": "text",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "titleEn",
+      "Type": "text",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "developer",
+      "Type": "varchar(128)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "project",
+      "Type": "varchar(128)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "location",
+      "Type": "varchar(256)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "unitType",
+      "Type": "varchar(64)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "Apartment",
+      "Extra": ""
+    },
+    {
+      "Field": "area",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "rooms",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "toilets",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "downpayment",
+      "Type": "varchar(64)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "monthlyInst",
+      "Type": "varchar(64)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "price",
+      "Type": "varchar(64)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "finishing",
+      "Type": "varchar(64)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "Semi Finished",
+      "Extra": ""
+    },
+    {
+      "Field": "delivery",
+      "Type": "varchar(64)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "featured",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "areaSlug",
+      "Type": "varchar(64)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "new-capital",
+      "Extra": ""
+    },
+    {
+      "Field": "images",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "sortOrder",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "active",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "",
+      "Default": "1",
+      "Extra": ""
+    },
+    {
+      "Field": "createdAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": ""
+    },
+    {
+      "Field": "updatedAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": "DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+    },
+    {
+      "Field": "developerAr",
+      "Type": "varchar(128)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "developerEn",
+      "Type": "varchar(128)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "projectAr",
+      "Type": "varchar(128)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "projectEn",
+      "Type": "varchar(128)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\nid\tint\tNO\tPRI\tNULL\tauto_increment\nunitCode\tvarchar(32)\tNO\t\tNULL\t\ntitleAr\ttext\tNO\t\tNULL\t\ntitleEn\ttext\tNO\t\tNULL\t\ndeveloper\tvarchar(128)\tNO\t\t\t\nproject\tvarchar(128)\tNO\t\t\t\nlocation\tvarchar(256)\tNO\t\tNULL\t\nunitType\tvarchar(64)\tNO\t\tApartment\t\narea\tint\tNO\t\tNULL\t\nrooms\tint\tNO\t\tNULL\t\ntoilets\tint\tNO\t\tNULL\t\ndownpayment\tvarchar(64)\tNO\t\t0\t\nmonthlyInst\tvarchar(64)\tNO\t\t\t\nprice\tvarchar(64)\tNO\t\tNULL\t\nfinishing\tvarchar(64)\tNO\t\tSemi Finished\t\ndelivery\tvarchar(64)\tNO\t\t\t\nfeatured\tint\tNO\t\t0\t\nareaSlug\tvarchar(64)\tNO\t\tnew-capital\t\nimages\ttext\tYES\t\tNULL\t\nsortOrder\tint\tNO\t\t0\t\nactive\tint\tNO\t\t1\t\ncreatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\t\nupdatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\tDEFAULT_GENERATED on update CURRENT_TIMESTAMP\ndeveloperAr\tvarchar(128)\tNO\t\t\t\ndeveloperEn\tvarchar(128)\tNO\t\t\t\nprojectAr\tvarchar(128)\tNO\t\t\t\nprojectEn\tvarchar(128)\tNO\t\t\t\n",
+  "stderr": "",
+  "execution_time_ms": 1590
+}

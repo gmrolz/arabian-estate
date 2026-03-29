@@ -1,0 +1,45 @@
+{
+  "query": "SELECT id, titleEn, price, downpayment, monthlyInst FROM listings LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4Rfrbfj8FoRUBfW.7151b4472968 --database Amy8eaCEPruFwakvoHY8Wk --execute SELECT id, titleEn, price, downpayment, monthlyInst FROM listings LIMIT 5;",
+  "rows": [
+    {
+      "id": "1",
+      "titleEn": "2BR Apt — HPC Hyde Park, 10yr installments",
+      "price": "9,100,000",
+      "downpayment": "450,000",
+      "monthlyInst": "72,000"
+    },
+    {
+      "id": "2",
+      "titleEn": "4BR Villa — HPC Hyde Park, garden view",
+      "price": "22,000,000",
+      "downpayment": "1,100,000",
+      "monthlyInst": "174,000"
+    },
+    {
+      "id": "3",
+      "titleEn": "3BR FF Apt — Patio Vida, 10yr installments",
+      "price": "11,550,000",
+      "downpayment": "570,000",
+      "monthlyInst": "90,000"
+    },
+    {
+      "id": "4",
+      "titleEn": "3BR FF Apt — Mayan, Suez Road, ready to move",
+      "price": "10,800,000",
+      "downpayment": "1,080,000",
+      "monthlyInst": "80,000"
+    },
+    {
+      "id": "5",
+      "titleEn": "3BR Apt — Lifewise, near Rehab",
+      "price": "6,000,000",
+      "downpayment": "300,000",
+      "monthlyInst": "45,000"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitleEn\tprice\tdownpayment\tmonthlyInst\n1\t2BR Apt — HPC Hyde Park, 10yr installments\t9,100,000\t450,000\t72,000\n2\t4BR Villa — HPC Hyde Park, garden view\t22,000,000\t1,100,000\t174,000\n3\t3BR FF Apt — Patio Vida, 10yr installments\t11,550,000\t570,000\t90,000\n4\t3BR FF Apt — Mayan, Suez Road, ready to move\t10,800,000\t1,080,000\t80,000\n5\t3BR Apt — Lifewise, near Rehab\t6,000,000\t300,000\t45,000\n",
+  "stderr": "",
+  "execution_time_ms": 1561
+}

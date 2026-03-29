@@ -158,7 +158,7 @@ export default function PropertyCard({ listing, featured = false }) {
     const viewTracked = useRef(false);
     const {
         project, developer, area, rooms, toilets,
-        downpayment, monthlyInst, price, finishing, delivery,
+        downpayment, monthly_inst, price, finishing, delivery,
         payment_years, payment_down_pct,
         images, location, title, id: listingId,
     } = listing;
@@ -196,7 +196,7 @@ export default function PropertyCard({ listing, featured = false }) {
             ``,
             `Total Price: EGP ${formatNumberReadable(price)}`,
             `Pay now: EGP ${formatNumberReadable(downpayment)}`,
-            `Monthly: ${formatNumberReadable(monthlyInst)}`,
+            `Monthly: ${formatNumberReadable(monthly_inst)}`,
             ``,
             `Please send me more details and available payment plans. Thank you!`
         ].join('\n')
@@ -239,7 +239,7 @@ export default function PropertyCard({ listing, featured = false }) {
                     </div>
                     <div className="price-row price-monthly">
                         <span className="price-label">{t('card.monthly')}</span>
-                        <span className="price-amount">{formatNumberReadable(monthlyInst)} <span className="price-suffix">{t('card.perMonth')}</span></span>
+                        <span className="price-amount">{formatNumberReadable(monthly_inst)} <span className="price-suffix">{t('card.perMonth')}</span></span>
                     </div>
                     {(payment_years != null || payment_down_pct != null) && (
                         <div className="price-row price-plan">

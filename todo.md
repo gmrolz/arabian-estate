@@ -19,3 +19,4 @@
 - [x] Save checkpoint and deliver to user
 - [x] Fix deployment: add react-router-dom and other missing frontend dependencies
 - [x] Update main CTA phone/WhatsApp number to 01000257941
+- [x] Fix monthly payment not showing on property cards (variable name mismatch: monthlyInst vs monthly_inst)
