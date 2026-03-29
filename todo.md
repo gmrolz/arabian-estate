@@ -17,3 +17,4 @@
 - [x] Combine New Capital + New Cairo + Mostakbal City into single East Cairo page
 - [x] Add image upload endpoint using Manus storage helpers
 - [x] Save checkpoint and deliver to user
+- [x] Fix deployment: add react-router-dom and other missing frontend dependencies
