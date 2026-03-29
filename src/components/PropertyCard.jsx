@@ -7,8 +7,8 @@ import { trackEvent } from '../lib/listingsApi';
 import { trackLeadConversion } from '../lib/conversions';
 import { formatNumberReadable } from '../lib/format';
 
-const WHATSAPP_NUMBER = '201226662193';
-const PHONE_NUMBER = '+201226662193';
+const WHATSAPP_NUMBER = '201000257941';
+const PHONE_NUMBER = '+201000257941';
 const FALLBACK_IMG = 'https://placehold.co/600x400/e8e8e8/999?text=Arabian+Estate';
 
 function formatPriceShort(priceStr) {

@@ -66,7 +66,7 @@ export default function PlaceholderSections() {
                     </p>
                     <div className="cta-actions">
                         <a
-                            href="https://wa.me/201226662193?text=Hello%2C%20I%27m%20interested%20in%20Arabian%20Estate%20listings"
+                            href="https://wa.me/201000257941?text=Hello%2C%20I%27m%20interested%20in%20Arabian%20Estate%20listings"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="btn-primary"
@@ -76,7 +76,7 @@ export default function PlaceholderSections() {
                             </svg>
                             {t('cta.whatsapp')}
                         </a>
-                        <a href="tel:+201226662193" className="btn-secondary">{t('cta.callUs')}</a>
+                        <a href="tel:+201000257941" className="btn-secondary">{t('cta.callUs')}</a>
                     </div>
                 </div>
             </section>

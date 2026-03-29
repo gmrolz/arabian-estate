@@ -18,3 +18,4 @@
 - [x] Add image upload endpoint using Manus storage helpers
 - [x] Save checkpoint and deliver to user
 - [x] Fix deployment: add react-router-dom and other missing frontend dependencies
+- [x] Update main CTA phone/WhatsApp number to 01000257941
