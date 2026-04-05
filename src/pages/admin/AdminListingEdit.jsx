@@ -203,22 +203,44 @@ export default function AdminListingEdit() {
     sort_order: form?.sort_order ?? 0,
   });
 
-  const handleImageUpload = async (file) => {
+  const handleImageUpload = async (files) => {
     const listingId = form?.id;
     if (!listingId) {
       showToast('Save the listing first, then upload images.', 'error');
       return;
     }
+    if (!files || files.length === 0) return;
+    
     setUploadLoading(true);
-    const { url, error } = await uploadListingImage(file, listingId);
-    setUploadLoading(false);
-    if (error || !url) {
-      showToast(error?.message || 'Upload failed.', 'error');
-      return;
+    const uploadedUrls = [];
+    const errors = [];
+    
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      try {
+        const { url, error } = await uploadListingImage(file, listingId);
+        if (error || !url) {
+          errors.push(`${file.name}: ${error?.message || 'Upload failed'}`);
+        } else {
+          uploadedUrls.push(url);
+        }
+      } catch (err) {
+        errors.push(`${file.name}: ${err.message}`);
+      }
     }
-    const newImages = [...(form?.images || []), url];
-    setForm((prev) => (prev ? { ...prev, images: newImages } : null));
-    await setListingImages(listingId, newImages);
+    
+    setUploadLoading(false);
+    
+    if (uploadedUrls.length > 0) {
+      const newImages = [...(form?.images || []), ...uploadedUrls];
+      setForm((prev) => (prev ? { ...prev, images: newImages } : null));
+      await setListingImages(listingId, newImages);
+      showToast(`${uploadedUrls.length} image(s) uploaded successfully.`, 'success');
+    }
+    
+    if (errors.length > 0) {
+      showToast(`Failed to upload ${errors.length} file(s): ${errors.join('; ')}`, 'error');
+    }
   };
 
   const handleSave = async () => {
@@ -707,10 +729,11 @@ export default function AdminListingEdit() {
               <input
                 type="file"
                 accept="image/*"
+                multiple
                 disabled={!form.id || uploadLoading}
                 onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) handleImageUpload(f);
+                  const files = e.target.files;
+                  if (files && files.length > 0) handleImageUpload(files);
                   e.target.value = '';
                 }}
               />

@@ -21,3 +21,5 @@
 - [x] Update main CTA phone/WhatsApp number to 01000257941
 - [x] Fix monthly payment not showing on property cards (variable name mismatch: monthlyInst vs monthly_inst)
 - [x] Add Google Tag Manager (GTM-N7LMGM56) across entire website
+- [x] Fix image upload in Add New Listing form (updated to support FileList)
+- [x] Add support for multiple image uploads in Add New Listing form
