@@ -13,6 +13,9 @@ import { useAdminToast } from '../../context/AdminToastContext';
 import { useSite } from '../../context/SiteContext';
 import { CAIRO_AREAS, EGYPT_REGIONS } from '../../data/newCapitalListings';
 import { formatNumberReadable } from '../../lib/format';
+import { ListingPreviewCard } from '../../components/ListingPreviewCard';
+import '../../styles/listing-preview.css';
+import { useState as useStateHook } from 'react';
 
 // Regions for first-level location (Cairo shows sub-section for area)
 const REGIONS = [
@@ -99,6 +102,8 @@ export default function AdminListingEdit() {
   const [planAfter3mPct, setPlanAfter3mPct] = useState(0);
   const [planYears, setPlanYears] = useState(0);
   const [planEqual, setPlanEqual] = useState(true);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewDrawerOpen, setPreviewDrawerOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -316,7 +321,10 @@ export default function AdminListingEdit() {
   }
 
   return (
-    <div className="admin-page admin-edit">
+    <>
+    <div className="admin-edit-with-preview">
+      <div className="admin-edit-main">
+      <div className="admin-page admin-edit">
       <div className="admin-edit-header">
         <Link to="/admin/listings" className="admin-back">← Listings</Link>
         <h1 className="admin-page-title">{isNew ? 'New listing' : 'Edit listing'}</h1>
@@ -824,5 +832,38 @@ export default function AdminListingEdit() {
         </div>
       </div>
     </div>
+      </div>
+      
+      {/* Desktop Preview Panel */}
+      <div className="admin-edit-preview-panel">
+        {form && <ListingPreviewCard listing={form} />}
+      </div>
+    </div>
+    
+    {/* Mobile Preview Button */}
+    <button
+      className="preview-toggle-btn"
+      onClick={() => setPreviewDrawerOpen(true)}
+      title="Preview"
+    >
+      👁️
+    </button>
+    
+    {/* Mobile Preview Drawer */}
+    <div className={`preview-drawer ${previewDrawerOpen ? 'open' : ''}`}>
+      <div className="preview-drawer-header">
+        <h2>Preview</h2>
+        <button
+          className="preview-drawer-close"
+          onClick={() => setPreviewDrawerOpen(false)}
+        >
+          ✕
+        </button>
+      </div>
+      <div className="preview-drawer-content">
+        {form && <ListingPreviewCard listing={form} />}
+      </div>
+    </div>
+    </>
   );
 }

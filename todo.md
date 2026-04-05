@@ -28,3 +28,4 @@
 - [x] Add pricing visibility checkboxes: show/hide Pay Now, Monthly, Full Price, Full Price
 - [x] Add compound visibility checkbox to admin form
 - [x] Update PropertyCard to respect visibility settings and show WhatsApp button for hidden prices
+- [x] Add live preview card to admin form (desktop: side panel, mobile: sidebar button)

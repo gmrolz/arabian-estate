@@ -1,0 +1,293 @@
+/* ─── Listing Preview Card ─────────────────────────────── */
+.listing-preview-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 600px;
+}
+
+.preview-carousel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background 0.2s;
+}
+
+.carousel-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.carousel-btn.prev {
+  left: 8px;
+}
+
+.carousel-btn.next {
+  right: 8px;
+}
+
+.carousel-counter {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.preview-content {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.preview-title {
+  margin-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 8px;
+}
+
+.title-ar {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.title-en {
+  margin: 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.preview-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detail-label {
+  color: #999;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.detail-value {
+  color: #333;
+  font-weight: 500;
+}
+
+.preview-pricing {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
+  border-left: 3px solid #d32f2f;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 13px;
+  border-bottom: 1px solid #eee;
+}
+
+.price-row:last-child {
+  border-bottom: none;
+}
+
+.price-label {
+  color: #666;
+  font-weight: 500;
+}
+
+.price-value {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+.price-plan {
+  font-size: 11px;
+  color: #999;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+}
+
+.price-hidden-notice {
+  background: #fff3e0;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  color: #e65100;
+  font-weight: 500;
+  margin-top: 12px;
+}
+
+/* ─── Admin Edit Layout with Preview ─────────────────────────────── */
+.admin-edit-with-preview {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.admin-edit-main {
+  min-width: 0;
+}
+
+.admin-edit-preview-panel {
+  position: sticky;
+  top: 80px;
+  height: fit-content;
+}
+
+/* ─── Mobile Preview Button ─────────────────────────────── */
+.preview-toggle-btn {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #d32f2f;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+  z-index: 100;
+  transition: all 0.3s;
+}
+
+.preview-toggle-btn:hover {
+  background: #b71c1c;
+  box-shadow: 0 6px 16px rgba(211, 47, 47, 0.4);
+}
+
+.preview-drawer {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 80vh;
+  background: white;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease-out;
+}
+
+.preview-drawer.open {
+  display: block;
+}
+
+.preview-drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  background: white;
+}
+
+.preview-drawer-header h2 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.preview-drawer-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+}
+
+.preview-drawer-content {
+  padding: 16px;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* ─── Responsive ─────────────────────────────── */
+@media (max-width: 1024px) {
+  .admin-edit-with-preview {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-edit-preview-panel {
+    display: none;
+  }
+
+  .preview-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .preview-drawer {
+    height: 90vh;
+  }
+
+  .listing-preview-card {
+    max-height: none;
+  }
+}
