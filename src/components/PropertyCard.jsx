@@ -161,6 +161,8 @@ export default function PropertyCard({ listing, featured = false }) {
         downpayment, monthly_inst, price, finishing, delivery,
         payment_years, payment_down_pct,
         images, location, title, id: listingId,
+        show_price = true, show_downpayment = true, show_monthly = true,
+        show_full_price = true, show_compound = true, annual_payment,
     } = listing;
 
     useEffect(() => {
@@ -233,14 +235,45 @@ export default function PropertyCard({ listing, featured = false }) {
                 <hr className="card-divider" />
 
                 <div className="card-pricing">
-                    <div className="price-row price-downpayment">
-                        <span className="price-label">{t('card.downPayment')}</span>
-                        <span className="price-amount">EGP {formatNumberReadable(downpayment)}</span>
-                    </div>
-                    <div className="price-row price-monthly">
-                        <span className="price-label">{t('card.monthly')}</span>
-                        <span className="price-amount">{formatNumberReadable(monthly_inst)} <span className="price-suffix">{t('card.perMonth')}</span></span>
-                    </div>
+                    {show_price && show_downpayment && downpayment && (
+                        <div className="price-row price-downpayment">
+                            <span className="price-label">{t('card.downPayment')}</span>
+                            <span className="price-amount">EGP {formatNumberReadable(downpayment)}</span>
+                        </div>
+                    )}
+                    {show_price && show_monthly && monthly_inst && (
+                        <div className="price-row price-monthly">
+                            <span className="price-label">{t('card.monthly')}</span>
+                            <span className="price-amount">{formatNumberReadable(monthly_inst)} <span className="price-suffix">{t('card.perMonth')}</span></span>
+                        </div>
+                    )}
+                    {show_price && show_full_price && price && (
+                        <div className="price-row price-full">
+                            <span className="price-label">{t('card.fullPrice')}</span>
+                            <span className="price-amount">EGP {formatNumberReadable(price)}</span>
+                        </div>
+                    )}
+                    {show_price && annual_payment && (
+                        <div className="price-row price-annual">
+                            <span className="price-label">دفعة سنويه</span>
+                            <span className="price-amount">EGP {formatNumberReadable(annual_payment)}/year</span>
+                        </div>
+                    )}
+                    {!show_price && (
+                        <div className="price-row price-hidden">
+                            <a
+                                href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hi, I'm interested in ${title}. Can you please share the pricing details?`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn-inquire-price"
+                                onClick={() => {
+                                    if (listingId && hasSupabase()) trackEvent(listingId, 'inquire_price', {}, listing.site_id ?? siteId);
+                                }}
+                            >
+                                استعلم عن السعر / Ask for Price
+                            </a>
+                        </div>
+                    )}
                     {(payment_years != null || payment_down_pct != null) && (
                         <div className="price-row price-plan">
                             <span className="price-label">{t('card.paymentPlan')}</span>

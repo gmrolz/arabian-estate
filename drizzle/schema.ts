@@ -41,9 +41,18 @@ export const listings = mysqlTable("listings", {
   toilets: int("toilets").notNull(),
   downpayment: varchar("downpayment", { length: 64 }).notNull().default("0"),
   monthlyInst: varchar("monthlyInst", { length: 64 }).notNull().default(""),
+  annualPayment: varchar("annualPayment", { length: 64 }).notNull().default(""),
   price: varchar("price", { length: 64 }).notNull(),
+  paymentYears: int("paymentYears"),
+  paymentDownPct: int("paymentDownPct"),
   finishing: varchar("finishing", { length: 64 }).notNull().default("Semi Finished"),
   delivery: varchar("delivery", { length: 64 }).notNull().default(""),
+  // Visibility controls
+  showPrice: int("showPrice").notNull().default(1),
+  showDownpayment: int("showDownpayment").notNull().default(1),
+  showMonthly: int("showMonthly").notNull().default(1),
+  showFullPrice: int("showFullPrice").notNull().default(1),
+  showCompound: int("showCompound").notNull().default(1),
   featured: int("featured").notNull().default(0),
   areaSlug: varchar("areaSlug", { length: 64 }).notNull().default("new-capital"),
   images: text("images"), // JSON array of image URLs
@@ -55,3 +64,12 @@ export const listings = mysqlTable("listings", {
 
 export type Listing = typeof listings.$inferSelect;
 export type InsertListing = typeof listings.$inferInsert;
+
+// Type helpers for visibility settings
+export interface ListingVisibility {
+  showPrice: boolean;
+  showDownpayment: boolean;
+  showMonthly: boolean;
+  showFullPrice: boolean;
+  showCompound: boolean;
+}

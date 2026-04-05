@@ -23,3 +23,8 @@
 - [x] Add Google Tag Manager (GTM-N7LMGM56) across entire website
 - [x] Fix image upload in Add New Listing form (updated to support FileList)
 - [x] Add support for multiple image uploads in Add New Listing form
+- [x] Update database schema: add annual_payment, show_price, show_monthly, show_downpayment, show_full_price, show_compound fields
+- [x] Update admin form: change downpayment starting from 1.5%, increase year options, add annual payment input
+- [x] Add pricing visibility checkboxes: show/hide Pay Now, Monthly, Full Price, Full Price
+- [x] Add compound visibility checkbox to admin form
+- [x] Update PropertyCard to respect visibility settings and show WhatsApp button for hidden prices

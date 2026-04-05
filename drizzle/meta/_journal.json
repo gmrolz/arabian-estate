@@ -15,6 +15,13 @@
       "when": 1774711189067,
       "tag": "0001_careless_monster_badoon",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1775429747237,
+      "tag": "0002_salty_shriek",
+      "breakpoints": true
     }
   ]
 }

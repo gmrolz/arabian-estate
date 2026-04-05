@@ -57,7 +57,8 @@ function parseNum(s) {
   return isNaN(n) ? NaN : n;
 }
 
-const DOWN_PCT_OPTIONS = [0, 5, 10, 15, 20, 25, 30];
+const DOWN_PCT_OPTIONS = [1.5, 5, 10, 15, 20, 25, 30];
+const YEAR_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20];
 
 function calculatePaymentPlan(price, downPct, paymentAfter3mPct, years, equalInstallments) {
   const priceNum = parseNum(price);
@@ -502,7 +503,7 @@ export default function AdminListingEdit() {
                 <label>Number of years</label>
                 <select className="admin-input" value={planYears} onChange={(e) => setPlanYears(Number(e.target.value))}>
                   <option value={0}>Cash price (full payment)</option>
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((y) => (
+                  {YEAR_OPTIONS.map((y) => (
                     <option key={y} value={y}>{y} {y === 1 ? 'year' : 'years'}</option>
                   ))}
                 </select>
@@ -561,6 +562,7 @@ export default function AdminListingEdit() {
             </>
           )}
           {pricingMode === 'manual' && (
+            <>
             <div className="admin-form-row two-cols">
               <div>
                 <label>Pay now (EGP)</label>
@@ -587,6 +589,19 @@ export default function AdminListingEdit() {
                 />
               </div>
             </div>
+            <div className="admin-form-row">
+              <label>Annual Payment - دفعة سنويه (EGP)</label>
+              <input
+                className="admin-input"
+                value={form.annual_payment || ''}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/,/g, '').replace(/[^\d]/g, '');
+                  setForm({ ...form, annual_payment: raw === '' ? '' : formatNumberReadable(raw) });
+                }}
+                placeholder="e.g. 600,000"
+              />
+            </div>
+            </>
           )}
           {(form.downpayment || form.monthly_inst) && (
             <div className="admin-form-row admin-pricing-summary">
@@ -594,6 +609,7 @@ export default function AdminListingEdit() {
               <div className="admin-pricing-output">
                 <span>Pay now: EGP {formatNumberReadable(form.downpayment)}</span>
                 <span>Monthly: EGP {formatNumberReadable(form.monthly_inst)}/mo</span>
+                {form.annual_payment && <span>Annual: EGP {formatNumberReadable(form.annual_payment)}/year</span>}
                 {(form.payment_years != null || form.payment_down_pct != null) && (
                   <span className="admin-pricing-plan">
                     {form.payment_down_pct != null && `${form.payment_down_pct}% down`}
@@ -614,7 +630,7 @@ export default function AdminListingEdit() {
                   onChange={(e) => setForm({ ...form, payment_years: e.target.value ? Number(e.target.value) : null })}
                 >
                   <option value="">—</option>
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((y) => (
+                  {YEAR_OPTIONS.map((y) => (
                     <option key={y} value={y}>{y} {y === 1 ? 'year' : 'years'}</option>
                   ))}
                 </select>
@@ -634,6 +650,52 @@ export default function AdminListingEdit() {
               </div>
             </div>
           )}
+          
+          <fieldset className="admin-form-row">
+            <legend className="admin-form-label">What to show on frontend:</legend>
+            <div className="admin-form-checkboxes" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <label className="admin-checkbox">
+                <input
+                  type="checkbox"
+                  checked={form.show_price ?? true}
+                  onChange={(e) => setForm({ ...form, show_price: e.target.checked })}
+                />
+                Show Price
+              </label>
+              <label className="admin-checkbox">
+                <input
+                  type="checkbox"
+                  checked={form.show_downpayment ?? true}
+                  onChange={(e) => setForm({ ...form, show_downpayment: e.target.checked })}
+                />
+                Show Pay Now
+              </label>
+              <label className="admin-checkbox">
+                <input
+                  type="checkbox"
+                  checked={form.show_monthly ?? true}
+                  onChange={(e) => setForm({ ...form, show_monthly: e.target.checked })}
+                />
+                Show Monthly Installment
+              </label>
+              <label className="admin-checkbox">
+                <input
+                  type="checkbox"
+                  checked={form.show_full_price ?? true}
+                  onChange={(e) => setForm({ ...form, show_full_price: e.target.checked })}
+                />
+                Show Full Price
+              </label>
+              <label className="admin-checkbox">
+                <input
+                  type="checkbox"
+                  checked={form.show_compound ?? true}
+                  onChange={(e) => setForm({ ...form, show_compound: e.target.checked })}
+                />
+                Show Compound Name
+              </label>
+            </div>
+          </fieldset>
         </section>
           <div className="admin-form-row two-cols">
             <div>
