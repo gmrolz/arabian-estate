@@ -60,14 +60,14 @@ function parseNum(s) {
   return isNaN(n) ? NaN : n;
 }
 
-const DOWN_PCT_OPTIONS = [1.5, 5, 10, 15, 20, 25, 30];
+const DOWN_PCT_OPTIONS = [0, 1.5, 5, 10, 15, 20, 25, 30];
 const YEAR_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20];
 
 function calculatePaymentPlan(price, downPct, paymentAfter3mPct, years, equalInstallments) {
   const priceNum = parseNum(price);
   if (isNaN(priceNum) || priceNum <= 0) return null;
   if (years === 0) {
-    return { payNow: priceNum, monthly: 0, years: 0, downPct: null };
+    return { payNow: priceNum, monthly: 0, annual: 0, years: 0, downPct: null };
   }
   const payNow = Math.round((priceNum * downPct) / 100);
   let remainder = priceNum - payNow;
@@ -75,7 +75,8 @@ function calculatePaymentPlan(price, downPct, paymentAfter3mPct, years, equalIns
   if (after3mAmount > 0) remainder -= after3mAmount;
   if (remainder <= 0) return null;
   const monthly = equalInstallments ? Math.round(remainder / (years * 12)) : null;
-  return { payNow, monthly, years, downPct };
+  const annual = equalInstallments ? Math.round(remainder / years) : null;
+  return { payNow, monthly, annual, years, downPct };
 }
 
 function getUrl(img) {
@@ -559,12 +560,13 @@ export default function AdminListingEdit() {
                       ...prev,
                       downpayment: formatNumberReadable(String(result.payNow)),
                       monthly_inst: result.monthly != null ? formatNumberReadable(String(result.monthly)) : prev.monthly_inst,
+                      annual_payment: result.annual != null ? formatNumberReadable(String(result.annual)) : prev.annual_payment,
                       payment_years: result.years,
                       payment_down_pct: result.downPct,
                     } : null);
                   }}
                 >
-                  Calculate Pay now & Monthly
+                  Calculate Pay now, Monthly & Annual
                 </button>
               </div>
             </>
