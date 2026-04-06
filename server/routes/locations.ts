@@ -115,6 +115,22 @@ router.get('/by-slug/:slug', async (req, res) => {
 });
 
 /**
+ * GET /api/locations/all
+ * Get all locations (all levels) — used by admin for building the location map
+ */
+router.get('/all', async (req, res) => {
+  try {
+    const db = await getDb();
+    if (!db) return res.status(503).json({ error: 'Database not available' });
+    const all = await db.select().from(locations);
+    res.json(all);
+  } catch (error) {
+    console.error('[Locations] Get all error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
  * GET /api/locations/level/:level
  * Get all locations at a specific level
  */

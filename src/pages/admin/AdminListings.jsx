@@ -4,14 +4,7 @@ import { controlListings, getAnalyticsByListing, deleteListing, setListingsOrder
 import { useSite } from '../../context/SiteContext';
 import { formatNumberReadable } from '../../lib/format';
 import { useAdminToast } from '../../context/AdminToastContext';
-import { CAIRO_AREAS, EGYPT_REGIONS, getAreaFromListing } from '../../data/newCapitalListings';
 import AdminListingsSitemap from '../../components/AdminListingsSitemap';
-
-// All areas that can have listings: Cairo sub-areas + other regions
-const ALL_DISPLAY_AREAS = [
-  ...CAIRO_AREAS,
-  ...EGYPT_REGIONS.filter((r) => r.slug !== 'cairo').map((r) => ({ slug: r.slug, label: r.label })),
-];
 
 export default function AdminListings() {
   const { showToast } = useAdminToast();
@@ -20,7 +13,10 @@ export default function AdminListings() {
   const [analytics, setAnalytics] = useState({});
   const [loading, setLoading] = useState(true);
   const [moving, setMoving] = useState(null);
-  const [selectedFilter, setSelectedFilter] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState(null); // locationId (number) | null
+
+  // Full location tree for resolving names: id → node
+  const [locationMap, setLocationMap] = useState({});
 
   const fetchData = () => {
     setLoading(true);
@@ -34,6 +30,23 @@ export default function AdminListings() {
   useEffect(() => {
     fetchData();
   }, [siteId]);
+
+  // Build a flat id→node map from the location tree
+  useEffect(() => {
+    async function loadLocations() {
+      try {
+        const res = await fetch('/api/locations/all');
+        if (!res.ok) return;
+        const all = await res.json();
+        const map = {};
+        all.forEach(n => { map[n.id] = n; });
+        setLocationMap(map);
+      } catch (e) {
+        console.error('Failed to load locations', e);
+      }
+    }
+    loadLocations();
+  }, []);
 
   const handleDelete = async (e, id) => {
     e.preventDefault();
@@ -66,19 +79,36 @@ export default function AdminListings() {
     showToast('Order updated', 'success');
   };
 
-  const listingsByArea = useMemo(() => {
-    const byArea = {};
-    ALL_DISPLAY_AREAS.forEach((area) => {
-      byArea[area.slug] = listings.filter((l) => getAreaFromListing(l) === area.slug);
+  // Get all descendant IDs for a locationId (including itself)
+  function getDescendantIds(locId, map) {
+    const ids = new Set([locId]);
+    // Find children
+    Object.values(map).forEach(n => {
+      if (n.parentId === locId) {
+        getDescendantIds(n.id, map).forEach(id => ids.add(id));
+      }
     });
-    return byArea;
-  }, [listings]);
+    return ids;
+  }
 
-  const sectionsToShow = useMemo(() => {
-    if (!selectedFilter) return ALL_DISPLAY_AREAS;
-    if (selectedFilter === 'cairo') return CAIRO_AREAS;
-    return ALL_DISPLAY_AREAS.filter((a) => a.slug === selectedFilter);
-  }, [selectedFilter]);
+  // Filter listings by selectedFilter (locationId) — include all descendants
+  const filteredListings = useMemo(() => {
+    if (!selectedFilter) return listings;
+    const ids = getDescendantIds(selectedFilter, locationMap);
+    return listings.filter(l => ids.has(l.locationId));
+  }, [listings, selectedFilter, locationMap]);
+
+  // Group filtered listings by their neighborhood name for display
+  const groupedListings = useMemo(() => {
+    const groups = {};
+    filteredListings.forEach(l => {
+      const node = locationMap[l.locationId];
+      const label = node ? (node.nameEn || node.nameAr || `Location ${l.locationId}`) : 'Other';
+      if (!groups[label]) groups[label] = [];
+      groups[label].push(l);
+    });
+    return groups;
+  }, [filteredListings, locationMap]);
 
   if (loading) {
     return (
@@ -99,111 +129,112 @@ export default function AdminListings() {
       <p className="admin-listings-hint">Click a location in the sitemap to filter. Use ↑ ↓ to reorder. Listings are grouped by area.</p>
 
       <AdminListingsSitemap
-        listingsByArea={listingsByArea}
+        listings={listings}
         selectedFilter={selectedFilter}
         onFilter={setSelectedFilter}
       />
 
       <div className="admin-listings-by-area">
-        {sectionsToShow.map((area) => {
-          const areaListings = listingsByArea[area.slug] || [];
-          return (
-            <section key={area.slug} id={`admin-area-${area.slug}`} className="admin-listings-area-section">
-              <h2 className="admin-listings-area-title">
-                {area.label}
-                <span className="admin-listings-area-count">
-                  {areaListings.length === 0 ? '0 units available' : `${areaListings.length} listing${areaListings.length !== 1 ? 's' : ''}`}
-                </span>
-              </h2>
-              <div className="admin-listings-list">
-                {areaListings.map((l) => {
-                  const globalIndex = listings.findIndex((item) => item.id === l.id);
-                  const a = analytics[l.id] || {};
-                  const imgUrl = Array.isArray(l.images) && l.images.length > 0
-                    ? (l.images[0].url ?? l.images[0])
-                    : null;
-                  const isMoving = moving === globalIndex;
-                  const title = l.title_ar || l.title_en || '—';
-                  const project = l.project_ar || l.project_en || '—';
-                  const developer = l.developer_ar || l.developer_en || '—';
-                  return (
-                    <div key={l.id} className="admin-listing-card">
-                      <div className="admin-listing-order">
-                        <span className="admin-listing-num">{globalIndex + 1}</span>
-                        <div className="admin-listing-move">
-                          <button
-                            type="button"
-                            className="admin-btn admin-btn-icon"
-                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMove(globalIndex, -1); }}
-                            disabled={globalIndex === 0 || isMoving}
-                            aria-label="Move up"
-                          >
-                            ↑
-                          </button>
-                          <button
-                            type="button"
-                            className="admin-btn admin-btn-icon"
-                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMove(globalIndex, 1); }}
-                            disabled={globalIndex === listings.length - 1 || isMoving}
-                            aria-label="Move down"
-                          >
-                            ↓
-                          </button>
-                        </div>
-                      </div>
-
-                      <Link to={`/admin/listings/${l.id}`} className="admin-listing-card-link">
-                        <div className="admin-listing-card-img">
-                          {imgUrl ? (
-                            <img src={imgUrl} alt="" />
-                          ) : (
-                            <span className="admin-listing-card-noimg">No image</span>
-                          )}
-                        </div>
-                        <div className="admin-listing-card-body">
-                          <div className="admin-listing-card-title">{title}</div>
-                          <div className="admin-listing-card-project">{project}</div>
-                          <div className="admin-listing-card-developer">{developer}{l.location ? ` · ${l.location}` : ''}</div>
-                          {l.delivery && <div className="admin-listing-card-delivery">Delivery: {l.delivery}</div>}
-                          <div className="admin-listing-card-specs">
-                            {l.area != null && <span>{l.area} m²</span>}
-                            {l.rooms != null && <span>{l.rooms} beds</span>}
-                            {l.toilets != null && <span>{l.toilets} bath</span>}
-                            {l.finishing && <span>{l.finishing}</span>}
-                          </div>
-                          <hr className="admin-listing-card-divider" />
-                          <div className="admin-listing-card-pricing">
-                            {l.downpayment && <div className="admin-listing-price-row"><span>Pay now</span><span>EGP {formatNumberReadable(l.downpayment)}</span></div>}
-                            {l.monthly_inst && <div className="admin-listing-price-row"><span>Monthly</span><span>{formatNumberReadable(l.monthly_inst)} /mo</span></div>}
-                            {l.price && <div className="admin-listing-price-row"><span>Price</span><span>EGP {formatNumberReadable(l.price)}</span></div>}
-                          </div>
-                          <div className="admin-listing-card-stats">
-                            <span>Views {a.view ?? 0}</span>
-                            <span>CTA {(a.cta_whatsapp ?? 0) + (a.cta_call ?? 0)}</span>
-                            <span>Photos {a.photo_view ?? 0}</span>
-                          </div>
-                        </div>
-                      </Link>
-
-                      <div className="admin-listing-card-actions">
-                        <Link to={`/admin/listings/${l.id}`} className="admin-btn admin-btn-sm admin-btn-primary">
-                          Edit
-                        </Link>
+        {Object.entries(groupedListings).map(([areaLabel, areaListings]) => (
+          <section key={areaLabel} className="admin-listings-area-section">
+            <h2 className="admin-listings-area-title">
+              {areaLabel}
+              <span className="admin-listings-area-count">
+                {areaListings.length === 0 ? '0 units available' : `${areaListings.length} listing${areaListings.length !== 1 ? 's' : ''}`}
+              </span>
+            </h2>
+            <div className="admin-listings-list">
+              {areaListings.map((l) => {
+                const globalIndex = listings.findIndex((item) => item.id === l.id);
+                const a = analytics[l.id] || {};
+                const imgUrl = Array.isArray(l.images) && l.images.length > 0
+                  ? (l.images[0].url ?? l.images[0])
+                  : null;
+                const isMoving = moving === globalIndex;
+                const title = l.title_ar || l.title_en || '—';
+                const project = l.compoundName || l.project_ar || l.project_en || '—';
+                const developer = l.developer_ar || l.developer_en || '—';
+                return (
+                  <div key={l.id} className="admin-listing-card">
+                    <div className="admin-listing-order">
+                      <span className="admin-listing-num">{globalIndex + 1}</span>
+                      <div className="admin-listing-move">
                         <button
                           type="button"
-                          className="admin-btn admin-btn-sm admin-btn-danger"
-                          onClick={(e) => handleDelete(e, l.id)}
+                          className="admin-btn admin-btn-icon"
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMove(globalIndex, -1); }}
+                          disabled={globalIndex === 0 || isMoving}
+                          aria-label="Move up"
                         >
-                          Delete
+                          ↑
+                        </button>
+                        <button
+                          type="button"
+                          className="admin-btn admin-btn-icon"
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMove(globalIndex, 1); }}
+                          disabled={globalIndex === listings.length - 1 || isMoving}
+                          aria-label="Move down"
+                        >
+                          ↓
                         </button>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
+
+                    <Link to={`/admin/listings/${l.id}`} className="admin-listing-card-link">
+                      <div className="admin-listing-card-img">
+                        {imgUrl ? (
+                          <img src={imgUrl} alt="" />
+                        ) : (
+                          <span className="admin-listing-card-noimg">No image</span>
+                        )}
+                      </div>
+                      <div className="admin-listing-card-body">
+                        <div className="admin-listing-card-title">{title}</div>
+                        <div className="admin-listing-card-project">{project}</div>
+                        <div className="admin-listing-card-developer">{developer}{l.location ? ` · ${l.location}` : ''}</div>
+                        {l.delivery && <div className="admin-listing-card-delivery">Delivery: {l.delivery}</div>}
+                        <div className="admin-listing-card-specs">
+                          {l.area != null && <span>{l.area} m²</span>}
+                          {l.rooms != null && <span>{l.rooms} beds</span>}
+                          {l.toilets != null && <span>{l.toilets} bath</span>}
+                          {l.finishing && <span>{l.finishing}</span>}
+                        </div>
+                        <hr className="admin-listing-card-divider" />
+                        <div className="admin-listing-card-pricing">
+                          {l.downpayment && <div className="admin-listing-price-row"><span>Pay now</span><span>EGP {formatNumberReadable(l.downpayment)}</span></div>}
+                          {l.monthly_inst && <div className="admin-listing-price-row"><span>Monthly</span><span>{formatNumberReadable(l.monthly_inst)} /mo</span></div>}
+                          {l.price && <div className="admin-listing-price-row"><span>Price</span><span>EGP {formatNumberReadable(l.price)}</span></div>}
+                        </div>
+                        <div className="admin-listing-card-stats">
+                          <span>Views {a.view ?? 0}</span>
+                          <span>CTA {(a.cta_whatsapp ?? 0) + (a.cta_call ?? 0)}</span>
+                          <span>Photos {a.photo_view ?? 0}</span>
+                        </div>
+                      </div>
+                    </Link>
+
+                    <div className="admin-listing-card-actions">
+                      <Link to={`/admin/listings/${l.id}`} className="admin-btn admin-btn-sm admin-btn-primary">
+                        Edit
+                      </Link>
+                      <button
+                        type="button"
+                        className="admin-btn admin-btn-sm admin-btn-danger"
+                        onClick={(e) => handleDelete(e, l.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        ))}
+
+        {filteredListings.length === 0 && (
+          <p className="admin-listings-empty">No listings found for this location.</p>
+        )}
       </div>
     </div>
   );
