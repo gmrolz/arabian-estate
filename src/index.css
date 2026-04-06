@@ -4666,3 +4666,133 @@ button {
     padding-bottom: 0;
   }
 }
+
+
+/* Location Selector */
+.location-selector {
+  position: relative;
+  width: 100%;
+}
+
+.location-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.location-input {
+  width: 100%;
+  padding: 10px 35px 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.location-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.location-clear-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.location-clear-btn:hover {
+  color: #333;
+}
+
+.location-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.location-loading,
+.location-empty {
+  padding: 12px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
+.location-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.location-item {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.location-item:last-child {
+  border-bottom: none;
+}
+
+.location-button {
+  width: 100%;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.location-button:hover {
+  background-color: #f5f5f5;
+}
+
+.location-name {
+  display: block;
+  font-weight: 500;
+  color: #333;
+}
+
+.location-meta {
+  display: block;
+  font-size: 12px;
+  color: #999;
+  margin-top: 2px;
+}
+
+.location-selected {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background-color: #f0f8ff;
+  border-left: 3px solid #007bff;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.location-breadcrumb {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}

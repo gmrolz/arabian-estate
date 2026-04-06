@@ -35,6 +35,7 @@ export const listings = mysqlTable("listings", {
   projectAr: varchar("projectAr", { length: 128 }).notNull().default(""),
   projectEn: varchar("projectEn", { length: 128 }).notNull().default(""),
   location: varchar("location", { length: 256 }).notNull(),
+  locationId: int("locationId"),
   unitType: varchar("unitType", { length: 64 }).notNull().default("Apartment"),
   area: int("area").notNull(),
   rooms: int("rooms").notNull(),
@@ -92,3 +93,6 @@ export const locations = mysqlTable("locations", {
 
 export type Location = typeof locations.$inferSelect;
 export type InsertLocation = typeof locations.$inferInsert;
+
+// Add foreign key constraint for parentId (self-referencing)
+// This is handled at database level, not in Drizzle schema

@@ -14,17 +14,20 @@ import { useSite } from '../../context/SiteContext';
 import { CAIRO_AREAS, EGYPT_REGIONS } from '../../data/newCapitalListings';
 import { formatNumberReadable } from '../../lib/format';
 import { ListingPreviewCard } from '../../components/ListingPreviewCard';
+import { LocationSelector } from '../../components/LocationSelector';
 import '../../styles/listing-preview.css';
 import { useState as useStateHook } from 'react';
 
-// Regions for first-level location (Cairo shows sub-section for area)
+// NOTE: LocationSelector component now handles location selection
+// The old REGIONS and CAIRO_SUB_AREAS are kept for backward compatibility
+// but will be phased out in favor of the new location system
+
 const REGIONS = [
   { value: 'cairo', label: 'Cairo' },
   ...EGYPT_REGIONS.filter((r) => r.slug !== 'cairo').map((r) => ({ value: r.slug, label: r.label })),
 ];
 
-// Cairo sub-areas (shown only when region is Cairo)
-const CAIRO_SUB_AREAS = CAIRO_AREAS; // [{ slug: 'new-capital', label: 'New Capital' }, ...]
+const CAIRO_SUB_AREAS = CAIRO_AREAS;
 
 const FINISHING_OPTIONS = [
   { value: '', label: '—' },
