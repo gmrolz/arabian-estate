@@ -61,3 +61,10 @@
 - [ ] Add compound search and create API endpoints
 - [ ] Integrate compound selector into listing form with autocomplete
 - [ ] Test and verify compound management works end-to-end
+
+## Location Hierarchy Cascading Dropdowns
+- [x] Create CascadingLocationSelector component (4 dropdowns + manual compound input)
+- [x] Add compoundName field to DB schema and run migration
+- [x] Update listingsRouter to accept locationId and compoundName
+- [x] Update listingsApi.js to pass locationId and compoundName
+- [x] Replace old LocationSelector with CascadingLocationSelector in admin form

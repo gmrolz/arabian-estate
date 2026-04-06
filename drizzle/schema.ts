@@ -35,6 +35,8 @@ export const listings = mysqlTable("listings", {
   projectAr: varchar("projectAr", { length: 128 }).notNull().default(""),
   projectEn: varchar("projectEn", { length: 128 }).notNull().default(""),
   location: varchar("location", { length: 256 }).notNull(),
+  locationId: int("locationId"),
+  compoundName: varchar("compoundName", { length: 256 }).notNull().default(""),
   unitType: varchar("unitType", { length: 64 }).notNull().default("Apartment"),
   area: int("area").notNull(),
   rooms: int("rooms").notNull(),
@@ -65,8 +67,6 @@ export const listings = mysqlTable("listings", {
 
 export type Listing = typeof listings.$inferSelect;
 export type InsertListing = typeof listings.$inferInsert;
-
-// NOTE: locationId column exists in DB but will be added back after fixing Drizzle state
 
 // Type helpers for visibility settings
 export interface ListingVisibility {

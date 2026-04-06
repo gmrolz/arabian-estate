@@ -14,7 +14,7 @@ import { useSite } from '../../context/SiteContext';
 import { CAIRO_AREAS, EGYPT_REGIONS } from '../../data/newCapitalListings';
 import { formatNumberReadable } from '../../lib/format';
 import { ListingPreviewCard } from '../../components/ListingPreviewCard';
-import { LocationSelector } from '../../components/LocationSelector';
+import { CascadingLocationSelector } from '../../components/CascadingLocationSelector';
 import '../../styles/listing-preview.css';
 import { useState as useStateHook } from 'react';
 
@@ -131,6 +131,7 @@ export default function AdminListingEdit() {
         project_en: '',
         location: '',
         locationId: null,
+        compound_name: '',
         unit_type: 'Apartment',
         area: '',
         rooms: '',
@@ -204,6 +205,7 @@ export default function AdminListingEdit() {
     project_en: form?.project_en || null,
     location: form?.location || null,
     locationId: form?.locationId || null,
+    compound_name: form?.compound_name || null,
     unit_type: form?.unit_type || 'Apartment',
     area: form?.area ? Number(form.area) : null,
     rooms: form?.rooms ? Number(form.rooms) : null,
@@ -509,19 +511,15 @@ export default function AdminListingEdit() {
               />
             </div>
           </div>
-          <div className="admin-form-row two-cols">
-            <div>
-              <label>Location (Select from hierarchy)</label>
-              <LocationSelector
-                value={form.locationId || null}
-                onChange={(locationId) => setForm({ ...form, locationId })}
-                placeholder="Search locations..."
-              />
-              <small style={{ color: '#999', marginTop: '4px', display: 'block' }}>
-                Select the compound/location from the 5-level hierarchy
-              </small>
-            </div>
-            <div />
+          <div className="admin-form-row">
+            <label style={{ fontWeight: 600, marginBottom: 8, display: 'block' }}>Location Hierarchy</label>
+            <CascadingLocationSelector
+              locationId={form.locationId || null}
+              compound={form.compound_name || ''}
+              onChange={({ locationId, compound }) =>
+                setForm({ ...form, locationId, compound_name: compound })
+              }
+            />
           </div>
           <div className="admin-form-row grid-cols">
             <div><label>Area (m²)</label><input type="number" className="admin-input" value={form.area ?? ''} onChange={(e) => setForm({ ...form, area: e.target.value ? Number(e.target.value) : null })} /></div>
