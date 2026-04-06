@@ -5,6 +5,7 @@ const FALLBACK_IMG = 'https://placehold.co/600x400/e8e8e8/999?text=Arabian+Estat
 
 export function ListingPreviewCard({ listing }) {
   const [imageIdx, setImageIdx] = useState(0);
+  const [language, setLanguage] = useState('ar'); // 'ar' or 'en'
 
   if (!listing) return null;
 
@@ -32,106 +33,139 @@ export function ListingPreviewCard({ listing }) {
 
   const imgList = (images && images.length > 0) ? images : [FALLBACK_IMG];
   const currentImg = imgList[imageIdx] || FALLBACK_IMG;
+  const isArabic = language === 'ar';
 
   const handlePrevImg = () => setImageIdx((i) => (i - 1 + imgList.length) % imgList.length);
   const handleNextImg = () => setImageIdx((i) => (i + 1) % imgList.length);
 
   return (
-    <div className="listing-preview-card">
-      {/* Image Carousel */}
-      <div className="preview-carousel">
-        <img src={currentImg} alt="Preview" className="preview-image" />
-        {imgList.length > 1 && (
-          <>
-            <button className="carousel-btn prev" onClick={handlePrevImg}>‹</button>
-            <button className="carousel-btn next" onClick={handleNextImg}>›</button>
-            <div className="carousel-counter">{imageIdx + 1}/{imgList.length}</div>
-          </>
-        )}
+    <div className="listing-preview-wrapper">
+      {/* Language Toggle */}
+      <div className="preview-language-toggle">
+        <button
+          className={`lang-btn ${isArabic ? 'active' : ''}`}
+          onClick={() => setLanguage('ar')}
+        >
+          العربية
+        </button>
+        <button
+          className={`lang-btn ${!isArabic ? 'active' : ''}`}
+          onClick={() => setLanguage('en')}
+        >
+          English
+        </button>
       </div>
 
-      {/* Content */}
-      <div className="preview-content">
-        {/* Title */}
-        <div className="preview-title">
-          <h3 className="title-ar">{title_ar}</h3>
-          <p className="title-en">{title_en}</p>
-        </div>
+      {/* Mobile-sized Preview Container */}
+      <div className="mobile-preview-container" dir={isArabic ? 'rtl' : 'ltr'}>
+        <div className="listing-preview-card">
+          {/* Image Carousel */}
+          <div className="preview-carousel">
+            <img src={currentImg} alt="Preview" className="preview-image" />
+            {imgList.length > 1 && (
+              <>
+                <button className="carousel-btn prev" onClick={handlePrevImg}>‹</button>
+                <button className="carousel-btn next" onClick={handleNextImg}>›</button>
+                <div className="carousel-counter">{imageIdx + 1}/{imgList.length}</div>
+              </>
+            )}
+          </div>
 
-        {/* Details Grid */}
-        <div className="preview-details">
-          <div className="detail-item">
-            <span className="detail-label">المشروع</span>
-            <span className="detail-value">{project}</span>
-          </div>
-          <div className="detail-item">
-            <span className="detail-label">المساحة</span>
-            <span className="detail-value">{area} m²</span>
-          </div>
-          <div className="detail-item">
-            <span className="detail-label">الغرف</span>
-            <span className="detail-value">{rooms}</span>
-          </div>
-          <div className="detail-item">
-            <span className="detail-label">الحمامات</span>
-            <span className="detail-value">{toilets}</span>
-          </div>
-          {finishing && (
-            <div className="detail-item">
-              <span className="detail-label">التشطيب</span>
-              <span className="detail-value">{finishing}</span>
+          {/* Content */}
+          <div className="preview-content">
+            {/* Title */}
+            <div className="preview-title">
+              <h3 className="title-ar">{isArabic ? title_ar : title_en}</h3>
+              {isArabic && title_en && <p className="title-en">{title_en}</p>}
+              {!isArabic && title_ar && <p className="title-en">{title_ar}</p>}
             </div>
-          )}
-          {delivery && (
-            <div className="detail-item">
-              <span className="detail-label">التسليم</span>
-              <span className="detail-value">{delivery}</span>
+
+            {/* Details Grid */}
+            <div className="preview-details">
+              <div className="detail-item">
+                <span className="detail-label">{isArabic ? 'المشروع' : 'Project'}</span>
+                <span className="detail-value">{project}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">{isArabic ? 'المساحة' : 'Area'}</span>
+                <span className="detail-value">{area} m²</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">{isArabic ? 'الغرف' : 'Rooms'}</span>
+                <span className="detail-value">{rooms}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">{isArabic ? 'الحمامات' : 'Bathrooms'}</span>
+                <span className="detail-value">{toilets}</span>
+              </div>
+              {finishing && (
+                <div className="detail-item">
+                  <span className="detail-label">{isArabic ? 'التشطيب' : 'Finishing'}</span>
+                  <span className="detail-value">{finishing}</span>
+                </div>
+              )}
+              {delivery && (
+                <div className="detail-item">
+                  <span className="detail-label">{isArabic ? 'التسليم' : 'Delivery'}</span>
+                  <span className="detail-value">{delivery}</span>
+                </div>
+              )}
             </div>
-          )}
+
+            {/* Pricing */}
+            {show_price && (
+              <div className="preview-pricing">
+                {show_downpayment && downpayment && (
+                  <div className="price-row">
+                    <span className="price-label">{isArabic ? 'الدفعة الأولى' : 'Pay Now'}</span>
+                    <span className="price-value">EGP {formatNumberReadable(downpayment)}</span>
+                  </div>
+                )}
+                {show_monthly && monthly_inst && (
+                  <div className="price-row">
+                    <span className="price-label">{isArabic ? 'الشهري' : 'Monthly'}</span>
+                    <span className="price-value">EGP {formatNumberReadable(monthly_inst)}/{isArabic ? 'شهر' : 'mo'}</span>
+                  </div>
+                )}
+                {annual_payment && (
+                  <div className="price-row">
+                    <span className="price-label">{isArabic ? 'دفعة سنويه' : 'Annual'}</span>
+                    <span className="price-value">EGP {formatNumberReadable(annual_payment)}/{isArabic ? 'سنة' : 'year'}</span>
+                  </div>
+                )}
+                {show_full_price && price && (
+                  <div className="price-row">
+                    <span className="price-label">{isArabic ? 'السعر الكامل' : 'Full Price'}</span>
+                    <span className="price-value">EGP {formatNumberReadable(price)}</span>
+                  </div>
+                )}
+                {(payment_years != null || payment_down_pct != null) && (
+                  <div className="price-plan">
+                    {payment_down_pct != null && `${payment_down_pct}% ${isArabic ? 'دفعة أولى' : 'down'}`}
+                    {payment_down_pct != null && payment_years != null && ' · '}
+                    {payment_years != null && `${payment_years} ${isArabic ? 'سنة' : 'years'}`}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {!show_price && (
+              <div className="price-hidden-notice">
+                {isArabic ? 'استعلم عن السعر' : 'Ask for Price'}
+              </div>
+            )}
+
+            {/* CTA Buttons */}
+            <div className="preview-cta">
+              <button className="cta-btn call-btn">
+                {isArabic ? '📞 اتصل' : '📞 Call'}
+              </button>
+              <button className="cta-btn whatsapp-btn">
+                {isArabic ? '💬 واتس اب' : '💬 WhatsApp'}
+              </button>
+            </div>
+          </div>
         </div>
-
-        {/* Pricing */}
-        {show_price && (
-          <div className="preview-pricing">
-            {show_downpayment && downpayment && (
-              <div className="price-row">
-                <span className="price-label">الدفعة الأولى</span>
-                <span className="price-value">EGP {formatNumberReadable(downpayment)}</span>
-              </div>
-            )}
-            {show_monthly && monthly_inst && (
-              <div className="price-row">
-                <span className="price-label">الشهري</span>
-                <span className="price-value">EGP {formatNumberReadable(monthly_inst)}/شهر</span>
-              </div>
-            )}
-            {annual_payment && (
-              <div className="price-row">
-                <span className="price-label">دفعة سنويه</span>
-                <span className="price-value">EGP {formatNumberReadable(annual_payment)}/سنة</span>
-              </div>
-            )}
-            {show_full_price && price && (
-              <div className="price-row">
-                <span className="price-label">السعر الكامل</span>
-                <span className="price-value">EGP {formatNumberReadable(price)}</span>
-              </div>
-            )}
-            {(payment_years != null || payment_down_pct != null) && (
-              <div className="price-plan">
-                {payment_down_pct != null && `${payment_down_pct}% down`}
-                {payment_down_pct != null && payment_years != null && ' · '}
-                {payment_years != null && `${payment_years} years`}
-              </div>
-            )}
-          </div>
-        )}
-
-        {!show_price && (
-          <div className="price-hidden-notice">
-            استعلم عن السعر / Ask for Price
-          </div>
-        )}
       </div>
     </div>
   );
