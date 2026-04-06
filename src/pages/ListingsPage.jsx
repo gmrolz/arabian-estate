@@ -26,7 +26,6 @@ export default function ListingsPage() {
                     <div className="listings-hub-grid">
                         {EGYPT_REGIONS.map((region) => {
                             const count = getListingsCountByEgyptRegion(region.slug);
-                            const featured = (region.slug === 'cairo' ? getFeaturedByRegion('new-capital', 1)[0] : getFeaturedByRegion(region.slug, 1)[0]) || getRepresentativeListing(region.slug);
                             const label = locationLabel(region.slug);
 
                             return (
@@ -36,15 +35,9 @@ export default function ListingsPage() {
                                     className="listings-hub-card"
                                 >
                                     <div className="listings-hub-card-inner">
-                                        {featured?.images?.[0] ? (
-                                            <div className="listings-hub-card-img">
-                                                <img src={featured.images[0]} alt={label} />
-                                            </div>
-                                        ) : (
-                                            <div className="listings-hub-card-placeholder">
-                                                <span className="listings-hub-card-icon" aria-hidden="true" />
-                                            </div>
-                                        )}
+                                        <div className="listings-hub-card-img">
+                                            <img src={region.image} alt={label} loading="lazy" />
+                                        </div>
                                         <div className="listings-hub-card-body">
                                             <h3 className="listings-hub-card-title">{label}</h3>
                                             <p className="listings-hub-card-count">

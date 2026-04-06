@@ -79,3 +79,4 @@
 ## UI Improvements
 - [x] Make admin sitemap collapsible (cities/collections expand/collapse)
 - [x] Add AI-generated brand placeholder image for listings without photos
+- [ ] Generate unique AI images for each location section card (no duplicates)

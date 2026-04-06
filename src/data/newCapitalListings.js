@@ -86,17 +86,17 @@ export const getUniqueValues = (key) =>
   [...new Set(newCapitalListings.map((l) => l[key]))].sort();
 
 export const EGYPT_REGIONS = [
-  { slug: 'cairo', label: 'Cairo', hasAreas: true },
-  { slug: 'north-coast', label: 'North Coast', hasAreas: false },
-  { slug: 'sokhna', label: 'Sokhna', hasAreas: false },
-  { slug: 'galala', label: 'Galala', hasAreas: false },
-  { slug: 'hurghada', label: 'Hurghada', hasAreas: false },
+  { slug: 'cairo', label: 'Cairo', hasAreas: true, image: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-cairo-6EJu2WXYNx8bbVMTZuSKvH.webp' },
+  { slug: 'north-coast', label: 'North Coast', hasAreas: false, image: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-north-coast-F4fqLbUxVzighKm8nh2ZFt.webp' },
+  { slug: 'sokhna', label: 'Sokhna', hasAreas: false, image: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-sokhna-J3aMcmqTDxbDeCxX25zQJm.webp' },
+  { slug: 'galala', label: 'Galala', hasAreas: false, image: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-galala-VR6RnhGf8SFFkrZFR8TENb.webp' },
+  { slug: 'hurghada', label: 'Hurghada', hasAreas: false, image: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-hurghada-Gt2ntR2UHD7p5wLDpHVxGM.webp' },
 ];
 
 export const CAIRO_AREAS = [
-  { slug: 'new-capital', label: 'New Capital' },
-  { slug: 'new-cairo', label: 'New Cairo' },
-  { slug: 'mostakbal-city', label: 'Mostakbal City' },
+  { slug: 'new-capital', label: 'New Capital', image: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-new-capital-378KSLviMbPW84dsXFFurd.webp' },
+  { slug: 'new-cairo', label: 'New Cairo', image: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-new-cairo-fYAFjbQS5E4ZtN3BPEngbW.webp' },
+  { slug: 'mostakbal-city', label: 'Mostakbal City', image: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-mostakbal-mQLbJUaFNDE6hWmKKZotzH.webp' },
 ];
 
 export function getAreaFromListing(listing) {

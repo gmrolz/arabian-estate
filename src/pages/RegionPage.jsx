@@ -40,7 +40,6 @@ export default function RegionPage() {
                             {CAIRO_AREAS.map((area) => {
                                 const listings = getListingsByRegion(area.slug);
                                 const count = listings.length;
-                                const featured = getFeaturedByRegion(area.slug, 1)[0] || getRepresentativeListing(area.slug);
                                 const areaLabel = locationLabel(area.slug);
                                 return (
                                     <Link
@@ -49,15 +48,9 @@ export default function RegionPage() {
                                         className="listings-hub-card"
                                     >
                                         <div className="listings-hub-card-inner">
-                                            {featured?.images?.[0] ? (
-                                                <div className="listings-hub-card-img">
-                                                    <img src={featured.images[0]} alt={areaLabel} loading="lazy" decoding="async" />
-                                                </div>
-                                            ) : (
-                                                <div className="listings-hub-card-placeholder">
-                                                    <span className="listings-hub-card-icon" aria-hidden="true" />
-                                                </div>
-                                            )}
+                                            <div className="listings-hub-card-img">
+                                                <img src={area.image} alt={areaLabel} loading="lazy" decoding="async" />
+                                            </div>
                                             <div className="listings-hub-card-body">
                                                 <h3 className="listings-hub-card-title">{areaLabel}</h3>
                                                 <p className="listings-hub-card-count">

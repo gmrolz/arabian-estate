@@ -5,7 +5,7 @@ import { EGYPT_REGIONS } from '../data/newCapitalListings';
 
 export default function CitiesSection() {
     const { t, lp, locationLabel } = useLocale();
-    const { getListingsCountByEgyptRegion, getFeaturedByRegion, getRepresentativeListing } = useListings();
+    const { getListingsCountByEgyptRegion } = useListings();
 
     return (
         <section className="cities-section" id="cities">
@@ -21,15 +21,9 @@ export default function CitiesSection() {
                 <div className="listings-hub-grid cities-section-grid">
                     <Link to={lp('/east-cairo')} className="listings-hub-card listings-hub-card--featured">
                         <div className="listings-hub-card-inner">
-                            {(getFeaturedByRegion('new-capital', 1)[0] || getRepresentativeListing('new-capital'))?.images?.[0] ? (
-                                <div className="listings-hub-card-img">
-                                    <img src={(getFeaturedByRegion('new-capital', 1)[0] || getRepresentativeListing('new-capital')).images[0]} alt={t('location.eastCairo')} loading="lazy" decoding="async" />
-                                </div>
-                            ) : (
-                                <div className="listings-hub-card-placeholder">
-                                    <span className="listings-hub-card-icon" aria-hidden="true">🏠</span>
-                                </div>
-                            )}
+                            <div className="listings-hub-card-img">
+                                <img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-new-capital-378KSLviMbPW84dsXFFurd.webp" alt={t('location.eastCairo')} loading="lazy" decoding="async" />
+                            </div>
                             <div className="listings-hub-card-body">
                                 <h3 className="listings-hub-card-title">{t('location.eastCairo')}</h3>
                                 <p className="listings-hub-card-count">
@@ -41,7 +35,6 @@ export default function CitiesSection() {
                     </Link>
                     {EGYPT_REGIONS.map((region) => {
                         const count = getListingsCountByEgyptRegion(region.slug);
-                        const featured = (region.slug === 'cairo' ? getFeaturedByRegion('new-capital', 1)[0] : getFeaturedByRegion(region.slug, 1)[0]) || getRepresentativeListing(region.slug);
                         const label = locationLabel(region.slug);
 
                         return (
@@ -51,15 +44,9 @@ export default function CitiesSection() {
                                 className="listings-hub-card"
                             >
                                 <div className="listings-hub-card-inner">
-                                    {featured?.images?.[0] ? (
-                                        <div className="listings-hub-card-img">
-                                            <img src={featured.images[0]} alt={label} loading="lazy" decoding="async" />
-                                        </div>
-                                    ) : (
-                                        <div className="listings-hub-card-placeholder">
-                                            <span className="listings-hub-card-icon" aria-hidden="true">🏠</span>
-                                        </div>
-                                    )}
+                                    <div className="listings-hub-card-img">
+                                        <img src={region.image} alt={label} loading="lazy" decoding="async" />
+                                    </div>
                                     <div className="listings-hub-card-body">
                                         <h3 className="listings-hub-card-title">{label}</h3>
                                         <p className="listings-hub-card-count">
