@@ -532,7 +532,7 @@ export default function AdminListingEdit() {
           <h2 className="admin-form-section-title">Pricing</h2>
           <div className="admin-form-row admin-form-row-with-checkbox">
             <div className="admin-form-input-group">
-              <label>Price (total) EGP</label>
+              <label>Full Price (total) EGP</label>
               <input
                 className="admin-input"
                 value={form.price || ''}
@@ -546,10 +546,10 @@ export default function AdminListingEdit() {
             <label className="admin-checkbox-inline">
               <input
                 type="checkbox"
-                checked={form.show_price !== false}
-                onChange={(e) => setForm({ ...form, show_price: e.target.checked })}
+                checked={form.show_full_price === true}
+                onChange={(e) => setForm({ ...form, show_full_price: e.target.checked })}
               />
-              <span>Show</span>
+              <span>Show Full Price</span>
             </label>
           </div>
           <div className="admin-form-row">
