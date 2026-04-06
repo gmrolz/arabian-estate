@@ -33,3 +33,4 @@
 - [x] Improve live preview: show mobile-sized card (375px), add Arabic/English toggle, show multiple cards in list view
 - [x] Add inline visibility checkboxes next to each pricing field (price, downpayment, monthly, annual)
 - [x] Remove redundant "What to show on frontend" section from admin form
+- [x] Add URL image upload feature (download from URL and upload to S3)

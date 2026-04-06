@@ -52,6 +52,46 @@ async function startServer() {
       return res.status(500).json({ error: err.message || "Upload failed" });
     }
   });
+
+  // Image upload from URL endpoint
+  app.post("/api/listings/upload-from-url", async (req: any, res: any) => {
+    try {
+      const { imageUrl, listingId } = req.body;
+      if (!imageUrl || !listingId) {
+        return res.status(400).json({ error: "Missing imageUrl or listingId" });
+      }
+
+      // Download image from URL
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        return res.status(400).json({ error: `Failed to download image: ${response.statusText}` });
+      }
+
+      const contentType = response.headers.get("content-type") || "image/jpeg";
+      const buffer = await response.arrayBuffer();
+
+      // Determine file extension from content-type or URL
+      let ext = "jpg";
+      if (contentType.includes("png")) ext = "png";
+      else if (contentType.includes("gif")) ext = "gif";
+      else if (contentType.includes("webp")) ext = "webp";
+      else if (contentType.includes("jpeg")) ext = "jpg";
+      else if (imageUrl.includes(".")) {
+        const urlExt = imageUrl.split(".").pop()?.split("?")[0];
+        if (urlExt && /^[a-z0-9]{2,5}$/.test(urlExt)) ext = urlExt;
+      }
+
+      // Upload to storage
+      const key = `listings/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { url } = await storagePut(key, Buffer.from(buffer), contentType);
+
+      return res.json({ url });
+    } catch (err: any) {
+      console.error("URL upload error:", err);
+      return res.status(500).json({ error: err.message || "Upload failed" });
+    }
+  });
+
   // tRPC API
   app.use(
     "/api/trpc",

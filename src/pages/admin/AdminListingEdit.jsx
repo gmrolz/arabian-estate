@@ -250,6 +250,43 @@ export default function AdminListingEdit() {
     }
   };
 
+  const handleImageUrlUpload = async (imageUrl) => {
+    const listingId = form?.id;
+    if (!listingId) {
+      showToast('Save the listing first, then upload images.', 'error');
+      return;
+    }
+    if (!imageUrl || !imageUrl.trim()) return;
+    
+    setUploadLoading(true);
+    try {
+      const response = await fetch('/api/listings/upload-from-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl: imageUrl.trim(), listingId }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok || !data.url) {
+        showToast(`Failed to upload image: ${data.error || 'Unknown error'}`, 'error');
+      } else {
+        const newImages = [...(form?.images || []), data.url];
+        setForm((prev) => (prev ? { ...prev, images: newImages } : null));
+        await setListingImages(listingId, newImages);
+        showToast('Image uploaded from URL successfully.', 'success');
+        
+        // Clear the input
+        const input = document.getElementById('admin-add-image-url');
+        if (input) input.value = '';
+      }
+    } catch (err) {
+      showToast(`Error uploading image: ${err.message}`, 'error');
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
   const handleSave = async () => {
     if (!form) return;
     setSaving(true);
@@ -771,8 +808,7 @@ export default function AdminListingEdit() {
                     const input = e.target;
                     const v = (input.value || '').trim();
                     if (v) {
-                      setForm((prev) => (prev ? { ...prev, images: [...(prev.images || []), v] } : null));
-                      input.value = '';
+                      handleImageUrlUpload(v);
                     }
                   }
                 }}
@@ -780,16 +816,16 @@ export default function AdminListingEdit() {
               <button
                 type="button"
                 className="admin-btn admin-btn-secondary"
+                disabled={uploadLoading}
                 onClick={() => {
                   const input = document.getElementById('admin-add-image-url');
                   const v = (input?.value || '').trim();
                   if (v) {
-                    setForm((prev) => (prev ? { ...prev, images: [...(prev.images || []), v] } : null));
-                    if (input) input.value = '';
+                    handleImageUrlUpload(v);
                   }
                 }}
               >
-                Add URL
+                {uploadLoading ? 'Uploading...' : 'Add URL'}
               </button>
             </div>
             <label className={`admin-image-upload ${uploadLoading ? 'admin-image-upload-loading' : ''} ${!form.id ? 'admin-image-upload-disabled' : ''}`}>
