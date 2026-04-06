@@ -22,6 +22,13 @@
       "when": 1775429747237,
       "tag": "0002_salty_shriek",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1775436374165,
+      "tag": "0003_wandering_boom_boom",
+      "breakpoints": true
     }
   ]
 }

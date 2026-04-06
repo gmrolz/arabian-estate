@@ -34,3 +34,14 @@
 - [x] Add inline visibility checkboxes next to each pricing field (price, downpayment, monthly, annual)
 - [x] Remove redundant "What to show on frontend" section from admin form
 - [x] Add URL image upload feature (download from URL and upload to S3)
+
+## Location System Refactoring (Pattern A)
+
+- [x] Create locations table schema with 5-level hierarchy
+- [x] Seed Egypt location hierarchy (Governorate → City → District → Sub-area → Compound)
+- [x] Create migration script to map existing listings to new location nodes
+- [ ] Implement Pattern A URL routing: /[lang]/[intent]/[governorate]/[property-type]-[intent][-area-slug].html
+- [ ] Create location search API endpoint with autocomplete
+- [ ] Add breadcrumb generation logic for listing pages
+- [ ] Add filter chips UI for location drilling
+- [ ] Test and verify all Pattern A URLs work correctly

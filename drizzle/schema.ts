@@ -73,3 +73,22 @@ export interface ListingVisibility {
   showFullPrice: boolean;
   showCompound: boolean;
 }
+
+/**
+ * Locations table for 5-level hierarchical location taxonomy.
+ * Levels: 1=Governorate, 2=City, 3=District, 4=Sub-area, 5=Compound
+ */
+export const locations = mysqlTable("locations", {
+  id: int("id").autoincrement().primaryKey(),
+  nameAr: varchar("nameAr", { length: 256 }).notNull(),
+  nameEn: varchar("nameEn", { length: 256 }).notNull(),
+  slug: varchar("slug", { length: 128 }).notNull().unique(),
+  level: int("level").notNull(), // 1-5
+  parentId: int("parentId"),
+  listingCount: int("listingCount").notNull().default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Location = typeof locations.$inferSelect;
+export type InsertLocation = typeof locations.$inferInsert;
