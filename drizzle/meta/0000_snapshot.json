@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "5cdedd32-c1ef-45f5-81ce-84ae721e7c2c",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "cb5ee03f-392d-400a-9e24-a1c90257b2c9",
+  "prevId": "5cdedd32-c1ef-45f5-81ce-84ae721e7c2c",
   "tables": {
     "listings": {
       "name": "listings",
@@ -210,7 +210,15 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": 1
+          "default": 0
+        },
+        "showAnnual": {
+          "name": "showAnnual",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
         },
         "showCompound": {
           "name": "showCompound",

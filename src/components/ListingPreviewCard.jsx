@@ -28,7 +28,8 @@ export function ListingPreviewCard({ listing }) {
     show_price = true,
     show_downpayment = true,
     show_monthly = true,
-    show_full_price = true,
+    show_full_price = false,
+    show_annual = false,
   } = listing;
 
   const imgList = (images && images.length > 0) ? images : [FALLBACK_IMG];
@@ -113,47 +114,57 @@ export function ListingPreviewCard({ listing }) {
             </div>
 
             {/* Pricing */}
-            {show_price && (
-              <div className="preview-pricing">
-                {show_downpayment && downpayment && (
-                  <div className="price-row">
-                    <span className="price-label">{isArabic ? 'الدفعة الأولى' : 'Pay Now'}</span>
-                    <span className="price-value">EGP {formatNumberReadable(downpayment)}</span>
-                  </div>
-                )}
-                {show_monthly && monthly_inst && (
-                  <div className="price-row">
-                    <span className="price-label">{isArabic ? 'الشهري' : 'Monthly'}</span>
-                    <span className="price-value">EGP {formatNumberReadable(monthly_inst)}/{isArabic ? 'شهر' : 'mo'}</span>
-                  </div>
-                )}
-                {annual_payment && (
-                  <div className="price-row">
-                    <span className="price-label">{isArabic ? 'دفعة سنويه' : 'Annual'}</span>
-                    <span className="price-value">EGP {formatNumberReadable(annual_payment)}/{isArabic ? 'سنة' : 'year'}</span>
-                  </div>
-                )}
-                {show_full_price && price && (
-                  <div className="price-row">
-                    <span className="price-label">{isArabic ? 'السعر الكامل' : 'Full Price'}</span>
-                    <span className="price-value">EGP {formatNumberReadable(price)}</span>
-                  </div>
-                )}
-                {(payment_years != null || payment_down_pct != null) && (
-                  <div className="price-plan">
-                    {payment_down_pct != null && `${payment_down_pct}% ${isArabic ? 'دفعة أولى' : 'down'}`}
-                    {payment_down_pct != null && payment_years != null && ' · '}
-                    {payment_years != null && `${payment_years} ${isArabic ? 'سنة' : 'years'}`}
-                  </div>
-                )}
-              </div>
-            )}
+            {(() => {
+              const hasPricingToShow = 
+                (show_downpayment && downpayment) ||
+                (show_monthly && monthly_inst) ||
+                (show_full_price && price) ||
+                (show_annual && annual_payment);
 
-            {!show_price && (
-              <div className="price-hidden-notice">
-                {isArabic ? 'استعلم عن السعر' : 'Ask for Price'}
-              </div>
-            )}
+              if (!hasPricingToShow) {
+                return (
+                  <div className="price-hidden-notice">
+                    {isArabic ? 'استعلم عن السعر' : 'Ask for Price'}
+                  </div>
+                );
+              }
+
+              return (
+                <div className="preview-pricing">
+                  {show_price && show_downpayment && downpayment && (
+                    <div className="price-row">
+                      <span className="price-label">{isArabic ? 'الدفعة الأولى' : 'Pay Now'}</span>
+                      <span className="price-value">EGP {formatNumberReadable(downpayment)}</span>
+                    </div>
+                  )}
+                  {show_price && show_monthly && monthly_inst && (
+                    <div className="price-row">
+                      <span className="price-label">{isArabic ? 'الشهري' : 'Monthly'}</span>
+                      <span className="price-value">EGP {formatNumberReadable(monthly_inst)}/{isArabic ? 'شهر' : 'mo'}</span>
+                    </div>
+                  )}
+                  {show_price && show_full_price && price && (
+                    <div className="price-row">
+                      <span className="price-label">{isArabic ? 'السعر الاجمالي' : 'Full Unit Price'}</span>
+                      <span className="price-value">EGP {formatNumberReadable(price)}</span>
+                    </div>
+                  )}
+                  {show_price && show_annual && annual_payment && (
+                    <div className="price-row">
+                      <span className="price-label">{isArabic ? 'دفعة سنويه' : 'Annual Payment'}</span>
+                      <span className="price-value">EGP {formatNumberReadable(annual_payment)}/{isArabic ? 'سنة' : 'year'}</span>
+                    </div>
+                  )}
+                  {(payment_years != null || payment_down_pct != null) && (
+                    <div className="price-plan">
+                      {payment_down_pct != null && `${payment_down_pct}% ${isArabic ? 'دفعة أولى' : 'down'}`}
+                      {payment_down_pct != null && payment_years != null && ' · '}
+                      {payment_years != null && `${payment_years} ${isArabic ? 'سنة' : 'years'}`}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
             {/* CTA Buttons */}
             <div className="preview-cta">

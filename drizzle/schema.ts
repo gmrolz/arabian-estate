@@ -51,7 +51,8 @@ export const listings = mysqlTable("listings", {
   showPrice: int("showPrice").notNull().default(1),
   showDownpayment: int("showDownpayment").notNull().default(1),
   showMonthly: int("showMonthly").notNull().default(1),
-  showFullPrice: int("showFullPrice").notNull().default(1),
+  showFullPrice: int("showFullPrice").notNull().default(0),
+  showAnnual: int("showAnnual").notNull().default(0),
   showCompound: int("showCompound").notNull().default(1),
   featured: int("featured").notNull().default(0),
   areaSlug: varchar("areaSlug", { length: 64 }).notNull().default("new-capital"),
@@ -73,6 +74,7 @@ export interface ListingVisibility {
   showDownpayment: boolean;
   showMonthly: boolean;
   showFullPrice: boolean;
+  showAnnual: boolean;
   showCompound: boolean;
 }
 

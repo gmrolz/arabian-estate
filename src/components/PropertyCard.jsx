@@ -162,7 +162,7 @@ export default function PropertyCard({ listing, featured = false }) {
         payment_years, payment_down_pct,
         images, location, title, id: listingId,
         show_price = true, show_downpayment = true, show_monthly = true,
-        show_full_price = true, show_compound = true, annual_payment,
+        show_full_price = false, show_annual = false, show_compound = true, annual_payment,
     } = listing;
 
     useEffect(() => {
@@ -240,7 +240,7 @@ export default function PropertyCard({ listing, featured = false }) {
                             (show_downpayment && downpayment) ||
                             (show_monthly && monthly_inst) ||
                             (show_full_price && price) ||
-                            (annual_payment);
+                            (show_annual && annual_payment);
 
                         if (!hasPricingToShow) {
                             return (
@@ -280,7 +280,7 @@ export default function PropertyCard({ listing, featured = false }) {
                                         <span className="price-amount">EGP {formatNumberReadable(price)}</span>
                                     </div>
                                 )}
-                                {show_price && annual_payment && (
+                                {show_price && show_annual && annual_payment && (
                                     <div className="price-row price-annual">
                                         <span className="price-label">دفعة سنويه</span>
                                         <span className="price-amount">EGP {formatNumberReadable(annual_payment)}/year</span>

@@ -34,6 +34,8 @@
 - [x] Add inline visibility checkboxes next to each pricing field (price, downpayment, monthly, annual)
 - [x] Remove redundant "What to show on frontend" section from admin form
 - [x] Add URL image upload feature (download from URL and upload to S3)
+- [x] Sync admin preview card with frontend pricing visibility logic
+- [x] Set default visibility: Pay Now + Monthly checked, Full Price + Annual unchecked for all cards
 
 ## Location System Refactoring (Pattern A)
 

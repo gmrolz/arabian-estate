@@ -19,6 +19,13 @@ export default function ListingLocationPage() {
     const { getListingsByRegion, getCompoundsByRegion } = useListings();
     const [selectedLocationId, setSelectedLocationId] = useState(null);
     const [showLocationTree, setShowLocationTree] = useState(false);
+    const [filterDev, setFilterDev] = useState('');
+    const [filterFinishing, setFilterFinishing] = useState('');
+    const [filterDelivery, setFilterDelivery] = useState('');
+    const [filterRooms, setFilterRooms] = useState('');
+    const [compoundsExpanded, setCompoundsExpanded] = useState(false);
+    const [filtersBarOpen, setFiltersBarOpen] = useState(false);
+    const [compoundsBarOpen, setCompoundsBarOpen] = useState(false);
 
     const isCairo = regionSlug === 'cairo';
     const areaConfigCairo = CAIRO_AREAS.find((a) => a.slug === areaSlug);
@@ -31,14 +38,6 @@ export default function ListingLocationPage() {
     }
 
     const regionListings = getListingsByRegion(areaSlug);
-
-    const [filterDev, setFilterDev] = useState('');
-    const [filterFinishing, setFilterFinishing] = useState('');
-    const [filterDelivery, setFilterDelivery] = useState('');
-    const [filterRooms, setFilterRooms] = useState('');
-    const [compoundsExpanded, setCompoundsExpanded] = useState(false);
-    const [filtersBarOpen, setFiltersBarOpen] = useState(false);
-    const [compoundsBarOpen, setCompoundsBarOpen] = useState(false);
     const sentinelRef = useRef(null);
     const { setHideHeader } = useHeaderVisibility();
 

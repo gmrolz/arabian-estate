@@ -146,6 +146,11 @@ export default function AdminListingEdit() {
         area_slug: 'new-capital',
         sort_order: listings.length,
         images: [],
+        show_price: true,
+        show_downpayment: true,
+        show_monthly: true,
+        show_full_price: false,
+        show_annual: false,
       });
       return;
     }
