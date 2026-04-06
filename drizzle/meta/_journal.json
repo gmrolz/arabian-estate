@@ -1,55 +1,5 @@
 {
   "version": "7",
   "dialect": "mysql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "5",
-      "when": 1774709996737,
-      "tag": "0000_youthful_sersi",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1774711189067,
-      "tag": "0001_careless_monster_badoon",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1775429747237,
-      "tag": "0002_salty_shriek",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1775436374165,
-      "tag": "0003_wandering_boom_boom",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1775440120040,
-      "tag": "0004_white_amphibian",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "5",
-      "when": 1775440149417,
-      "tag": "0005_talented_husk",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "5",
-      "when": 1775440192578,
-      "tag": "0006_uneven_frank_castle",
-      "breakpoints": true
-    }
-  ]
+  "entries": []
 }

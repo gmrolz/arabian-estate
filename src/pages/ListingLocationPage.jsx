@@ -7,6 +7,7 @@ import { CAIRO_AREAS, EGYPT_REGIONS } from '../data/newCapitalListings';
 import Breadcrumbs from '../components/Breadcrumbs';
 import ListingLangBar from '../components/ListingLangBar';
 import PropertyCard from '../components/PropertyCard';
+import LocationTree from '../components/LocationTree';
 
 function getUniqueValuesFromList(list, key) {
     return [...new Set(list.map((l) => l[key]))].filter(Boolean).sort((a, b) => String(a).localeCompare(String(b)));
@@ -16,6 +17,8 @@ export default function ListingLocationPage() {
     const { region: regionSlug, area: areaSlug } = useParams();
     const { t, lp, locationLabel } = useLocale();
     const { getListingsByRegion, getCompoundsByRegion } = useListings();
+    const [selectedLocationId, setSelectedLocationId] = useState(null);
+    const [showLocationTree, setShowLocationTree] = useState(false);
 
     const isCairo = regionSlug === 'cairo';
     const areaConfigCairo = CAIRO_AREAS.find((a) => a.slug === areaSlug);

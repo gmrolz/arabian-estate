@@ -46,13 +46,13 @@
 - [ ] Add filter chips UI for location drilling (deferred)
 - [x] Test and verify location search API endpoints
 
-## Frontend Integration (Location System)
+## Frontend Integration (Location System) - COMPLETE
 
-- [ ] Create LocationTree component for hierarchical display (levels 1-5 with expand/collapse)
-- [ ] Update ListingsContext to read/write locationId with backward-compatible areaSlug fallback
-- [ ] Implement location filtering UI on listing pages (search/tree selection)
-- [ ] Resolve Drizzle schema migration state for locationId column
-- [ ] End-to-end test: admin create listing with locationId -> persist -> display on frontend
+- [x] Create LocationTree component for hierarchical display (levels 1-5 with expand/collapse)
+- [x] Update ListingsContext to read/write locationId with backward-compatible areaSlug fallback
+- [x] Implement location filtering UI on listing pages (search/tree selection)
+- [x] Resolve Drizzle schema migration state for locationId column (FIXED)
+- [x] End-to-end test: admin create listing with locationId -> persist -> display on frontend
 
 ## Compound Management System
 - [ ] Create admin compounds management page with autocomplete search

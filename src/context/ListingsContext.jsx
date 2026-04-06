@@ -41,6 +41,7 @@ function normalizeRow(row, locale) {
     developer: row.developer ?? '',
     project: row.project ?? '',
     location: row.location ?? '',
+    locationId: row.locationId ?? row.location_id ?? null,
     unit_type: row.unitType ?? row.unit_type ?? 'Apartment',
     area: row.area ?? 0,
     rooms: row.rooms ?? 0,
