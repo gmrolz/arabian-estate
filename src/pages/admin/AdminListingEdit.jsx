@@ -130,6 +130,7 @@ export default function AdminListingEdit() {
         project_ar: '',
         project_en: '',
         location: '',
+        locationId: null,
         unit_type: 'Apartment',
         area: '',
         rooms: '',
@@ -197,6 +198,7 @@ export default function AdminListingEdit() {
     project_ar: form?.project_ar || null,
     project_en: form?.project_en || null,
     location: form?.location || null,
+    locationId: form?.locationId || null,
     unit_type: form?.unit_type || 'Apartment',
     area: form?.area ? Number(form.area) : null,
     rooms: form?.rooms ? Number(form.rooms) : null,
@@ -504,13 +506,15 @@ export default function AdminListingEdit() {
           </div>
           <div className="admin-form-row two-cols">
             <div>
-              <label>Location (optional text)</label>
-              <input
-                className="admin-input"
-                value={form.location || ''}
-                onChange={(e) => setForm({ ...form, location: e.target.value })}
-                placeholder="e.g. R5, Phase 2"
+              <label>Location (Select from hierarchy)</label>
+              <LocationSelector
+                value={form.locationId || null}
+                onChange={(locationId) => setForm({ ...form, locationId })}
+                placeholder="Search locations..."
               />
+              <small style={{ color: '#999', marginTop: '4px', display: 'block' }}>
+                Select the compound/location from the 5-level hierarchy
+              </small>
             </div>
             <div />
           </div>

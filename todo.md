@@ -48,11 +48,11 @@
 
 ## Frontend Integration (Location System)
 
-- [ ] Create location tree component to display hierarchy
-- [ ] Update listing context to use locationId instead of areaSlug
-- [ ] Add location filtering to listing pages
-- [ ] Test and verify location system works end-to-end
-- [x] Add location management to admin dashboard (view, edit, add locations)
+- [ ] Create LocationTree component for hierarchical display (levels 1-5 with expand/collapse)
+- [ ] Update ListingsContext to read/write locationId with backward-compatible areaSlug fallback
+- [ ] Implement location filtering UI on listing pages (search/tree selection)
+- [ ] Resolve Drizzle schema migration state for locationId column
+- [ ] End-to-end test: admin create listing with locationId -> persist -> display on frontend
 
 ## Compound Management System
 - [ ] Create admin compounds management page with autocomplete search
