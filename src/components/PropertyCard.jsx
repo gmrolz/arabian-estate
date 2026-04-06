@@ -152,7 +152,7 @@ function ImageCarousel({ images, alt, featured, priceTag, t, listingId, siteId }
 
 /* ─── Property Card ──────────────────────────────────── */
 export default function PropertyCard({ listing, featured = false }) {
-    const { t, locationLabel } = useLocale();
+    const { t, locale, locationLabel } = useLocale();
     const { siteId } = useSite();
     const cardRef = useRef(null);
     const viewTracked = useRef(false);
@@ -249,7 +249,7 @@ export default function PropertyCard({ listing, featured = false }) {
                     )}
                     {show_price && show_full_price && price && (
                         <div className="price-row price-full">
-                            <span className="price-label">{locale === 'ar' ? 'السعر الاجمالي' : 'Full Unit Price'}</span>
+                            <span className="price-label">{locale === 'ar' ? '\u0627\u0644\u0633\u0639\u0631 \u0627\u0644\u0627\u062c\u0645\u0627\u0644\u064a' : 'Full Unit Price'}</span>
                             <span className="price-amount">EGP {formatNumberReadable(price)}</span>
                         </div>
                     )}
