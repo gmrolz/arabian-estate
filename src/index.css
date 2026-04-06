@@ -4608,3 +4608,61 @@ button {
   background: #c62828;
   color: #fff;
 }
+
+/* ─── Inline Checkbox Layout ─── */
+.admin-form-row-with-checkbox {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.admin-form-row-with-checkbox .admin-form-input-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-form-row-with-checkbox .admin-form-input-group label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+.admin-checkbox-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  padding-bottom: 2px;
+}
+
+.admin-checkbox-inline input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--gold);
+}
+
+.admin-checkbox-inline span {
+  user-select: none;
+}
+
+@media (max-width: 768px) {
+  .admin-form-row-with-checkbox {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-form-row-with-checkbox .admin-form-input-group {
+    width: 100%;
+  }
+
+  .admin-checkbox-inline {
+    padding-bottom: 0;
+  }
+}

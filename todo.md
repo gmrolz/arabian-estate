@@ -31,3 +31,4 @@
 - [x] Add live preview card to admin form (desktop: side panel, mobile: sidebar button)
 - [x] Update payment plan calculator: support 0% downpayment and annual payment calculations
 - [x] Improve live preview: show mobile-sized card (375px), add Arabic/English toggle, show multiple cards in list view
+- [x] Add inline visibility checkboxes next to each pricing field (price, downpayment, monthly, annual)

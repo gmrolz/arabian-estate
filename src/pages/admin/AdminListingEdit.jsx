@@ -481,17 +481,27 @@ export default function AdminListingEdit() {
           </div>
           <section className="admin-form-section admin-form-section-pricing">
           <h2 className="admin-form-section-title">Pricing</h2>
-          <div className="admin-form-row">
-            <label>Price (total) EGP</label>
-            <input
-              className="admin-input"
-              value={form.price || ''}
-              onChange={(e) => {
-                const raw = e.target.value.replace(/,/g, '').replace(/[^\d]/g, '');
-                setForm({ ...form, price: raw === '' ? '' : formatNumberReadable(raw) });
-              }}
-              placeholder="e.g. 5,000,000"
-            />
+          <div className="admin-form-row admin-form-row-with-checkbox">
+            <div className="admin-form-input-group">
+              <label>Price (total) EGP</label>
+              <input
+                className="admin-input"
+                value={form.price || ''}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/,/g, '').replace(/[^\d]/g, '');
+                  setForm({ ...form, price: raw === '' ? '' : formatNumberReadable(raw) });
+                }}
+                placeholder="e.g. 5,000,000"
+              />
+            </div>
+            <label className="admin-checkbox-inline">
+              <input
+                type="checkbox"
+                checked={form.show_price !== false}
+                onChange={(e) => setForm({ ...form, show_price: e.target.checked })}
+              />
+              <span>Show</span>
+            </label>
           </div>
           <div className="admin-form-row">
             <span className="admin-form-label">How to set Pay now & Monthly</span>
@@ -574,42 +584,72 @@ export default function AdminListingEdit() {
           {pricingMode === 'manual' && (
             <>
             <div className="admin-form-row two-cols">
-              <div>
-                <label>Pay now (EGP)</label>
-                <input
-                  className="admin-input"
-                  value={form.downpayment || ''}
-                  onChange={(e) => {
-                    const raw = e.target.value.replace(/,/g, '').replace(/[^\d]/g, '');
-                    setForm({ ...form, downpayment: raw === '' ? '' : formatNumberReadable(raw) });
-                  }}
-                  placeholder="e.g. 500,000"
-                />
+              <div className="admin-form-row-with-checkbox">
+                <div className="admin-form-input-group">
+                  <label>Pay now (EGP)</label>
+                  <input
+                    className="admin-input"
+                    value={form.downpayment || ''}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/,/g, '').replace(/[^\d]/g, '');
+                      setForm({ ...form, downpayment: raw === '' ? '' : formatNumberReadable(raw) });
+                    }}
+                    placeholder="e.g. 500,000"
+                  />
+                </div>
+                <label className="admin-checkbox-inline">
+                  <input
+                    type="checkbox"
+                    checked={form.show_downpayment !== false}
+                    onChange={(e) => setForm({ ...form, show_downpayment: e.target.checked })}
+                  />
+                  <span>Show</span>
+                </label>
               </div>
-              <div>
-                <label>Monthly (EGP)</label>
-                <input
-                  className="admin-input"
-                  value={form.monthly_inst || ''}
-                  onChange={(e) => {
-                    const raw = e.target.value.replace(/,/g, '').replace(/[^\d]/g, '');
-                    setForm({ ...form, monthly_inst: raw === '' ? '' : formatNumberReadable(raw) });
-                  }}
-                  placeholder="e.g. 50,000"
-                />
+              <div className="admin-form-row-with-checkbox">
+                <div className="admin-form-input-group">
+                  <label>Monthly (EGP)</label>
+                  <input
+                    className="admin-input"
+                    value={form.monthly_inst || ''}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/,/g, '').replace(/[^\d]/g, '');
+                      setForm({ ...form, monthly_inst: raw === '' ? '' : formatNumberReadable(raw) });
+                    }}
+                    placeholder="e.g. 50,000"
+                  />
+                </div>
+                <label className="admin-checkbox-inline">
+                  <input
+                    type="checkbox"
+                    checked={form.show_monthly !== false}
+                    onChange={(e) => setForm({ ...form, show_monthly: e.target.checked })}
+                  />
+                  <span>Show</span>
+                </label>
               </div>
             </div>
-            <div className="admin-form-row">
-              <label>Annual Payment - دفعة سنويه (EGP)</label>
-              <input
-                className="admin-input"
-                value={form.annual_payment || ''}
-                onChange={(e) => {
-                  const raw = e.target.value.replace(/,/g, '').replace(/[^\d]/g, '');
-                  setForm({ ...form, annual_payment: raw === '' ? '' : formatNumberReadable(raw) });
-                }}
-                placeholder="e.g. 600,000"
-              />
+            <div className="admin-form-row admin-form-row-with-checkbox">
+              <div className="admin-form-input-group">
+                <label>Annual Payment - دفعة سنويه (EGP)</label>
+                <input
+                  className="admin-input"
+                  value={form.annual_payment || ''}
+                  onChange={(e) => {
+                    const raw = e.target.value.replace(/,/g, '').replace(/[^\d]/g, '');
+                    setForm({ ...form, annual_payment: raw === '' ? '' : formatNumberReadable(raw) });
+                  }}
+                  placeholder="e.g. 600,000"
+                />
+              </div>
+              <label className="admin-checkbox-inline">
+                <input
+                  type="checkbox"
+                  checked={form.show_annual !== false}
+                  onChange={(e) => setForm({ ...form, show_annual: e.target.checked })}
+                />
+                <span>Show</span>
+              </label>
             </div>
             </>
           )}
