@@ -40,8 +40,8 @@
 - [x] Create locations table schema with 5-level hierarchy
 - [x] Seed Egypt location hierarchy (Governorate → City → District → Sub-area → Compound)
 - [x] Create migration script to map existing listings to new location nodes
-- [ ] Implement Pattern A URL routing: /[lang]/[intent]/[governorate]/[property-type]-[intent][-area-slug].html
-- [ ] Create location search API endpoint with autocomplete
-- [ ] Add breadcrumb generation logic for listing pages
-- [ ] Add filter chips UI for location drilling
-- [ ] Test and verify all Pattern A URLs work correctly
+- [x] Implement Pattern A URL routing: /[lang]/[intent]/[governorate]/[property-type]-[intent][-area-slug].html
+- [x] Create location search API endpoint with autocomplete
+- [ ] Add breadcrumb generation logic for listing pages (deferred)
+- [ ] Add filter chips UI for location drilling (deferred)
+- [x] Test and verify location search API endpoints

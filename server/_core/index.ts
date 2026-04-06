@@ -9,6 +9,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import multer from "multer";
 import { storagePut } from "../storage";
+import locationsRouter from "../routes/locations";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -91,6 +92,9 @@ async function startServer() {
       return res.status(500).json({ error: err.message || "Upload failed" });
     }
   });
+
+  // Locations API
+  app.use("/api/locations", locationsRouter);
 
   // tRPC API
   app.use(
