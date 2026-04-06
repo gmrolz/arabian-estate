@@ -45,3 +45,11 @@
 - [ ] Add breadcrumb generation logic for listing pages (deferred)
 - [ ] Add filter chips UI for location drilling (deferred)
 - [x] Test and verify location search API endpoints
+
+## Frontend Integration (Location System)
+
+- [ ] Create location tree component to display hierarchy
+- [ ] Update listing context to use locationId instead of areaSlug
+- [ ] Add location filtering to listing pages
+- [ ] Test and verify location system works end-to-end
+- [x] Add location management to admin dashboard (view, edit, add locations)

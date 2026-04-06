@@ -175,6 +175,177 @@ router.get('/:id/children', async (req, res) => {
 });
 
 /**
+ * POST /api/locations
+ * Create a new location
+ */
+router.post('/', async (req, res) => {
+  try {
+    const { nameEn, nameAr, slug, level, parentId } = req.body;
+    const db = await getDb();
+
+    if (!db) {
+      return res.status(503).json({ error: 'Database not available' });
+    }
+
+    if (!nameEn || !nameAr || !slug || !level) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    if (level < 1 || level > 5) {
+      return res.status(400).json({ error: 'Invalid level (must be 1-5)' });
+    }
+
+    // Check if slug already exists
+    const existing = await db
+      .select()
+      .from(locations)
+      .where(eq(locations.slug, slug))
+      .limit(1);
+
+    if (existing.length > 0) {
+      return res.status(400).json({ error: 'Slug already exists' });
+    }
+
+    // Validate parent if not root level
+    if (level > 1 && parentId) {
+      const parent = await db
+        .select()
+        .from(locations)
+        .where(eq(locations.id, parentId))
+        .limit(1);
+
+      if (parent.length === 0 || parent[0].level !== level - 1) {
+        return res.status(400).json({ error: 'Invalid parent location' });
+      }
+    }
+
+    await db
+      .insert(locations)
+      .values({
+        nameEn,
+        nameAr,
+        slug,
+        level,
+        parentId: level > 1 ? parentId : null,
+      });
+
+    // Fetch the created location
+    const created = await db
+      .select()
+      .from(locations)
+      .where(eq(locations.slug, slug))
+      .limit(1);
+
+    res.status(201).json(created[0]);
+  } catch (error) {
+    console.error('[Locations] Create error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * PUT /api/locations/:id
+ * Update a location
+ */
+router.put('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nameEn, nameAr, slug } = req.body;
+    const db = await getDb();
+
+    if (!db) {
+      return res.status(503).json({ error: 'Database not available' });
+    }
+
+    const locationId = Number(id);
+    if (isNaN(locationId)) {
+      return res.status(400).json({ error: 'Invalid location ID' });
+    }
+
+    const location = await db
+      .select()
+      .from(locations)
+      .where(eq(locations.id, locationId))
+      .limit(1);
+
+    if (location.length === 0) {
+      return res.status(404).json({ error: 'Location not found' });
+    }
+
+    const updateData: any = {};
+    if (nameEn) updateData.nameEn = nameEn;
+    if (nameAr) updateData.nameAr = nameAr;
+    if (slug) updateData.slug = slug;
+
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ error: 'No fields to update' });
+    }
+
+    const result = await db
+      .update(locations)
+      .set(updateData)
+      .where(eq(locations.id, locationId));
+
+    res.json(location[0]);
+  } catch (error) {
+    console.error('[Locations] Update error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * DELETE /api/locations/:id
+ * Delete a location (only if no children or listings)
+ */
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const db = await getDb();
+
+    if (!db) {
+      return res.status(503).json({ error: 'Database not available' });
+    }
+
+    const locationId = Number(id);
+    if (isNaN(locationId)) {
+      return res.status(400).json({ error: 'Invalid location ID' });
+    }
+
+    const location = await db
+      .select()
+      .from(locations)
+      .where(eq(locations.id, locationId))
+      .limit(1);
+
+    if (location.length === 0) {
+      return res.status(404).json({ error: 'Location not found' });
+    }
+
+    // Check for children
+    const children = await db
+      .select()
+      .from(locations)
+      .where(eq(locations.parentId, locationId));
+
+    if (children.length > 0) {
+      return res.status(400).json({ error: 'Cannot delete location with children' });
+    }
+
+    // Check for listings
+    if (location[0].listingCount && location[0].listingCount > 0) {
+      return res.status(400).json({ error: 'Cannot delete location with listings' });
+    }
+
+    await db.delete(locations).where(eq(locations.id, locationId));
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[Locations] Delete error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
  * GET /api/locations/:id
  * Get a single location by ID
  */
