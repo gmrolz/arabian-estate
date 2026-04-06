@@ -75,3 +75,7 @@
 - [ ] Level 2: Areas (New Cairo, New Capital, Mostakbal, Shorouk, etc.)
 - [ ] Level 3: Sub-areas / Neighborhoods (all detailed areas from previous chat)
 - [ ] Update CascadingLocationSelector labels to match new structure
+
+## UI Improvements
+- [x] Make admin sitemap collapsible (cities/collections expand/collapse)
+- [x] Add AI-generated brand placeholder image for listings without photos

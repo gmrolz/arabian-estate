@@ -7,25 +7,32 @@ const EyeIcon = () => (
   </svg>
 );
 
+const ChevronIcon = ({ open }) => (
+  <svg
+    width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+    style={{ transition: 'transform 0.2s', transform: open ? 'rotate(90deg)' : 'rotate(0deg)', flexShrink: 0 }}
+    aria-hidden="true"
+  >
+    <polyline points="9 18 15 12 9 6" />
+  </svg>
+);
+
 /**
- * Sitemap-style navigation for admin listings.
+ * Collapsible sitemap-style navigation for admin listings.
  * Hierarchy: City (L2) → Collection (L3) → Neighborhood (L4)
- * Uses the new location hierarchy from the DB.
- * 
- * Props:
- *   listings       – full flat array of listing objects (each has locationId)
- *   selectedFilter – currently active locationId filter (number | null)
- *   onFilter       – callback(locationId: number | null)
  */
 export default function AdminListingsSitemap({ listings = [], selectedFilter, onFilter }) {
-  const [tree, setTree] = useState([]);   // [{city, collections: [{coll, areas: [area]}]}]
+  const [tree, setTree] = useState([]);
   const [popupUrl, setPopupUrl] = useState(null);
+  // Track which cities and collections are expanded
+  const [expandedCities, setExpandedCities] = useState({});
+  const [expandedColls, setExpandedColls] = useState({});
 
   // Build the location tree from the DB
   useEffect(() => {
     async function loadTree() {
       try {
-        // Load all cities (L2)
         const citiesRes = await fetch('/api/locations/level/2');
         const cities = citiesRes.ok ? await citiesRes.json() : [];
 
@@ -42,8 +49,19 @@ export default function AdminListingsSitemap({ listings = [], selectedFilter, on
           return { ...city, collections: withAreas };
         }));
 
-        // Only show cities that have at least one collection
-        setTree(built.filter(c => c.collections.length > 0));
+        const filtered = built.filter(c => c.collections.length > 0);
+        setTree(filtered);
+
+        // Auto-expand cities that have listings
+        const autoExpand = {};
+        filtered.forEach(city => {
+          const hasListings = city.collections.some(coll =>
+            coll.areas.some(area => listings.some(l => l.locationId === area.id)) ||
+            listings.some(l => l.locationId === coll.id)
+          ) || listings.some(l => l.locationId === city.id);
+          if (hasListings) autoExpand[city.id] = true;
+        });
+        setExpandedCities(autoExpand);
       } catch (e) {
         console.error('Failed to load location tree', e);
       }
@@ -51,7 +69,6 @@ export default function AdminListingsSitemap({ listings = [], selectedFilter, on
     loadTree();
   }, []);
 
-  // Count listings for a given locationId (and all its descendants)
   function countForLocation(locId, allListings) {
     return allListings.filter(l => l.locationId === locId).length;
   }
@@ -59,9 +76,7 @@ export default function AdminListingsSitemap({ listings = [], selectedFilter, on
   function countForCity(city, allListings) {
     let count = 0;
     for (const coll of city.collections) {
-      for (const area of coll.areas) {
-        count += countForLocation(area.id, allListings);
-      }
+      for (const area of coll.areas) count += countForLocation(area.id, allListings);
       count += countForLocation(coll.id, allListings);
     }
     count += countForLocation(city.id, allListings);
@@ -70,11 +85,12 @@ export default function AdminListingsSitemap({ listings = [], selectedFilter, on
 
   function countForCollection(coll, allListings) {
     let count = countForLocation(coll.id, allListings);
-    for (const area of coll.areas) {
-      count += countForLocation(area.id, allListings);
-    }
+    for (const area of coll.areas) count += countForLocation(area.id, allListings);
     return count;
   }
+
+  const toggleCity = (id) => setExpandedCities(prev => ({ ...prev, [id]: !prev[id] }));
+  const toggleColl = (id) => setExpandedColls(prev => ({ ...prev, [id]: !prev[id] }));
 
   useEffect(() => {
     if (!popupUrl) return;
@@ -85,7 +101,6 @@ export default function AdminListingsSitemap({ listings = [], selectedFilter, on
 
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
   const closePreview = () => setPopupUrl(null);
-
   const totalCount = listings.length;
 
   return (
@@ -114,11 +129,22 @@ export default function AdminListingsSitemap({ listings = [], selectedFilter, on
 
         {tree.map((city) => {
           const cityCount = countForCity(city, listings);
+          const isCityOpen = !!expandedCities[city.id];
+
           return (
             <div key={city.id} className="admin-sitemap-branch">
-              {/* City level */}
+              {/* City level — clickable to expand/collapse */}
               <div className="admin-sitemap-level admin-sitemap-level--city">
                 <span className="admin-sitemap-sep">└</span>
+                <button
+                  type="button"
+                  className="admin-sitemap-toggle"
+                  onClick={() => toggleCity(city.id)}
+                  aria-expanded={isCityOpen}
+                  aria-label={`${isCityOpen ? 'Collapse' : 'Expand'} ${city.nameEn}`}
+                >
+                  <ChevronIcon open={isCityOpen} />
+                </button>
                 <button
                   type="button"
                   className={`admin-sitemap-filter ${selectedFilter === city.id ? 'active' : ''}`}
@@ -131,14 +157,25 @@ export default function AdminListingsSitemap({ listings = [], selectedFilter, on
                 </span>
               </div>
 
-              {/* Collection level */}
-              {city.collections.map((coll, ci) => {
+              {/* Collections — only shown when city is expanded */}
+              {isCityOpen && city.collections.map((coll, ci) => {
                 const collCount = countForCollection(coll, listings);
                 const isLastColl = ci === city.collections.length - 1;
+                const isCollOpen = !!expandedColls[coll.id];
+
                 return (
                   <div key={coll.id} className="admin-sitemap-branch admin-sitemap-branch--sub">
                     <div className="admin-sitemap-level admin-sitemap-level--collection">
                       <span className="admin-sitemap-sep">{isLastColl ? '└' : '├'}</span>
+                      <button
+                        type="button"
+                        className="admin-sitemap-toggle"
+                        onClick={() => toggleColl(coll.id)}
+                        aria-expanded={isCollOpen}
+                        aria-label={`${isCollOpen ? 'Collapse' : 'Expand'} ${coll.nameEn}`}
+                      >
+                        <ChevronIcon open={isCollOpen} />
+                      </button>
                       <button
                         type="button"
                         className={`admin-sitemap-filter ${selectedFilter === coll.id ? 'active' : ''}`}
@@ -151,8 +188,8 @@ export default function AdminListingsSitemap({ listings = [], selectedFilter, on
                       </span>
                     </div>
 
-                    {/* Neighborhood (area) level */}
-                    {coll.areas.length > 0 && (
+                    {/* Neighborhoods — only shown when collection is expanded */}
+                    {isCollOpen && coll.areas.length > 0 && (
                       <div className="admin-sitemap-level admin-sitemap-level--areas">
                         {coll.areas.map((area, ai) => {
                           const areaCount = countForLocation(area.id, listings);
@@ -166,9 +203,9 @@ export default function AdminListingsSitemap({ listings = [], selectedFilter, on
                                 onClick={() => onFilter?.(area.id)}
                               >
                                 {area.nameEn}
-                                <span className="admin-sitemap-count">
-                                  {areaCount === 0 ? '' : ` (${areaCount})`}
-                                </span>
+                                {areaCount > 0 && (
+                                  <span className="admin-sitemap-count"> ({areaCount})</span>
+                                )}
                               </button>
                             </div>
                           );

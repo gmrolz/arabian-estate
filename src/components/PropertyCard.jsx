@@ -10,7 +10,7 @@ import GoogleMapsModal from './GoogleMapsModal';
 
 const WHATSAPP_NUMBER = '201000257941';
 const PHONE_NUMBER = '+201000257941';
-const FALLBACK_IMG = 'https://placehold.co/600x400/e8e8e8/999?text=Arabian+Estate';
+const FALLBACK_IMG = 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/placeholder-listing-gwAks4ueAQVz8qfmqQpEYM.webp';
 
 function formatPriceShort(priceStr) {
     if (!priceStr || typeof priceStr !== 'string') return '';

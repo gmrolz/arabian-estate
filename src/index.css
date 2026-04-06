@@ -1315,15 +1315,24 @@ button {
 
 .listings-hub-card-placeholder {
   height: 180px;
-  background: var(--bg-surface);
+  background: url('https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/placeholder-listing-gwAks4ueAQVz8qfmqQpEYM.webp') center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.listings-hub-card-placeholder::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.35));
 }
 
 .listings-hub-card-icon {
   font-size: 3rem;
-  opacity: 0.5;
+  opacity: 0;
 }
 
 .listings-hub-card-body {
@@ -4032,6 +4041,21 @@ button {
 .admin-sitemap-area:hover {
   opacity: 0.85;
   text-decoration: underline;
+}
+.admin-sitemap-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: color var(--transition);
+}
+.admin-sitemap-toggle:hover {
+  color: var(--admin-gold);
 }
 .admin-sitemap-filter {
   font-size: inherit;
