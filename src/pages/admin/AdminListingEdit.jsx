@@ -438,26 +438,8 @@ export default function AdminListingEdit() {
         </section>
 
         <section className="admin-form-section">
-          <h2 className="admin-form-section-title">Location & details</h2>
+          <h2 className="admin-form-section-title">Location & Details</h2>
           <div className="admin-form-row two-cols">
-            <div>
-              <label>Location (website section)</label>
-              <select
-                className="admin-input"
-                value={getRegionFromAreaSlug(form.area_slug)}
-                onChange={(e) => {
-                  const region = e.target.value;
-                  const area_slug = region === 'cairo' ? 'new-capital' : region;
-                  setForm({ ...form, area_slug });
-                }}
-                title="Region where this listing appears"
-              >
-                {REGIONS.map((r) => (
-                  <option key={r.value} value={r.value}>{r.label}</option>
-                ))}
-              </select>
-              <span className="admin-form-hint-inline">Region (Cairo shows sub-area below)</span>
-            </div>
             <div>
               <label>Display order (position on page)</label>
               <input
@@ -474,47 +456,9 @@ export default function AdminListingEdit() {
               />
               <span className="admin-form-hint-inline">1 = first, 2 = second, etc.</span>
             </div>
-          </div>
-          {getRegionFromAreaSlug(form.area_slug) === 'cairo' && (
-            <div className="admin-form-row admin-form-row--sub">
-              <div>
-                <label>Cairo area</label>
-                <select
-                  className="admin-input"
-                  value={form.area_slug || 'new-capital'}
-                  onChange={(e) => setForm({ ...form, area_slug: e.target.value })}
-                >
-                  {CAIRO_SUB_AREAS.map((a) => (
-                    <option key={a.slug} value={a.slug}>{a.label}</option>
-                  ))}
-                </select>
-                <span className="admin-form-hint-inline">New Capital, New Cairo, or Mostakbal City</span>
-              </div>
-              <div />
-            </div>
-          )}
-          <div className="admin-form-row two-cols">
-            <div>
-              <label>Compound (AR)</label>
-              <input
-                className="admin-input"
-                value={form.project_ar || ''}
-                onChange={(e) => setForm({ ...form, project_ar: e.target.value })}
-                placeholder="المشروع / الكمباوند"
-              />
-            </div>
-            <div>
-              <label>Compound (EN)</label>
-              <input
-                className="admin-input"
-                value={form.project_en || ''}
-                onChange={(e) => setForm({ ...form, project_en: e.target.value })}
-                placeholder="Project / compound name"
-              />
-            </div>
+            <div />
           </div>
           <div className="admin-form-row">
-            <label style={{ fontWeight: 600, marginBottom: 8, display: 'block' }}>Location Hierarchy</label>
             <CascadingLocationSelector
               locationId={form.locationId || null}
               compound={form.compound_name || ''}
@@ -523,8 +467,9 @@ export default function AdminListingEdit() {
                   ...prev,
                   locationId,
                   compound_name: compound,
-                  // Auto-derive the location text from the hierarchy
                   location: locationLabel || prev.location || '',
+                  // Keep area_slug in sync for backwards compatibility
+                  area_slug: prev.area_slug || 'new-capital',
                 }))
               }
             />
