@@ -68,3 +68,10 @@
 - [x] Update listingsRouter to accept locationId and compoundName
 - [x] Update listingsApi.js to pass locationId and compoundName
 - [x] Replace old LocationSelector with CascadingLocationSelector in admin form
+
+## Location Hierarchy Rebuild
+- [ ] Clear old location data and reseed with correct Egyptian real estate regions
+- [ ] Level 1: Regions (East Cairo, West Cairo, North Coast, Red Sea, etc.)
+- [ ] Level 2: Areas (New Cairo, New Capital, Mostakbal, Shorouk, etc.)
+- [ ] Level 3: Sub-areas / Neighborhoods (all detailed areas from previous chat)
+- [ ] Update CascadingLocationSelector labels to match new structure

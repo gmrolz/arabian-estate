@@ -177,7 +177,7 @@ export function CascadingLocationSelector({ locationId, compound = '', onChange 
       {/* Level 1 & 2 */}
       <div style={rowStyle}>
         <div>
-          <label style={labelStyle}>Governorate (Level 1)</label>
+          <label style={labelStyle}>Governorate — المحافظة</label>
           <select
             style={selectStyle}
             value={sel1 || ''}
@@ -190,7 +190,7 @@ export function CascadingLocationSelector({ locationId, compound = '', onChange 
           </select>
         </div>
         <div>
-          <label style={labelStyle}>City (Level 2)</label>
+          <label style={labelStyle}>City — المدينة</label>
           <select
             style={{ ...selectStyle, opacity: level2List.length ? 1 : 0.5 }}
             value={sel2 || ''}
@@ -208,28 +208,28 @@ export function CascadingLocationSelector({ locationId, compound = '', onChange 
       {/* Level 3 & 4 */}
       <div style={rowStyle}>
         <div>
-          <label style={labelStyle}>District (Level 3)</label>
+          <label style={labelStyle}>Collection — المنطقة (e.g. East Cairo, North Coast)</label>
           <select
             style={{ ...selectStyle, opacity: level3List.length ? 1 : 0.5 }}
             value={sel3 || ''}
             onChange={e => handleLevel3(e.target.value)}
             disabled={!level3List.length}
           >
-            <option value="">— Select District —</option>
+            <option value="">— Select Collection —</option>
             {level3List.map(l => (
               <option key={l.id} value={l.id}>{l.nameEn} / {l.nameAr}</option>
             ))}
           </select>
         </div>
         <div>
-          <label style={labelStyle}>Sub-area (Level 4)</label>
+          <label style={labelStyle}>Neighborhood — الحي (e.g. New Capital, Madinaty)</label>
           <select
             style={{ ...selectStyle, opacity: level4List.length ? 1 : 0.5 }}
             value={sel4 || ''}
             onChange={e => handleLevel4(e.target.value)}
             disabled={!level4List.length}
           >
-            <option value="">— Select Sub-area —</option>
+            <option value="">— Select Neighborhood —</option>
             {level4List.map(l => (
               <option key={l.id} value={l.id}>{l.nameEn} / {l.nameAr}</option>
             ))}
@@ -239,7 +239,7 @@ export function CascadingLocationSelector({ locationId, compound = '', onChange 
 
       {/* Level 5 – Manual Compound Name */}
       <div>
-        <label style={labelStyle}>Compound Name (Level 5 – enter manually)</label>
+        <label style={labelStyle}>Compound Name — اسم الكمباوند (enter manually)</label>
         <input
           type="text"
           className="admin-input"

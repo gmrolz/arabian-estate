@@ -1,0 +1,10 @@
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+const __dirname = dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: join(__dirname, '..', '.env') });
+const conn = await mysql.createConnection(process.env.DATABASE_URL);
+const [rows] = await conn.query('SELECT slug, level FROM locations WHERE level <= 2 ORDER BY level, slug');
+for (const r of rows) console.log(`L${r.level}: ${r.slug}`);
+await conn.end();
