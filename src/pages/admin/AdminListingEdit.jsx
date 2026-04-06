@@ -700,52 +700,7 @@ export default function AdminListingEdit() {
               </div>
             </div>
           )}
-          
-          <fieldset className="admin-form-row">
-            <legend className="admin-form-label">What to show on frontend:</legend>
-            <div className="admin-form-checkboxes" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <label className="admin-checkbox">
-                <input
-                  type="checkbox"
-                  checked={form.show_price ?? true}
-                  onChange={(e) => setForm({ ...form, show_price: e.target.checked })}
-                />
-                Show Price
-              </label>
-              <label className="admin-checkbox">
-                <input
-                  type="checkbox"
-                  checked={form.show_downpayment ?? true}
-                  onChange={(e) => setForm({ ...form, show_downpayment: e.target.checked })}
-                />
-                Show Pay Now
-              </label>
-              <label className="admin-checkbox">
-                <input
-                  type="checkbox"
-                  checked={form.show_monthly ?? true}
-                  onChange={(e) => setForm({ ...form, show_monthly: e.target.checked })}
-                />
-                Show Monthly Installment
-              </label>
-              <label className="admin-checkbox">
-                <input
-                  type="checkbox"
-                  checked={form.show_full_price ?? true}
-                  onChange={(e) => setForm({ ...form, show_full_price: e.target.checked })}
-                />
-                Show Full Price
-              </label>
-              <label className="admin-checkbox">
-                <input
-                  type="checkbox"
-                  checked={form.show_compound ?? true}
-                  onChange={(e) => setForm({ ...form, show_compound: e.target.checked })}
-                />
-                Show Compound Name
-              </label>
-            </div>
-          </fieldset>
+
         </section>
           <div className="admin-form-row two-cols">
             <div>
