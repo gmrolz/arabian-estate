@@ -1,0 +1,120 @@
+name_en,name_ar,slug,level,parent_slug
+Egypt,مصر,egypt,1,
+Cairo,القاهرة,cairo,2,egypt
+Giza,الجيزة,giza,2,egypt
+New Cairo,مدينة القاهرة الجديدة,new-cairo,2,egypt
+6th of October,مدينة السادس من أكتوبر,6th-october,2,egypt
+Helwan,حلوان,helwan,2,egypt
+Suez,السويس,suez,2,egypt
+Ismailia,الإسماعيلية,ismailia,2,egypt
+Port Said,بورسعيد,port-said,2,egypt
+Damietta,دمياط,damietta,2,egypt
+Mansoura,المنصورة,mansoura,2,egypt
+Tanta,طنطا,tanta,2,egypt
+Alexandria,الإسكندرية,alexandria,2,egypt
+Kafr El-Sheikh,كفر الشيخ,kafr-el-sheikh,2,egypt
+Beheira,البحيرة,beheira,2,egypt
+Matrouh,مطروح,matrouh,2,egypt
+Marsa Matruh,مرسى مطروح,marsa-matruh,3,matrouh
+North Coast,الساحل الشمالي,north-coast,3,matrouh
+Sidi Abdel Rahman,سيدي عبد الرحمن,sidi-abdel-rahman,3,matrouh
+Ain Sokhna,عين السخنة,ain-sokhna,3,suez
+Sokhna,السخنة,sokhna,3,suez
+Galala,الجلالة,galala,3,suez
+Red Sea,البحر الأحمر,red-sea,2,egypt
+Hurghada,الغردقة,hurghada,2,egypt
+Sharm El-Sheikh,شرم الشيخ,sharm-el-sheikh,2,egypt
+Dahab,داهب,dahab,2,egypt
+Taba,طابا,taba,2,egypt
+Luxor,الأقصر,luxor,2,egypt
+Aswan,أسوان,aswan,2,egypt
+Qena,قنا,qena,2,egypt
+Sohag,سوهاج,sohag,2,egypt
+Asyut,أسيوط,asyut,2,egypt
+Minya,المنيا,minya,2,egypt
+Beni Suef,بني سويف,beni-suef,2,egypt
+Fayoum,الفيوم,fayoum,2,egypt
+Maadi,المعادي,maadi,3,cairo
+Heliopolis,مصر الجديدة,heliopolis,3,cairo
+Zamalek,الزمالك,zamalek,3,cairo
+Dokki,الدقي,dokki,3,cairo
+Giza City,مدينة الجيزة,giza-city,3,giza
+Mohandessin,المهندسين,mohandessin,3,giza
+Agouza,العجوزة,agouza,3,giza
+Sheikh Zayed,الشيخ زايد,sheikh-zayed,3,giza
+Haram,الهرم,haram,3,giza
+Faisal,فيصل,faisal,3,giza
+Nasr City,مدينة نصر,nasr-city,3,cairo
+Masr El-Gedida,مصر القديمة,masr-el-gedida,3,cairo
+Abbasiya,العباسية,abbasiya,3,cairo
+Ain Shams,عين شمس,ain-shams,3,cairo
+Helwan City,مدينة حلوان,helwan-city,3,helwan
+Mostakbal City,مدينة المستقبل,mostakbal-city,3,cairo
+New Administrative Capital,العاصمة الإدارية الجديدة,new-administrative-capital,3,cairo
+East Cairo,شرق القاهرة,east-cairo,3,cairo
+New Capital Downtown,وسط العاصمة,new-capital-downtown,4,new-administrative-capital
+New Capital Residential,السكنية,new-capital-residential,4,new-administrative-capital
+New Capital Business,المنطقة التجارية,new-capital-business,4,new-administrative-capital
+Maadi Sarai,سراي المعادي,maadi-sarai,4,maadi
+Maadi Degla,دجلة المعادي,maadi-degla,4,maadi
+Maadi Heights,ارتفاعات المعادي,maadi-heights,4,maadi
+Heliopolis Heights,ارتفاعات مصر الجديدة,heliopolis-heights,4,heliopolis
+Heliopolis Centre,وسط مصر الجديدة,heliopolis-centre,4,heliopolis
+Zamalek Island,جزيرة الزمالك,zamalek-island,4,zamalek
+Dokki Residences,سكنيات الدقي,dokki-residences,4,dokki
+Sheikh Zayed City,مدينة الشيخ زايد,sheikh-zayed-city,4,sheikh-zayed
+Zayed Dunes,كثبان الشيخ زايد,zayed-dunes,4,sheikh-zayed
+Zayed Heights,ارتفاعات الشيخ زايد,zayed-heights,4,sheikh-zayed
+Haram City,مدينة الهرم,haram-city,4,haram
+Faisal City,مدينة فيصل,faisal-city,4,faisal
+Nasr City Downtown,وسط مدينة نصر,nasr-city-downtown,4,nasr-city
+Nasr City Heights,ارتفاعات مدينة نصر,nasr-city-heights,4,nasr-city
+6th October City,مدينة السادس من أكتوبر,6th-october-city,4,6th-october
+6th October Compounds,مجمعات السادس من أكتوبر,6th-october-compounds,4,6th-october
+October Gardens,حدائق أكتوبر,october-gardens,4,6th-october
+Mostakbal Downtown,وسط المستقبل,mostakbal-downtown,4,mostakbal-city
+Mostakbal Compounds,مجمعات المستقبل,mostakbal-compounds,4,mostakbal-city
+Hurghada Downtown,وسط الغردقة,hurghada-downtown,4,hurghada
+Hurghada Beach,شاطئ الغردقة,hurghada-beach,4,hurghada
+Hurghada Marina,مارينا الغردقة,hurghada-marina,4,hurghada
+North Coast Downtown,وسط الساحل الشمالي,north-coast-downtown,4,north-coast
+North Coast Beach,شاطئ الساحل الشمالي,north-coast-beach,4,north-coast
+Ain Sokhna Downtown,وسط عين السخنة,ain-sokhna-downtown,4,ain-sokhna
+Ain Sokhna Beach,شاطئ عين السخنة,ain-sokhna-beach,4,ain-sokhna
+Sokhna Downtown,وسط السخنة,sokhna-downtown,4,sokhna
+Sokhna Beach,شاطئ السخنة,sokhna-beach,4,sokhna
+Galala Downtown,وسط الجلالة,galala-downtown,4,galala
+Galala Beach,شاطئ الجلالة,galala-beach,4,galala
+Sharm El-Sheikh Downtown,وسط شرم الشيخ,sharm-el-sheikh-downtown,4,sharm-el-sheikh
+Sharm El-Sheikh Beach,شاطئ شرم الشيخ,sharm-el-sheikh-beach,4,sharm-el-sheikh
+Luxor Downtown,وسط الأقصر,luxor-downtown,4,luxor
+Luxor West Bank,الضفة الغربية,luxor-west-bank,4,luxor
+Aswan Downtown,وسط أسوان,aswan-downtown,4,aswan
+Aswan Nile,نيل أسوان,aswan-nile,4,aswan
+Hyde Park,هايد بارك,hyde-park,5,east-cairo
+Palm Hills,بالم هيلز,palm-hills,5,east-cairo
+Eastown,إيستاون,eastown,5,east-cairo
+Taj City,تاج سيتي,taj-city,5,east-cairo
+Beverly Hills,بيفرلي هيلز,beverly-hills,5,east-cairo
+Madinaty,مدينتي,madinaty,5,east-cairo
+El Patio,الباتيو,el-patio,5,east-cairo
+Zahraa El Maadi,زهراء المعادي,zahraa-el-maadi,5,maadi
+Degla,دجلة,degla,5,maadi
+Katameya Heights,ارتفاعات كتاميا,katameya-heights,5,maadi
+Katameya Dunes,كثبان كتاميا,katameya-dunes,5,maadi
+Uptown Cairo,أبتاون كايرو,uptown-cairo,5,nasr-city
+Heliopolis Palace,قصر مصر الجديدة,heliopolis-palace,5,heliopolis
+Heliopolis Park,بارك مصر الجديدة,heliopolis-park,5,heliopolis
+Zamalek Heights,ارتفاعات الزمالك,zamalek-heights,5,zamalek
+Dokki Park,بارك الدقي,dokki-park,5,dokki
+Zayed Dunes Compounds,مجمعات كثبان الشيخ زايد,zayed-dunes-compounds,5,zayed-dunes
+Zayed Heights Compounds,مجمعات ارتفاعات الشيخ زايد,zayed-heights-compounds,5,zayed-heights
+October Gardens Compounds,مجمعات حدائق أكتوبر,october-gardens-compounds,5,october-gardens
+Mostakbal City Compounds,مجمعات مدينة المستقبل,mostakbal-city-compounds,5,mostakbal-compounds
+Hurghada Beach Resorts,منتجعات شاطئ الغردقة,hurghada-beach-resorts,5,hurghada-beach
+Hurghada Marina Resorts,منتجعات مارينا الغردقة,hurghada-marina-resorts,5,hurghada-marina
+North Coast Beach Resorts,منتجعات شاطئ الساحل الشمالي,north-coast-beach-resorts,5,north-coast-beach
+Ain Sokhna Beach Resorts,منتجعات شاطئ عين السخنة,ain-sokhna-beach-resorts,5,ain-sokhna-beach
+Sokhna Beach Resorts,منتجعات شاطئ السخنة,sokhna-beach-resorts,5,sokhna-beach
+Galala Beach Resorts,منتجعات شاطئ الجلالة,galala-beach-resorts,5,galala-beach
+Sharm El-Sheikh Resorts,منتجعات شرم الشيخ,sharm-el-sheikh-resorts,5,sharm-el-sheikh-beach

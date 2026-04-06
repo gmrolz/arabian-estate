@@ -53,3 +53,9 @@
 - [ ] Add location filtering to listing pages
 - [ ] Test and verify location system works end-to-end
 - [x] Add location management to admin dashboard (view, edit, add locations)
+
+## Compound Management System
+- [ ] Create admin compounds management page with autocomplete search
+- [ ] Add compound search and create API endpoints
+- [ ] Integrate compound selector into listing form with autocomplete
+- [ ] Test and verify compound management works end-to-end
