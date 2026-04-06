@@ -1,37 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 /**
  * CascadingLocationSelector
- * 4 cascading dropdowns (Levels 1–4) + manual text input for Level 5 (Compound)
+ * 3 cascading dropdowns (Levels 2–4) + manual text input for Level 5 (Compound)
+ * Level 1 (Egypt) is skipped — Cities load directly on mount.
  *
  * Props:
- *   locationId   – currently selected location ID (level 1–4)
+ *   locationId   – currently selected location ID (level 2–4)
  *   compound     – manual compound name (level 5 text)
  *   onChange     – ({ locationId, compound }) => void
  */
 export function CascadingLocationSelector({ locationId, compound = '', onChange }) {
-  const [level1List, setLevel1List] = useState([]);
-  const [level2List, setLevel2List] = useState([]);
-  const [level3List, setLevel3List] = useState([]);
-  const [level4List, setLevel4List] = useState([]);
+  const [cityList, setCityList]       = useState([]); // Level 2
+  const [collList, setCollList]       = useState([]); // Level 3
+  const [areaList, setAreaList]       = useState([]); // Level 4
 
-  const [sel1, setSel1] = useState(null); // Governorate id
-  const [sel2, setSel2] = useState(null); // City id
-  const [sel3, setSel3] = useState(null); // District id
-  const [sel4, setSel4] = useState(null); // Sub-area id
+  const [selCity, setSelCity] = useState(null);
+  const [selColl, setSelColl] = useState(null);
+  const [selArea, setSelArea] = useState(null);
 
   const [compoundName, setCompoundName] = useState(compound || '');
-  const [initialized, setInitialized] = useState(false);
+  const [initialized, setInitialized]   = useState(false);
 
-  // Load level 1 (Governorates) on mount
+  // Load all Level-2 cities on mount (children of Egypt, id=39)
   useEffect(() => {
-    fetch('/api/locations/level/1')
+    fetch('/api/locations/39/children')
       .then(r => r.ok ? r.json() : [])
-      .then(setLevel1List)
+      .then(setCityList)
       .catch(() => {});
   }, []);
 
-  // When locationId changes externally, resolve the hierarchy
+  // When locationId changes externally, resolve the full hierarchy
   useEffect(() => {
     if (!locationId || initialized) return;
     resolveHierarchy(locationId);
@@ -48,46 +47,25 @@ export function CascadingLocationSelector({ locationId, compound = '', onChange 
       if (!res.ok) return;
       const loc = await res.json();
 
-      if (loc.level === 1) {
-        setSel1(loc.id);
-        loadChildren(loc.id, setLevel2List);
-      } else if (loc.level === 2) {
-        setSel2(loc.id);
-        loadChildren(loc.id, setLevel3List);
-        // Load parent chain
-        if (loc.parentId) {
-          const p1 = await fetch(`/api/locations/${loc.parentId}`).then(r => r.json());
-          setSel1(p1.id);
-          loadChildren(p1.id, setLevel2List);
-        }
+      if (loc.level === 2) {
+        setSelCity(loc.id);
+        loadChildren(loc.id, setCollList);
       } else if (loc.level === 3) {
-        setSel3(loc.id);
-        loadChildren(loc.id, setLevel4List);
+        setSelColl(loc.id);
+        loadChildren(loc.id, setAreaList);
         if (loc.parentId) {
-          const p2 = await fetch(`/api/locations/${loc.parentId}`).then(r => r.json());
-          setSel2(p2.id);
-          loadChildren(p2.id, setLevel3List);
-          if (p2.parentId) {
-            const p1 = await fetch(`/api/locations/${p2.parentId}`).then(r => r.json());
-            setSel1(p1.id);
-            loadChildren(p1.id, setLevel2List);
-          }
+          setSelCity(loc.parentId);
+          loadChildren(loc.parentId, setCollList);
         }
       } else if (loc.level === 4) {
-        setSel4(loc.id);
+        setSelArea(loc.id);
         if (loc.parentId) {
           const p3 = await fetch(`/api/locations/${loc.parentId}`).then(r => r.json());
-          setSel3(p3.id);
-          loadChildren(p3.id, setLevel4List);
+          setSelColl(p3.id);
+          loadChildren(p3.id, setAreaList);
           if (p3.parentId) {
-            const p2 = await fetch(`/api/locations/${p3.parentId}`).then(r => r.json());
-            setSel2(p2.id);
-            loadChildren(p2.id, setLevel3List);
-            if (p2.parentId) {
-              const p1 = await fetch(`/api/locations/${p2.parentId}`).then(r => r.json());
-              setSel1(p1.id);
-              loadChildren(p1.id, setLevel2List);
-            }
+            setSelCity(p3.parentId);
+            loadChildren(p3.parentId, setCollList);
           }
         }
       }
@@ -104,42 +82,33 @@ export function CascadingLocationSelector({ locationId, compound = '', onChange 
       .catch(() => {});
   }
 
-  function handleLevel1(id) {
+  function handleCity(id) {
     const numId = id ? Number(id) : null;
-    setSel1(numId);
-    setSel2(null); setSel3(null); setSel4(null);
-    setLevel2List([]); setLevel3List([]); setLevel4List([]);
-    if (numId) loadChildren(numId, setLevel2List);
+    setSelCity(numId);
+    setSelColl(null); setSelArea(null);
+    setCollList([]); setAreaList([]);
+    if (numId) loadChildren(numId, setCollList);
     onChange({ locationId: numId, compound: compoundName });
   }
 
-  function handleLevel2(id) {
+  function handleColl(id) {
     const numId = id ? Number(id) : null;
-    setSel2(numId);
-    setSel3(null); setSel4(null);
-    setLevel3List([]); setLevel4List([]);
-    if (numId) loadChildren(numId, setLevel3List);
-    onChange({ locationId: numId || sel1, compound: compoundName });
+    setSelColl(numId);
+    setSelArea(null);
+    setAreaList([]);
+    if (numId) loadChildren(numId, setAreaList);
+    onChange({ locationId: numId || selCity, compound: compoundName });
   }
 
-  function handleLevel3(id) {
+  function handleArea(id) {
     const numId = id ? Number(id) : null;
-    setSel3(numId);
-    setSel4(null);
-    setLevel4List([]);
-    if (numId) loadChildren(numId, setLevel4List);
-    onChange({ locationId: numId || sel2 || sel1, compound: compoundName });
-  }
-
-  function handleLevel4(id) {
-    const numId = id ? Number(id) : null;
-    setSel4(numId);
-    onChange({ locationId: numId || sel3 || sel2 || sel1, compound: compoundName });
+    setSelArea(numId);
+    onChange({ locationId: numId || selColl || selCity, compound: compoundName });
   }
 
   function handleCompound(val) {
     setCompoundName(val);
-    const currentLocId = sel4 || sel3 || sel2 || sel1 || locationId;
+    const currentLocId = selArea || selColl || selCity || locationId;
     onChange({ locationId: currentLocId, compound: val });
   }
 
@@ -174,67 +143,51 @@ export function CascadingLocationSelector({ locationId, compound = '', onChange 
 
   return (
     <div className="cascading-location-selector">
-      {/* Level 1 & 2 */}
+      {/* Level 2 & 3 */}
       <div style={rowStyle}>
         <div>
-          <label style={labelStyle}>Governorate — المحافظة</label>
+          <label style={labelStyle}>City — المدينة</label>
           <select
             style={selectStyle}
-            value={sel1 || ''}
-            onChange={e => handleLevel1(e.target.value)}
+            value={selCity || ''}
+            onChange={e => handleCity(e.target.value)}
           >
-            <option value="">— Select Governorate —</option>
-            {level1List.map(l => (
+            <option value="">— Select City —</option>
+            {cityList.map(l => (
               <option key={l.id} value={l.id}>{l.nameEn} / {l.nameAr}</option>
             ))}
           </select>
         </div>
         <div>
-          <label style={labelStyle}>City — المدينة</label>
+          <label style={labelStyle}>Collection — المنطقة (e.g. East Cairo, North Coast)</label>
           <select
-            style={{ ...selectStyle, opacity: level2List.length ? 1 : 0.5 }}
-            value={sel2 || ''}
-            onChange={e => handleLevel2(e.target.value)}
-            disabled={!level2List.length}
+            style={{ ...selectStyle, opacity: collList.length ? 1 : 0.5 }}
+            value={selColl || ''}
+            onChange={e => handleColl(e.target.value)}
+            disabled={!collList.length}
           >
-            <option value="">— Select City —</option>
-            {level2List.map(l => (
+            <option value="">— Select Collection —</option>
+            {collList.map(l => (
               <option key={l.id} value={l.id}>{l.nameEn} / {l.nameAr}</option>
             ))}
           </select>
         </div>
       </div>
 
-      {/* Level 3 & 4 */}
-      <div style={rowStyle}>
-        <div>
-          <label style={labelStyle}>Collection — المنطقة (e.g. East Cairo, North Coast)</label>
-          <select
-            style={{ ...selectStyle, opacity: level3List.length ? 1 : 0.5 }}
-            value={sel3 || ''}
-            onChange={e => handleLevel3(e.target.value)}
-            disabled={!level3List.length}
-          >
-            <option value="">— Select Collection —</option>
-            {level3List.map(l => (
-              <option key={l.id} value={l.id}>{l.nameEn} / {l.nameAr}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label style={labelStyle}>Neighborhood — الحي (e.g. New Capital, Madinaty)</label>
-          <select
-            style={{ ...selectStyle, opacity: level4List.length ? 1 : 0.5 }}
-            value={sel4 || ''}
-            onChange={e => handleLevel4(e.target.value)}
-            disabled={!level4List.length}
-          >
-            <option value="">— Select Neighborhood —</option>
-            {level4List.map(l => (
-              <option key={l.id} value={l.id}>{l.nameEn} / {l.nameAr}</option>
-            ))}
-          </select>
-        </div>
+      {/* Level 4 */}
+      <div style={{ marginBottom: '12px' }}>
+        <label style={labelStyle}>Neighborhood — الحي (e.g. New Capital, Madinaty)</label>
+        <select
+          style={{ ...selectStyle, opacity: areaList.length ? 1 : 0.5 }}
+          value={selArea || ''}
+          onChange={e => handleArea(e.target.value)}
+          disabled={!areaList.length}
+        >
+          <option value="">— Select Neighborhood —</option>
+          {areaList.map(l => (
+            <option key={l.id} value={l.id}>{l.nameEn} / {l.nameAr}</option>
+          ))}
+        </select>
       </div>
 
       {/* Level 5 – Manual Compound Name */}
