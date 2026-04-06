@@ -199,6 +199,9 @@ export async function controlListings(_siteId = null) {
         sort_order: row.sortOrder ?? row.sort_order ?? 0,
         active: row.active === 1 || row.active === true,
         images: imgObjects,
+        locationId: row.locationId ?? row.location_id ?? null,
+        compoundName: row.compoundName ?? row.compound_name ?? '',
+        mapsUrl: row.mapsUrl ?? row.maps_url ?? '',
       };
     });
     return { data: list, error: null };

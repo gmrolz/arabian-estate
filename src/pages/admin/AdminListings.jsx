@@ -102,8 +102,14 @@ export default function AdminListings() {
   const groupedListings = useMemo(() => {
     const groups = {};
     filteredListings.forEach(l => {
-      const node = locationMap[l.locationId];
-      const label = node ? (node.nameEn || node.nameAr || `Location ${l.locationId}`) : 'Other';
+      let label = 'All Listings';
+      if (l.locationId && locationMap[l.locationId]) {
+        const node = locationMap[l.locationId];
+        label = node.nameEn || node.nameAr || `Location ${l.locationId}`;
+      } else if (l.locationId) {
+        // locationMap not loaded yet — use area_slug as fallback
+        label = l.area_slug || 'Other';
+      }
       if (!groups[label]) groups[label] = [];
       groups[label].push(l);
     });
