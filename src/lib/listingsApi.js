@@ -234,6 +234,7 @@ export async function upsertListing(listing) {
       delivery: listing.delivery ?? '',
       featured: !!listing.featured,
       areaSlug: listing.area_slug ?? listing.areaSlug ?? 'new-capital',
+      mapsUrl: listing.maps_url ?? listing.mapsUrl ?? '',
       sortOrder: listing.sort_order ?? listing.sortOrder ?? 0,
       images: listing.images
         ? (listing.images || []).map((img) => typeof img === 'string' ? img : img?.url).filter(Boolean)
@@ -272,6 +273,7 @@ export async function upsertListing(listing) {
         delivery: payload.delivery,
         featured: payload.featured,
         area_slug: payload.areaSlug,
+        maps_url: payload.mapsUrl,
         sort_order: payload.sortOrder,
       },
       error: null,

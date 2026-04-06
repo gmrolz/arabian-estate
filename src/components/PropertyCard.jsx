@@ -6,6 +6,7 @@ import { hasSupabase } from '../lib/supabase';
 import { trackEvent } from '../lib/listingsApi';
 import { trackLeadConversion } from '../lib/conversions';
 import { formatNumberReadable } from '../lib/format';
+import GoogleMapsModal from './GoogleMapsModal';
 
 const WHATSAPP_NUMBER = '201000257941';
 const PHONE_NUMBER = '+201000257941';
@@ -163,7 +164,10 @@ export default function PropertyCard({ listing, featured = false }) {
         images, location, title, id: listingId,
         show_downpayment = true, show_monthly = true,
         show_full_price = false, show_annual = false, show_compound = true, annual_payment,
+        maps_url, mapsUrl,
     } = listing;
+    const resolvedMapsUrl = maps_url || mapsUrl || null;
+    const [showMap, setShowMap] = useState(false);
 
     useEffect(() => {
         if (!listingId || !hasSupabase() || viewTracked.current) return;
@@ -308,7 +312,26 @@ export default function PropertyCard({ listing, featured = false }) {
                 </div>
             </div>
 
+            {showMap && resolvedMapsUrl && (
+                <GoogleMapsModal url={resolvedMapsUrl} onClose={() => setShowMap(false)} />
+            )}
             <div className="card-footer">
+                {resolvedMapsUrl && (
+                    <button
+                        className="btn-map"
+                        onClick={() => {
+                            setShowMap(true);
+                            if (listingId && hasSupabase()) trackEvent(listingId, 'view_map', {}, listing.site_id ?? siteId);
+                        }}
+                        title="View on Map"
+                    >
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        Map
+                    </button>
+                )}
                 <a
                     href={waLink}
                     target="_blank"

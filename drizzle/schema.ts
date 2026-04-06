@@ -58,6 +58,7 @@ export const listings = mysqlTable("listings", {
   showCompound: int("showCompound").notNull().default(1),
   featured: int("featured").notNull().default(0),
   areaSlug: varchar("areaSlug", { length: 64 }).notNull().default("new-capital"),
+  mapsUrl: text("mapsUrl"), // Google Maps embed/share URL
   images: text("images"), // JSON array of image URLs
   sortOrder: int("sortOrder").notNull().default(0),
   active: int("active").notNull().default(1),

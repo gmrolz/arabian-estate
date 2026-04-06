@@ -82,13 +82,33 @@ export function CascadingLocationSelector({ locationId, compound = '', onChange 
       .catch(() => {});
   }
 
+  // Build a human-readable location string from current selections
+  function buildLocationLabel(cityId, collId, areaId, compound) {
+    const parts = [];
+    if (areaId) {
+      const a = areaList.find(l => l.id === areaId);
+      if (a) parts.push(a.nameEn);
+    }
+    if (collId) {
+      const c = collList.find(l => l.id === collId);
+      if (c) parts.push(c.nameEn);
+    }
+    if (cityId) {
+      const ci = cityList.find(l => l.id === cityId);
+      if (ci) parts.push(ci.nameEn);
+    }
+    if (compound) parts.unshift(compound);
+    return parts.join(', ');
+  }
+
   function handleCity(id) {
     const numId = id ? Number(id) : null;
     setSelCity(numId);
     setSelColl(null); setSelArea(null);
     setCollList([]); setAreaList([]);
     if (numId) loadChildren(numId, setCollList);
-    onChange({ locationId: numId, compound: compoundName });
+    const label = buildLocationLabel(numId, null, null, compoundName);
+    onChange({ locationId: numId, compound: compoundName, locationLabel: label });
   }
 
   function handleColl(id) {
@@ -97,19 +117,22 @@ export function CascadingLocationSelector({ locationId, compound = '', onChange 
     setSelArea(null);
     setAreaList([]);
     if (numId) loadChildren(numId, setAreaList);
-    onChange({ locationId: numId || selCity, compound: compoundName });
+    const label = buildLocationLabel(selCity, numId, null, compoundName);
+    onChange({ locationId: numId || selCity, compound: compoundName, locationLabel: label });
   }
 
   function handleArea(id) {
     const numId = id ? Number(id) : null;
     setSelArea(numId);
-    onChange({ locationId: numId || selColl || selCity, compound: compoundName });
+    const label = buildLocationLabel(selCity, selColl, numId, compoundName);
+    onChange({ locationId: numId || selColl || selCity, compound: compoundName, locationLabel: label });
   }
 
   function handleCompound(val) {
     setCompoundName(val);
     const currentLocId = selArea || selColl || selCity || locationId;
-    onChange({ locationId: currentLocId, compound: val });
+    const label = buildLocationLabel(selCity, selColl, selArea, val);
+    onChange({ locationId: currentLocId, compound: val, locationLabel: label });
   }
 
   const selectStyle = {

@@ -40,6 +40,7 @@ const createListingSchema = z.object({
   delivery: z.string().default(""),
   featured: z.boolean().default(false),
   areaSlug: z.string().default("new-capital"),
+  mapsUrl: z.string().optional().default(""),
   images: z.union([z.string(), z.array(z.string())]).optional(),
   sortOrder: z.number().int().default(0),
   active: z.boolean().default(true),
@@ -70,6 +71,7 @@ const updateListingSchema = z.object({
   delivery: z.string().optional(),
   featured: z.boolean().optional(),
   areaSlug: z.string().optional(),
+  mapsUrl: z.string().optional(),
   images: z.union([z.string(), z.array(z.string())]).optional(),
   sortOrder: z.number().int().optional(),
   active: z.boolean().optional(),
@@ -215,6 +217,7 @@ export const listingsRouter = router({
         featured: input.featured ? 1 : 0,
         active: input.active ? 1 : 0,
         areaSlug: input.areaSlug,
+        mapsUrl: input.mapsUrl ?? "",
         images: serializeImages(input.images),
         sortOrder: input.sortOrder,
       });

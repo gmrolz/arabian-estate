@@ -132,6 +132,7 @@ export default function AdminListingEdit() {
         location: '',
         locationId: null,
         compound_name: '',
+        maps_url: '',
         unit_type: 'Apartment',
         area: '',
         rooms: '',
@@ -206,6 +207,7 @@ export default function AdminListingEdit() {
     location: form?.location || null,
     locationId: form?.locationId || null,
     compound_name: form?.compound_name || null,
+    maps_url: form?.maps_url || '',
     unit_type: form?.unit_type || 'Apartment',
     area: form?.area ? Number(form.area) : null,
     rooms: form?.rooms ? Number(form.rooms) : null,
@@ -516,9 +518,29 @@ export default function AdminListingEdit() {
             <CascadingLocationSelector
               locationId={form.locationId || null}
               compound={form.compound_name || ''}
-              onChange={({ locationId, compound }) =>
-                setForm({ ...form, locationId, compound_name: compound })
+              onChange={({ locationId, compound, locationLabel }) =>
+                setForm(prev => ({
+                  ...prev,
+                  locationId,
+                  compound_name: compound,
+                  // Auto-derive the location text from the hierarchy
+                  location: locationLabel || prev.location || '',
+                }))
               }
+            />
+          </div>
+          <div className="admin-form-row">
+            <label style={{ fontWeight: 600, marginBottom: 4, display: 'block' }}>
+              🗺️ Google Maps URL
+              <span style={{ fontWeight: 400, fontSize: 12, color: '#718096', marginLeft: 8 }}>Paste a Google Maps share link — shows as an in-site popup</span>
+            </label>
+            <input
+              type="url"
+              className="admin-input"
+              value={form.maps_url || ''}
+              onChange={(e) => setForm({ ...form, maps_url: e.target.value })}
+              placeholder="https://maps.google.com/maps?q=..."
+              style={{ width: '100%' }}
             />
           </div>
           <div className="admin-form-row grid-cols">
