@@ -237,10 +237,10 @@ export default function PropertyCard({ listing, featured = false }) {
                 <div className="card-pricing">
                     {(() => {
                         const hasPricingToShow = 
-                            (show_price && show_downpayment && downpayment) ||
-                            (show_price && show_monthly && monthly_inst) ||
-                            (show_price && show_full_price && price) ||
-                            (show_price && annual_payment);
+                            (show_downpayment && downpayment) ||
+                            (show_monthly && monthly_inst) ||
+                            (show_full_price && price) ||
+                            (annual_payment);
 
                         if (!hasPricingToShow) {
                             return (
