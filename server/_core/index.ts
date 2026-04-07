@@ -54,6 +54,48 @@ async function startServer() {
     }
   });
 
+  // Bulk image upload endpoint (multiple files at once)
+  app.post("/api/upload-multiple", upload.array("files", 20), async (req: any, res: any) => {
+    try {
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ urls: [], errors: ["No files provided"] });
+      }
+
+      // Upload all files in parallel
+      const uploadPromises = (req.files as any[]).map(async (file) => {
+        try {
+          const ext = file.originalname.split(".").pop() || "jpg";
+          const key = `listings/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+          const { url } = await storagePut(key, file.buffer, file.mimetype);
+          return { url, error: null };
+        } catch (err: any) {
+          return { url: null, error: `${file.originalname}: ${err.message}` };
+        }
+      });
+
+      const results = await Promise.allSettled(uploadPromises);
+      const urls = [];
+      const errors = [];
+
+      for (const result of results) {
+        if (result.status === "fulfilled") {
+          if (result.value.error) {
+            errors.push(result.value.error);
+          } else if (result.value.url) {
+            urls.push(result.value.url);
+          }
+        } else {
+          errors.push(`Upload failed: ${result.reason?.message || "Unknown error"}`);
+        }
+      }
+
+      return res.json({ urls, errors });
+    } catch (err: any) {
+      console.error("Bulk upload error:", err);
+      return res.status(500).json({ urls: [], errors: [err.message || "Bulk upload failed"] });
+    }
+  });
+
   // Image upload from URL endpoint
   app.post("/api/listings/upload-from-url", async (req: any, res: any) => {
     try {

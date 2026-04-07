@@ -387,3 +387,32 @@ export async function appendListingImages(listingId, newUrls) {
     return { error: { message: err.message } };
   }
 }
+
+// ─── Bulk upload multiple images at once ───
+
+export async function uploadMultipleImages(files, listingId) {
+  try {
+    // Upload all files to the server's /api/upload-multiple endpoint in one request
+    const formData = new FormData();
+    for (const file of files) {
+      formData.append('files', file);
+    }
+    formData.append('listingId', String(listingId));
+
+    const res = await fetch('/api/upload-multiple', {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      return { urls: [], errors: [text || 'Bulk upload failed'] };
+    }
+
+    const result = await res.json();
+    return { urls: result.urls || [], errors: result.errors || [] };
+  } catch (err) {
+    return { urls: [], errors: [err.message || 'Bulk upload failed'] };
+  }
+}

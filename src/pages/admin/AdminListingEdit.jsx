@@ -6,6 +6,7 @@ import {
   setListingImages,
   appendListingImages,
   uploadListingImage,
+  uploadMultipleImages,
   deleteListing,
 } from '../../lib/listingsApi';
 import { translateArToEn } from '../../lib/translate';
@@ -225,7 +226,7 @@ export default function AdminListingEdit() {
     sort_order: form?.sort_order ?? 0,
   });
 
-  const handleImageUpload = async (files) => {
+    const handleImageUpload = async (files) => {
     let listingId = form?.id;
     if (!listingId) {
       // Auto-save the listing first to get an ID
@@ -247,43 +248,30 @@ export default function AdminListingEdit() {
     if (!files || files.length === 0) return;
     
     setUploadLoading(true);
-    const uploadedUrls = [];
-    const errors = [];
     
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      try {
-        const { url, error } = await uploadListingImage(file, listingId);
-        if (error || !url) {
-          errors.push(`${file.name}: ${error?.message || 'Upload failed'}`);
-        } else {
-          uploadedUrls.push(url);
-        }
-      } catch (err) {
-        errors.push(`${file.name}: ${err.message}`);
-      }
-    }
+    // Upload all files in one request to the bulk endpoint
+    const { urls, errors } = await uploadMultipleImages(files, listingId);
     
     setUploadLoading(false);
     
-    if (uploadedUrls.length > 0) {
-      // Persist images to DB immediately with all uploaded URLs (appends to existing)
+    if (urls.length > 0) {
+      // Persist all uploaded URLs to DB in one call (appends to existing)
       try {
-        const { error } = await appendListingImages(listingId, uploadedUrls);
+        const { error } = await appendListingImages(listingId, urls);
         if (error) {
-          showToast(`Images uploaded but failed to save to database: ${error.message}`, 'warning');
+          showToast(`${urls.length} image(s) uploaded but failed to save to database: ${error.message}`, 'warning');
         } else {
-          showToast(`${uploadedUrls.length} image(s) uploaded successfully.`, 'success');
+          showToast(`${urls.length} image(s) uploaded successfully.`, 'success');
           // Update form with new images after successful persistence
           setForm((prev) => {
             if (!prev) return null;
-            const newImages = [...(prev.images || []), ...uploadedUrls];
+            const newImages = [...(prev.images || []), ...urls];
             return { ...prev, images: newImages };
           });
         }
       } catch (err) {
         console.error('Failed to persist images:', err);
-        showToast(`Images uploaded but failed to save to database: ${err.message}`, 'warning');
+        showToast(`${urls.length} image(s) uploaded but failed to save to database: ${err.message}`, 'warning');
       }
     }
     
