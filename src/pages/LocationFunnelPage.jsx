@@ -136,7 +136,7 @@ export default function LocationFunnelPage() {
       }
       const currentNode = nodes[nodes.length - 1];
       if (isCompoundLevel) {
-        const listings = await fetchListingsByCompound(compoundSlug, locale.replace(/-/g, ' '));
+        const listings = await fetchListingsByCompound(compoundSlug, locale);
         if (!cancelled) setState({ nodes, children: [], listings, loading: false, notFound: false });
       } else {
         const [descendantIds, children] = await Promise.all([
@@ -155,7 +155,7 @@ export default function LocationFunnelPage() {
     }
     load();
     return () => { cancelled = true; };
-  }, [slugChain.join(','), isCompoundLevel, compoundSlug]);
+  }, [slugChain.join(','), isCompoundLevel, compoundSlug, locale]);
 
   if (state.notFound) return <Navigate to={lp('/listings')} replace />;
 

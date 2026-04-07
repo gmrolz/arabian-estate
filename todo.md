@@ -113,3 +113,4 @@
 - [x] FEATURE: Add I Villa, Z Villa, Q Villa to unit_type selector - Added to AdminListingEdit dropdown
 - [x] BUG: Fix Arabic titles showing in English - Fixed LocationFunnelPage to pass actual locale to normalization
 - [x] FEATURE: Ensure villa types display correctly on frontend PropertyCard - Already displays via unit_type field
+- [x] BUG: Title showing only in Arabic - FIXED: Removed incorrect locale.replace() in LocationFunnelPage and added locale to dependency array
