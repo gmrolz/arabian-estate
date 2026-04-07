@@ -49,7 +49,7 @@ async function fetchAllDescendantIds(nodeId) {
   return ids;
 }
 
-async function fetchListingsByLocationIds(locationIds) {
+async function fetchListingsByLocationIds(locationIds, locale = 'en') {
   if (!locationIds || locationIds.length === 0) return [];
   const url = `/api/trpc/listings.list?input=${encodeURIComponent(JSON.stringify({ json: { locationIds } }))}`;
   const r = await fetch(url);
@@ -57,10 +57,10 @@ async function fetchListingsByLocationIds(locationIds) {
   const d = await r.json();
   const listings = d?.result?.data?.json ?? [];
   // Normalize all listings to ensure consistent field names
-  return listings.map(l => normalizeListingRow(l, 'en'));
+  return listings.map(l => normalizeListingRow(l, locale));
 }
 
-async function fetchListingsByCompound(compoundName) {
+async function fetchListingsByCompound(compoundName, locale = 'en') {
   if (!compoundName) return [];
   const url = `/api/trpc/listings.list?input=${encodeURIComponent(JSON.stringify({ json: { compoundName } }))}`;
   const r = await fetch(url);
@@ -68,7 +68,7 @@ async function fetchListingsByCompound(compoundName) {
   const d = await r.json();
   const listings = d?.result?.data?.json ?? [];
   // Normalize all listings to ensure consistent field names
-  return listings.map(l => normalizeListingRow(l, 'en'));
+  return listings.map(l => normalizeListingRow(l, locale));
 }
 
 // ─── Region images ───────────────────────────────────────────────────────────
@@ -136,7 +136,7 @@ export default function LocationFunnelPage() {
       }
       const currentNode = nodes[nodes.length - 1];
       if (isCompoundLevel) {
-        const listings = await fetchListingsByCompound(compoundSlug.replace(/-/g, ' '));
+        const listings = await fetchListingsByCompound(compoundSlug, locale.replace(/-/g, ' '));
         if (!cancelled) setState({ nodes, children: [], listings, loading: false, notFound: false });
       } else {
         const [descendantIds, children] = await Promise.all([
@@ -149,7 +149,7 @@ export default function LocationFunnelPage() {
           const ids = await fetchAllDescendantIds(child.id);
           childDescendantIds[child.id] = new Set(ids);
         }));
-        const listings = await fetchListingsByLocationIds(descendantIds);
+        const listings = await fetchListingsByLocationIds(descendantIds, locale);
         if (!cancelled) setState({ nodes, children, childDescendantIds, listings, loading: false, notFound: false });
       }
     }

@@ -110,3 +110,6 @@
 - [x] FEATURE: Add unit_type selector to admin form - Added dropdown with 7 options
 - [x] FEATURE: Display unit_type on frontend listing cards - Shows in PropertyCard specs
 - [x] FEATURE: Migrate existing units to have unit_type values - All units already have unitType from DB
+- [x] FEATURE: Add I Villa, Z Villa, Q Villa to unit_type selector - Added to AdminListingEdit dropdown
+- [x] BUG: Fix Arabic titles showing in English - Fixed LocationFunnelPage to pass actual locale to normalization
+- [x] FEATURE: Ensure villa types display correctly on frontend PropertyCard - Already displays via unit_type field
