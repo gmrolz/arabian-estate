@@ -289,29 +289,36 @@ export default function LocationFunnelPage() {
         </div>
 
         {/* ─── Sub-location Chips ────────────────────────────────────────── */}
-        {!loading && children.length > 0 && (
+        {!loading && children.filter(c => (childCounts[c.id] || 0) > 0).length > 0 && (
           <div className="pf-chips-wrapper">
-            <div className={`pf-chips-row${chipsExpanded ? ' expanded' : ''}`}>
-              {children.map((child) => {
-                const count = childCounts[child.id] || 0;
-                return (
-                  <Link key={child.id} to={childUrl(child)} className="pf-chip">
-                    {isRTL ? child.nameAr : child.nameEn}
-                    {count > 0 && <span className="pf-chip-count">({count})</span>}
-                  </Link>
-                );
-              })}
-            </div>
-            {children.length > 4 && (
-              <button
-                className="pf-chips-show-more"
-                onClick={() => setChipsExpanded((v) => !v)}
-              >
-                {chipsExpanded
-                  ? (isRTL ? '▲ عرض أقل' : '▲ Show Less')
-                  : (isRTL ? `▼ عرض المزيد (${children.length - 4}+)` : `▼ Show More (${children.length - 4}+)`)}
-              </button>
-            )}
+            {(() => {
+              const visibleChips = children.filter(c => (childCounts[c.id] || 0) > 0);
+              return (
+                <>
+                  <div className={`pf-chips-row${chipsExpanded ? ' expanded' : ''}`}>
+                    {visibleChips.map((child) => {
+                      const count = childCounts[child.id] || 0;
+                      return (
+                        <Link key={child.id} to={childUrl(child)} className="pf-chip">
+                          {isRTL ? child.nameAr : child.nameEn}
+                          <span className="pf-chip-count">({count})</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                  {visibleChips.length > 4 && (
+                    <button
+                      className="pf-chips-show-more"
+                      onClick={() => setChipsExpanded((v) => !v)}
+                    >
+                      {chipsExpanded
+                        ? (isRTL ? '▲ عرض أقل' : '▲ Show Less')
+                        : (isRTL ? `▼ عرض المزيد (${visibleChips.length - 4}+)` : `▼ Show More (${visibleChips.length - 4}+)`)}
+                    </button>
+                  )}
+                </>
+              );
+            })()}
           </div>
         )}
 

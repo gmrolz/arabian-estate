@@ -96,3 +96,6 @@
 - [x] LocationFunnelPage: breadcrumbs + sub-location chips with counts + quick filters + listings grid
 - [x] Chips row: single line with Show More / See Less toggle
 - [x] Fix chips bar: expand downward to show all hidden chips below first row
+- [x] Hide chips and section cards with 0 listings from funnel pages and homepage
+- [ ] Fix image upload from computer not working on Add Listing (only works in Edit)
+- [ ] Fix multiple image selection - only uploads one instead of all selected

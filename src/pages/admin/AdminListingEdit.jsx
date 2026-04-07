@@ -225,10 +225,23 @@ export default function AdminListingEdit() {
   });
 
   const handleImageUpload = async (files) => {
-    const listingId = form?.id;
+    let listingId = form?.id;
     if (!listingId) {
-      showToast('Save the listing first, then upload images.', 'error');
-      return;
+      // Auto-save the listing first to get an ID
+      if (!form?.title_ar) {
+        showToast('Please fill in at least the Arabic Title before uploading images.', 'error');
+        return;
+      }
+      showToast('Saving listing first...', 'info');
+      const row = buildListingRow();
+      const { data, error } = await upsertListing(row);
+      if (error || !data?.id) {
+        showToast(error?.message || 'Failed to save listing', 'error');
+        return;
+      }
+      listingId = data.id;
+      // Update form with the new ID
+      setForm((prev) => (prev ? { ...prev, id: listingId } : null));
     }
     if (!files || files.length === 0) return;
     
@@ -253,9 +266,16 @@ export default function AdminListingEdit() {
     setUploadLoading(false);
     
     if (uploadedUrls.length > 0) {
-      const newImages = [...(form?.images || []), ...uploadedUrls];
-      setForm((prev) => (prev ? { ...prev, images: newImages } : null));
-      await setListingImages(listingId, newImages);
+      // Get fresh form state to avoid stale state
+      setForm((prev) => {
+        if (!prev) return null;
+        const newImages = [...(prev.images || []), ...uploadedUrls];
+        // Persist images to DB
+        setListingImages(listingId, newImages).catch((err) => {
+          console.error('Failed to persist images:', err);
+        });
+        return { ...prev, images: newImages };
+      });
       showToast(`${uploadedUrls.length} image(s) uploaded successfully.`, 'success');
     }
     
@@ -265,10 +285,23 @@ export default function AdminListingEdit() {
   };
 
   const handleImageUrlUpload = async (imageUrl) => {
-    const listingId = form?.id;
+    let listingId = form?.id;
     if (!listingId) {
-      showToast('Save the listing first, then upload images.', 'error');
-      return;
+      // Auto-save the listing first to get an ID
+      if (!form?.title_ar) {
+        showToast('Please fill in at least the Arabic Title before uploading images.', 'error');
+        return;
+      }
+      showToast('Saving listing first...', 'info');
+      const row = buildListingRow();
+      const { data, error } = await upsertListing(row);
+      if (error || !data?.id) {
+        showToast(error?.message || 'Failed to save listing', 'error');
+        return;
+      }
+      listingId = data.id;
+      // Update form with the new ID
+      setForm((prev) => (prev ? { ...prev, id: listingId } : null));
     }
     if (!imageUrl || !imageUrl.trim()) return;
     
@@ -285,9 +318,14 @@ export default function AdminListingEdit() {
       if (!response.ok || !data.url) {
         showToast(`Failed to upload image: ${data.error || 'Unknown error'}`, 'error');
       } else {
-        const newImages = [...(form?.images || []), data.url];
-        setForm((prev) => (prev ? { ...prev, images: newImages } : null));
-        await setListingImages(listingId, newImages);
+        setForm((prev) => {
+          if (!prev) return null;
+          const newImages = [...(prev.images || []), data.url];
+          setListingImages(listingId, newImages).catch((err) => {
+            console.error('Failed to persist images:', err);
+          });
+          return { ...prev, images: newImages };
+        });
         showToast('Image uploaded from URL successfully.', 'success');
         
         // Clear the input
@@ -805,12 +843,12 @@ export default function AdminListingEdit() {
                 {uploadLoading ? 'Uploading...' : 'Add URL'}
               </button>
             </div>
-            <label className={`admin-image-upload ${uploadLoading ? 'admin-image-upload-loading' : ''} ${!form.id ? 'admin-image-upload-disabled' : ''}`}>
+            <label className={`admin-image-upload ${uploadLoading ? 'admin-image-upload-loading' : ''}`}>
               <input
                 type="file"
                 accept="image/*"
                 multiple
-                disabled={!form.id || uploadLoading}
+                disabled={uploadLoading}
                 onChange={(e) => {
                   const files = e.target.files;
                   if (files && files.length > 0) handleImageUpload(files);
@@ -821,7 +859,7 @@ export default function AdminListingEdit() {
             </label>
           </div>
           {!form.id && (
-            <p className="admin-form-hint">Fill in the required fields (at least Title Arabic) and click Save to create the listing. Then you can upload images.</p>
+            <p className="admin-form-hint">Fill in at least the Arabic Title, then you can upload images directly. The listing will be saved automatically.</p>
           )}
         </section>
 
