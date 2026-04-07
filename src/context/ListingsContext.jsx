@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocale } from './LocaleContext';
 import { fetchListingsFromAPI } from '../lib/api';
+import { normalizeListingRow } from '../lib/listingsApi';
 import { slugifyProject, EGYPT_REGIONS, CAIRO_AREAS } from '../data/newCapitalListings';
 
 const getAreaFromListing = (listing) => {
@@ -21,43 +22,7 @@ export function useListings() {
  * Normalize a DB row (camelCase) to the shape the frontend components expect.
  * The old static data used snake_case keys; components reference both.
  */
-function normalizeRow(row, locale) {
-  const title = locale === 'en'
-    ? (row.titleEn || row.title_en || row.titleAr || row.title_ar || '')
-    : (row.titleAr || row.title_ar || row.titleEn || row.title_en || '');
-
-  // Parse images — may be a JSON string, an array, or null
-  let images = row.images ?? row.parsedImages ?? [];
-  if (typeof images === 'string') {
-    try { images = JSON.parse(images); } catch { images = []; }
-  }
-
-  return {
-    id: row.id,
-    unit_code: row.unitCode ?? row.unit_code ?? '',
-    title,
-    title_ar: row.titleAr ?? row.title_ar ?? '',
-    title_en: row.titleEn ?? row.title_en ?? '',
-    developer: row.developer ?? '',
-    project: row.project ?? '',
-    location: row.location ?? '',
-    locationId: row.locationId ?? row.location_id ?? null,
-    unit_type: row.unitType ?? row.unit_type ?? 'Apartment',
-    area: row.area ?? 0,
-    rooms: row.rooms ?? 0,
-    toilets: row.toilets ?? 0,
-    downpayment: row.downpayment ?? '0',
-    monthly_inst: row.monthlyInst ?? row.monthly_inst ?? '',
-    price: row.price ?? '',
-    finishing: row.finishing ?? '',
-    delivery: row.delivery ?? '',
-    featured: row.featured === 1 || row.featured === true,
-    area_slug: getAreaFromListing(row),
-    images,
-    sort_order: row.sortOrder ?? row.sort_order ?? 0,
-    active: row.active === 1 || row.active === true,
-  };
-}
+const normalizeRow = (row, locale) => normalizeListingRow(row, locale);
 
 export function ListingsProvider({ children }) {
   const { locale } = useLocale();

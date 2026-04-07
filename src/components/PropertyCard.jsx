@@ -165,6 +165,7 @@ export default function PropertyCard({ listing, featured = false }) {
         show_downpayment = true, show_monthly = true,
         show_full_price = false, show_annual = false, show_compound = true, annual_payment,
         maps_url, mapsUrl,
+        unit_type,
     } = listing;
     const resolvedMapsUrl = maps_url || mapsUrl || null;
     const [showMap, setShowMap] = useState(false);
@@ -230,6 +231,7 @@ export default function PropertyCard({ listing, featured = false }) {
                 </div>
 
                 <div className="card-specs">
+                    <span className="spec">{unit_type || 'Unit'}</span>
                     <span className="spec">{area} m²</span>
                     <span className="spec">{rooms} {t('card.beds')}</span>
                     <span className="spec">{toilets} {t('card.bath')}</span>

@@ -416,3 +416,60 @@ export async function uploadMultipleImages(files, listingId) {
     return { urls: [], errors: [err.message || 'Bulk upload failed'] };
   }
 }
+
+// ─── Shared Listing Normalization ───
+
+/**
+ * Normalize a DB row (camelCase) to the shape the frontend components expect.
+ * Used by both ListingsContext and LocationFunnelPage to ensure consistency.
+ * @param {Object} row - Raw listing row from API
+ * @param {string} locale - Current locale ('en' or 'ar')
+ * @returns {Object} Normalized listing object
+ */
+export function normalizeListingRow(row, locale = 'en') {
+  // Select title based on locale
+  const title = locale === 'en'
+    ? (row.titleEn || row.title_en || row.titleAr || row.title_ar || '')
+    : (row.titleAr || row.title_ar || row.titleEn || row.title_en || '');
+
+  // Parse images — may be a JSON string, an array, or null
+  let images = row.images ?? row.parsedImages ?? [];
+  if (typeof images === 'string') {
+    try { images = JSON.parse(images); } catch { images = []; }
+  }
+
+  // Get area slug (with fallback)
+  const getAreaSlug = (listing) => {
+    if (listing.areaSlug) return listing.areaSlug;
+    if (listing.area_slug) return listing.area_slug;
+    return 'new-capital';
+  };
+
+  return {
+    id: row.id,
+    unit_code: row.unitCode ?? row.unit_code ?? '',
+    title,
+    title_ar: row.titleAr ?? row.title_ar ?? '',
+    title_en: row.titleEn ?? row.title_en ?? '',
+    developer: row.developer ?? '',
+    project: row.project ?? '',
+    location: row.location ?? '',
+    locationId: row.locationId ?? row.location_id ?? null,
+    unit_type: row.unitType ?? row.unit_type ?? 'Apartment',
+    area: row.area ?? 0,
+    rooms: row.rooms ?? 0,
+    toilets: row.toilets ?? 0,
+    downpayment: row.downpayment ?? '0',
+    monthly_inst: row.monthlyInst ?? row.monthly_inst ?? '',
+    price: row.price ?? '',
+    finishing: row.finishing ?? '',
+    delivery: row.delivery ?? '',
+    featured: row.featured === 1 || row.featured === true,
+    area_slug: getAreaSlug(row),
+    images,
+    sort_order: row.sortOrder ?? row.sort_order ?? 0,
+    active: row.active === 1 || row.active === true,
+    // Include all other fields that might be needed
+    ...row,
+  };
+}

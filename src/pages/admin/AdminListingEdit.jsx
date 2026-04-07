@@ -139,6 +139,7 @@ export default function AdminListingEdit() {
         area: '',
         rooms: '',
         toilets: '',
+        unit_type: 'Apartment',
         downpayment: '',
         monthly_inst: '',
         price: '',
@@ -366,6 +367,7 @@ export default function AdminListingEdit() {
       area: form.area ? Number(form.area) : null,
       rooms: form.rooms ? Number(form.rooms) : null,
       toilets: form.toilets ? Number(form.toilets) : null,
+      unit_type: form.unit_type || 'Apartment',
       downpayment: form.downpayment || null,
       monthly_inst: form.monthly_inst || null,
       price: form.price || null,
@@ -540,6 +542,7 @@ export default function AdminListingEdit() {
             <div><label>Area (m²)</label><input type="number" className="admin-input" value={form.area ?? ''} onChange={(e) => setForm({ ...form, area: e.target.value ? Number(e.target.value) : null })} /></div>
             <div><label>Rooms</label><input type="number" className="admin-input" value={form.rooms ?? ''} onChange={(e) => setForm({ ...form, rooms: e.target.value ? Number(e.target.value) : null })} /></div>
             <div><label>Toilets</label><input type="number" className="admin-input" value={form.toilets ?? ''} onChange={(e) => setForm({ ...form, toilets: e.target.value ? Number(e.target.value) : null })} /></div>
+            <div><label>Unit Type</label><select className="admin-input" value={form.unit_type || 'Apartment'} onChange={(e) => setForm({ ...form, unit_type: e.target.value })}><option value="Studio">Studio</option><option value="1 Bed">1 Bed</option><option value="2 Bed">2 Bed</option><option value="3 Bed">3 Bed</option><option value="Penthouse">Penthouse</option><option value="Villa">Villa</option><option value="Apartment">Apartment</option></select></div>
           </div>
           <section className="admin-form-section admin-form-section-pricing">
           <h2 className="admin-form-section-title">Pricing</h2>

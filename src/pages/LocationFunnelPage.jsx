@@ -17,6 +17,7 @@
 import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
 import { useLocale } from '../context/LocaleContext';
+import { normalizeListingRow } from '../lib/listingsApi';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -54,7 +55,9 @@ async function fetchListingsByLocationIds(locationIds) {
   const r = await fetch(url);
   if (!r.ok) return [];
   const d = await r.json();
-  return d?.result?.data?.json ?? [];
+  const listings = d?.result?.data?.json ?? [];
+  // Normalize all listings to ensure consistent field names
+  return listings.map(l => normalizeListingRow(l, 'en'));
 }
 
 async function fetchListingsByCompound(compoundName) {
@@ -63,7 +66,9 @@ async function fetchListingsByCompound(compoundName) {
   const r = await fetch(url);
   if (!r.ok) return [];
   const d = await r.json();
-  return d?.result?.data?.json ?? [];
+  const listings = d?.result?.data?.json ?? [];
+  // Normalize all listings to ensure consistent field names
+  return listings.map(l => normalizeListingRow(l, 'en'));
 }
 
 // ─── Region images ───────────────────────────────────────────────────────────

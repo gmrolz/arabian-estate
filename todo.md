@@ -105,3 +105,8 @@
 - [x] BUG: All sections/pages show same listings - FIXED: added superjson {json: {...}} wrapper to LocationFunnelPage tRPC calls
 - [x] BUG: All units display as "New Capital" even in New Cairo section - FIXED: added areaSlug check to getAreaFromListing() and missing fields to handleSave
 - [x] BUG: Multiple image upload STILL only saves 1 image - FIXED: implemented bulk upload endpoint with parallel S3 uploads
+- [x] BUG: Frontend titles not appearing on listings - FIXED: created shared normalizeListingRow() and applied to LocationFunnelPage
+- [x] FEATURE: Add unit_type field to database schema - Already exists in DB
+- [x] FEATURE: Add unit_type selector to admin form - Added dropdown with 7 options
+- [x] FEATURE: Display unit_type on frontend listing cards - Shows in PropertyCard specs
+- [x] FEATURE: Migrate existing units to have unit_type values - All units already have unitType from DB
