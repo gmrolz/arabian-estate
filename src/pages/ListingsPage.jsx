@@ -27,11 +27,15 @@ export default function ListingsPage() {
                         {EGYPT_REGIONS.map((region) => {
                             const count = getListingsCountByEgyptRegion(region.slug);
                             const label = locationLabel(region.slug);
+                            // Cairo goes to /listings/cairo/east-cairo (the main collection)
+                            const funnelUrl = region.slug === 'cairo'
+                              ? lp('/listings/cairo/east-cairo')
+                              : lp(`/listings/${region.slug}`);
 
                             return (
                                 <Link
                                     key={region.slug}
-                                    to={lp(`/listings/${region.slug}`)}
+                                    to={funnelUrl}
                                     className="listings-hub-card"
                                 >
                                     <div className="listings-hub-card-inner">
@@ -64,7 +68,7 @@ export default function ListingsPage() {
                         ))}
                     </div>
                     <div style={{ marginTop: '48px', display: 'flex', justifyContent: 'center' }}>
-                        <Link to={lp('/east-cairo')} className="btn-primary">
+                        <Link to={lp('/listings/cairo/east-cairo')} className="btn-primary">
                             {t('listings.viewAllNewCapital')} →
                         </Link>
                     </div>
@@ -77,7 +81,7 @@ export default function ListingsPage() {
                 <div className="footer-links">
                     <Link to={lp('/')}>{t('footer.home')}</Link>
                     <Link to={lp('/listings')}>{t('footer.listings')}</Link>
-                    <Link to={lp('/east-cairo')}>{t('location.eastCairo')}</Link>
+                    <Link to={lp('/listings/cairo/east-cairo')}>{t('location.eastCairo')}</Link>
                     <a href="#about">{t('footer.about')}</a>
                     <a href="#contact">{t('footer.contact')}</a>
                     <Link to="/admin">{t('footer.admin')}</Link>

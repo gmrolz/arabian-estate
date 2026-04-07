@@ -19,7 +19,7 @@ export default function CitiesSection() {
                 </div>
 
                 <div className="listings-hub-grid cities-section-grid">
-                    <Link to={lp('/east-cairo')} className="listings-hub-card listings-hub-card--featured">
+                    <Link to={lp('/listings/cairo/east-cairo')} className="listings-hub-card listings-hub-card--featured">
                         <div className="listings-hub-card-inner">
                             <div className="listings-hub-card-img">
                                 <img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-new-capital-378KSLviMbPW84dsXFFurd.webp" alt={t('location.eastCairo')} loading="lazy" decoding="async" />
@@ -40,7 +40,7 @@ export default function CitiesSection() {
                         return (
                             <Link
                                 key={region.slug}
-                                to={region.slug === 'cairo' ? lp('/east-cairo') : lp(`/listings/${region.slug}`)}
+                                to={lp(`/listings/${region.slug}`)}
                                 className="listings-hub-card"
                             >
                                 <div className="listings-hub-card-inner">

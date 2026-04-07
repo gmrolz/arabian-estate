@@ -11,6 +11,7 @@ import EastCairoPage from './pages/EastCairoPage';
 import RegionPage from './pages/RegionPage';
 import ListingLocationPage from './pages/ListingLocationPage';
 import CompoundPage from './pages/CompoundPage';
+import LocationFunnelPage from './pages/LocationFunnelPage';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminLoginGate from './pages/admin/AdminLoginGate';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -43,9 +44,13 @@ function AppRoutes() {
         <Route path="/listings/cairo/new-capital" element={<Navigate to="/east-cairo" replace />} />
         <Route path="/listings/cairo/new-cairo" element={<Navigate to="/east-cairo" replace />} />
         <Route path="/listings/cairo/mostakbal-city" element={<Navigate to="/east-cairo" replace />} />
-        <Route path="/listings/:region" element={<RegionPage />} />
-        <Route path="/listings/:region/:area/:compoundSlug" element={<CompoundPage />} />
-        <Route path="/listings/:region/:area" element={<ListingLocationPage />} />
+        {/* New location funnel routes — 4 levels deep */}
+        <Route path="/listings/:citySlug" element={<LocationFunnelPage />} />
+        <Route path="/listings/:citySlug/:collectionSlug" element={<LocationFunnelPage />} />
+        <Route path="/listings/:citySlug/:collectionSlug/:neighborhoodSlug" element={<LocationFunnelPage />} />
+        <Route path="/listings/:citySlug/:collectionSlug/:neighborhoodSlug/:compoundSlug" element={<LocationFunnelPage />} />
+        {/* Legacy routes kept for backward compatibility */}
+        <Route path="/listings/:region/compound/:compoundSlug" element={<CompoundPage />} />
         <Route path="/en" element={<HomePage />} />
         <Route path="/en/listings" element={<ListingsPage />} />
         <Route path="/en/east-cairo" element={<EastCairoPage />} />
@@ -54,9 +59,13 @@ function AppRoutes() {
         <Route path="/en/listings/cairo/new-capital" element={<Navigate to="/en/east-cairo" replace />} />
         <Route path="/en/listings/cairo/new-cairo" element={<Navigate to="/en/east-cairo" replace />} />
         <Route path="/en/listings/cairo/mostakbal-city" element={<Navigate to="/en/east-cairo" replace />} />
-        <Route path="/en/listings/:region" element={<RegionPage />} />
-        <Route path="/en/listings/:region/:area/:compoundSlug" element={<CompoundPage />} />
-        <Route path="/en/listings/:region/:area" element={<ListingLocationPage />} />
+        {/* New location funnel routes (EN) */}
+        <Route path="/en/listings/:citySlug" element={<LocationFunnelPage />} />
+        <Route path="/en/listings/:citySlug/:collectionSlug" element={<LocationFunnelPage />} />
+        <Route path="/en/listings/:citySlug/:collectionSlug/:neighborhoodSlug" element={<LocationFunnelPage />} />
+        <Route path="/en/listings/:citySlug/:collectionSlug/:neighborhoodSlug/:compoundSlug" element={<LocationFunnelPage />} />
+        {/* Legacy EN routes */}
+        <Route path="/en/listings/:region/compound/:compoundSlug" element={<CompoundPage />} />
         <Route path="/control" element={<Navigate to="/admin" replace />} />
         {/* Admin */}
         <Route path="/admin" element={<AdminLayout />}>

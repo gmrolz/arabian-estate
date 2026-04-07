@@ -1,4 +1,4 @@
-import { eq, desc, asc, and, sql } from "drizzle-orm";
+import { eq, like, and, or, asc, desc, sql, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "./db";
 import { listings } from "../drizzle/schema";
@@ -8,6 +8,9 @@ import { publicProcedure, adminProcedure, router } from "./_core/trpc";
 
 const listingsFilterSchema = z.object({
   areaSlug: z.string().optional(),
+  locationId: z.number().int().optional(),
+  locationIds: z.array(z.number().int()).optional(),
+  compoundName: z.string().optional(),
   developer: z.string().optional(),
   finishing: z.string().optional(),
   rooms: z.number().optional(),
@@ -118,6 +121,15 @@ export const listingsRouter = router({
       }
       if (filters.areaSlug) {
         conditions.push(eq(listings.areaSlug, filters.areaSlug));
+      }
+      if (filters.locationId) {
+        conditions.push(eq(listings.locationId, filters.locationId));
+      }
+      if (filters.locationIds && filters.locationIds.length > 0) {
+        conditions.push(inArray(listings.locationId, filters.locationIds));
+      }
+      if (filters.compoundName) {
+        conditions.push(eq(listings.compoundName, filters.compoundName));
       }
       if (filters.developer) {
         conditions.push(eq(listings.developer, filters.developer));

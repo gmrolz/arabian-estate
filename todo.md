@@ -80,3 +80,13 @@
 - [x] Make admin sitemap collapsible (cities/collections expand/collapse)
 - [x] Add AI-generated brand placeholder image for listings without photos
 - [ ] Generate unique AI images for each location section card (no duplicates)
+
+## Location Funnel Pages (Google Ads)
+- [ ] Dynamic routes: /listings/:citySlug, /listings/:citySlug/:collectionSlug, /listings/:citySlug/:collectionSlug/:neighborhoodSlug, /listings/:citySlug/:collectionSlug/:neighborhoodSlug/:compoundSlug
+- [ ] CityPage component with collection cards + breadcrumbs
+- [ ] CollectionPage component with neighborhood cards + breadcrumbs
+- [ ] NeighborhoodPage component with compound cards + listings + breadcrumbs
+- [ ] CompoundPage component with all listings for that compound + breadcrumbs
+- [ ] Location API endpoints: get by slug, get children by parent slug
+- [ ] Update homepage CitiesSection to link into new funnel
+- [ ] SEO meta tags (title, description, og:tags) per page level

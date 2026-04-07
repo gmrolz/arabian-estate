@@ -161,6 +161,29 @@ router.get('/level/:level', async (req, res) => {
 });
 
 /**
+ * GET /api/locations/by-path?slugs=cairo,east-cairo,area-new-capital
+ * Resolve a chain of slugs to location objects (for breadcrumbs)
+ */
+router.get('/by-path', async (req, res) => {
+  try {
+    const { slugs } = req.query as { slugs?: string };
+    if (!slugs) return res.json([]);
+    const db = await getDb();
+    if (!db) return res.status(503).json({ error: 'Database not available' });
+    const slugList = slugs.split(',').map((s: string) => s.trim()).filter(Boolean);
+    const results: any[] = [];
+    for (const slug of slugList) {
+      const found = await db.select().from(locations).where(eq(locations.slug, slug)).limit(1);
+      results.push(found[0] || null);
+    }
+    res.json(results);
+  } catch (error) {
+    console.error('[Locations] By-path error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
  * GET /api/locations/:id/children
  * Get all children of a location
  */
