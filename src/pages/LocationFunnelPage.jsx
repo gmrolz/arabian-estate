@@ -50,7 +50,7 @@ async function fetchAllDescendantIds(nodeId) {
 
 async function fetchListingsByLocationIds(locationIds) {
   if (!locationIds || locationIds.length === 0) return [];
-  const url = `/api/trpc/listings.list?input=${encodeURIComponent(JSON.stringify({ locationIds }))}`;
+  const url = `/api/trpc/listings.list?input=${encodeURIComponent(JSON.stringify({ json: { locationIds } }))}`;
   const r = await fetch(url);
   if (!r.ok) return [];
   const d = await r.json();
@@ -59,7 +59,7 @@ async function fetchListingsByLocationIds(locationIds) {
 
 async function fetchListingsByCompound(compoundName) {
   if (!compoundName) return [];
-  const url = `/api/trpc/listings.list?input=${encodeURIComponent(JSON.stringify({ compoundName }))}`;
+  const url = `/api/trpc/listings.list?input=${encodeURIComponent(JSON.stringify({ json: { compoundName } }))}`;
   const r = await fetch(url);
   if (!r.ok) return [];
   const d = await r.json();

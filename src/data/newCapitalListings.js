@@ -101,6 +101,7 @@ export const CAIRO_AREAS = [
 
 export function getAreaFromListing(listing) {
   if (listing.area_slug) return listing.area_slug;
+  if (listing.areaSlug) return listing.areaSlug;
   const title = listing.title || listing.title_en || listing.title_ar || '';
   const t = title.toLowerCase();
   if (t.includes('new cairo')) return 'new-cairo';

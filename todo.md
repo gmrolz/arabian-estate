@@ -99,3 +99,8 @@
 - [x] Hide chips and section cards with 0 listings from funnel pages and homepage
 - [x] Fix image upload from computer not working on Add Listing (only works in Edit) - auto-save listing first
 - [x] Fix multiple image selection - only uploads one instead of all selected - fixed stale state issue
+
+## Bug Fixes (Reported by user)
+- [x] BUG: Multiple image upload still only saves 1 image - FIXED: created appendListingImages() that merges with existing images
+- [x] BUG: All sections/pages show same listings - FIXED: added superjson {json: {...}} wrapper to LocationFunnelPage tRPC calls
+- [x] BUG: All units display as "New Capital" even in New Cairo section - FIXED: added areaSlug check to getAreaFromListing() and missing fields to handleSave

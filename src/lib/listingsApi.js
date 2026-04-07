@@ -361,3 +361,29 @@ export function formatNumberReadable(val) {
   if (isNaN(n)) return String(val);
   return n.toLocaleString('en-US');
 }
+
+// ─── Control panel: append images to a listing (preserves existing) ───
+
+export async function appendListingImages(listingId, newUrls) {
+  try {
+    // Fetch current listing to get existing images
+    const current = await trpcQuery('listings.getById', { id: listingId });
+    const existingImages = current?.images || [];
+    
+    // Convert new URLs to strings
+    const newUrlStrings = (newUrls || []).map((u) => (typeof u === 'string' ? u : u?.url)).filter(Boolean);
+    
+    // Merge: existing + new (avoiding duplicates)
+    const merged = [...existingImages, ...newUrlStrings];
+    const unique = Array.from(new Set(merged));
+    
+    // Update the listing with merged images array
+    await trpcMutation('listings.update', {
+      id: listingId,
+      images: unique,
+    });
+    return { error: null };
+  } catch (err) {
+    return { error: { message: err.message } };
+  }
+}

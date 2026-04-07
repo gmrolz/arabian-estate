@@ -4,6 +4,7 @@ import {
   controlListings,
   upsertListing,
   setListingImages,
+  appendListingImages,
   uploadListingImage,
   deleteListing,
 } from '../../lib/listingsApi';
@@ -266,9 +267,9 @@ export default function AdminListingEdit() {
     setUploadLoading(false);
     
     if (uploadedUrls.length > 0) {
-      // Persist images to DB immediately with all uploaded URLs
+      // Persist images to DB immediately with all uploaded URLs (appends to existing)
       try {
-        const { error } = await setListingImages(listingId, uploadedUrls);
+        const { error } = await appendListingImages(listingId, uploadedUrls);
         if (error) {
           showToast(`Images uploaded but failed to save to database: ${error.message}`, 'warning');
         } else {
@@ -327,9 +328,9 @@ export default function AdminListingEdit() {
       } else {
 
         
-        // Persist image to DB immediately
+        // Persist image to DB immediately (appends to existing)
         try {
-          const { error } = await setListingImages(listingId, [data.url]);
+          const { error } = await appendListingImages(listingId, [data.url]);
           if (error) {
             showToast(`Image uploaded but failed to save to database: ${error.message}`, 'warning');
           } else {
@@ -371,6 +372,8 @@ export default function AdminListingEdit() {
       project_ar: form.project_ar || null,
       project_en: form.project_en || null,
       location: form.location || null,
+      location_id: form.locationId || null,
+      compound_name: form.compound_name || '',
       unit_type: form.unit_type || 'Apartment',
       area: form.area ? Number(form.area) : null,
       rooms: form.rooms ? Number(form.rooms) : null,
@@ -384,6 +387,7 @@ export default function AdminListingEdit() {
       delivery: form.delivery || null,
       featured: !!form.featured,
       area_slug: form.area_slug || 'new-capital',
+      maps_url: form.maps_url || '',
       sort_order: form.sort_order ?? 0,
     };
     const { data, error } = await upsertListing(row);
@@ -393,7 +397,7 @@ export default function AdminListingEdit() {
       return;
     }
     if (data?.id != null) {
-      await setListingImages(data.id, form.images || []);
+      // Images are now saved atomically with upsertListing, no separate call needed
       setListings((prev) => {
         const idx = prev.findIndex((l) => l.id === data.id);
         const next = [...prev];
