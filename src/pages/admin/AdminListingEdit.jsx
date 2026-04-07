@@ -267,16 +267,25 @@ export default function AdminListingEdit() {
     
     if (uploadedUrls.length > 0) {
       // Get fresh form state to avoid stale state
+      let persistError = null;
       setForm((prev) => {
         if (!prev) return null;
         const newImages = [...(prev.images || []), ...uploadedUrls];
-        // Persist images to DB
+        // Persist images to DB immediately and track errors
         setListingImages(listingId, newImages).catch((err) => {
+          persistError = err;
           console.error('Failed to persist images:', err);
         });
         return { ...prev, images: newImages };
       });
-      showToast(`${uploadedUrls.length} image(s) uploaded successfully.`, 'success');
+      // Wait a moment for persistence to complete before showing toast
+      setTimeout(() => {
+        if (persistError) {
+          showToast(`Images uploaded but failed to save to database: ${persistError.message}`, 'warning');
+        } else {
+          showToast(`${uploadedUrls.length} image(s) uploaded successfully.`, 'success');
+        }
+      }, 500);
     }
     
     if (errors.length > 0) {
@@ -318,15 +327,24 @@ export default function AdminListingEdit() {
       if (!response.ok || !data.url) {
         showToast(`Failed to upload image: ${data.error || 'Unknown error'}`, 'error');
       } else {
+        let persistError = null;
         setForm((prev) => {
           if (!prev) return null;
           const newImages = [...(prev.images || []), data.url];
           setListingImages(listingId, newImages).catch((err) => {
+            persistError = err;
             console.error('Failed to persist images:', err);
           });
           return { ...prev, images: newImages };
         });
-        showToast('Image uploaded from URL successfully.', 'success');
+        // Wait a moment for persistence to complete before showing toast
+        setTimeout(() => {
+          if (persistError) {
+            showToast(`Image uploaded but failed to save to database: ${persistError.message}`, 'warning');
+          } else {
+            showToast('Image uploaded from URL successfully.', 'success');
+          }
+        }, 500);
         
         // Clear the input
         const input = document.getElementById('admin-add-image-url');
