@@ -250,7 +250,7 @@
 .preview-toggle-btn {
   display: none;
   position: fixed;
-  bottom: 24px;
+  bottom: 120px;  /* Moved up to avoid covering save button (56px button + 64px save button = 120px) */
   right: 24px;
   width: 56px;
   height: 56px;
@@ -261,7 +261,7 @@
   cursor: pointer;
   font-size: 24px;
   box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
-  z-index: 100;
+  z-index: 99;  /* Lower than preview drawer but still visible */
   transition: all 0.3s;
 }
 
@@ -280,7 +280,7 @@
   background: white;
   border-radius: 16px 16px 0 0;
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+  z-index: 1001;  /* Higher than button */
   overflow-y: auto;
   animation: slideUp 0.3s ease-out;
 }
