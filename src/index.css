@@ -4954,3 +4954,279 @@ button {
 @media (max-width: 480px) {
   .funnel-children-grid { grid-template-columns: 1fr; }
 }
+
+/* ─── PROPERTYFINDER-STYLE FUNNEL ────────────────────────────────────────── */
+.pf-page {
+  min-height: 100vh;
+  background: var(--bg-surface, #f8f8f8);
+}
+
+/* Breadcrumbs */
+.pf-breadcrumbs {
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  padding: 10px 0;
+  font-size: 0.82rem;
+  color: #888;
+}
+.pf-crumb { display: inline-flex; align-items: center; gap: 4px; }
+.pf-crumb a { color: #555; text-decoration: none; }
+.pf-crumb a:hover { color: var(--gold, #c9a84c); text-decoration: underline; }
+.pf-crumb-sep { color: #bbb; margin: 0 4px; font-size: 0.9em; }
+.pf-crumb-current { color: #222; font-weight: 600; }
+
+/* Main container */
+.pf-main { padding-top: 32px; padding-bottom: 64px; }
+
+/* Header */
+.pf-header { margin-bottom: 20px; }
+.pf-title {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 700;
+  color: var(--text-primary, #111);
+  margin: 0 0 6px;
+  line-height: 1.25;
+}
+.pf-count { font-size: 0.95rem; color: #666; margin: 0; }
+
+/* Sub-location chips */
+.pf-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding: 16px 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+.pf-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 16px;
+  border: 1.5px solid #ddd;
+  border-radius: 100px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #333;
+  background: #fff;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.pf-chip:hover {
+  border-color: var(--gold, #c9a84c);
+  color: var(--gold, #c9a84c);
+  background: #fffbf0;
+}
+.pf-chip-count { color: #888; font-size: 0.82rem; }
+
+/* Filters bar */
+.pf-filters-bar {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 28px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.pf-filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.pf-filter-select {
+  padding: 9px 14px;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #333;
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+  min-width: 130px;
+}
+.pf-filter-select:hover,
+.pf-filter-select:focus { border-color: var(--gold, #c9a84c); }
+.pf-filter-btn { cursor: pointer; border: 1.5px solid #ddd; background: #fff; }
+.pf-filter-btn.active { border-color: var(--gold, #c9a84c); color: var(--gold, #c9a84c); }
+.pf-filter-clear {
+  padding: 9px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #e53e3e;
+  background: #fff5f5;
+  cursor: pointer;
+  font-weight: 500;
+}
+.pf-price-range {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+.pf-price-input {
+  flex: 1;
+  padding: 9px 12px;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  outline: none;
+}
+.pf-price-input:focus { border-color: var(--gold, #c9a84c); }
+.pf-price-sep { color: #aaa; font-weight: 600; }
+
+/* Listings grid */
+.pf-listings-grid { margin-top: 8px; }
+
+@media (max-width: 640px) {
+  .pf-filters-row { gap: 8px; }
+  .pf-filter-select { min-width: 100px; font-size: 0.82rem; padding: 8px 10px; }
+  .pf-chips-row { gap: 8px; }
+  .pf-chip { padding: 6px 12px; font-size: 0.82rem; }
+  .pf-title { font-size: 1.3rem; }
+}
+
+/* ─── CITIES SECTION — CAIRO NESTED BLOCK ───────────────────────────────── */
+.cities-cairo-block {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.cities-cairo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.cities-cairo-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cities-cairo-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary, #111);
+  margin: 0;
+}
+
+.cities-cairo-count {
+  font-size: 0.85rem;
+  color: #888;
+  background: #f5f5f5;
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+
+.cities-cairo-viewall {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gold, #c9a84c);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.cities-cairo-viewall:hover { text-decoration: underline; }
+
+/* East Cairo sub-section */
+.cities-east-cairo { padding: 16px 24px 24px; }
+
+.cities-subcollection-label { margin-bottom: 14px; }
+
+.cities-subcollection-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+  padding: 6px 0;
+  border-bottom: 2px solid var(--gold, #c9a84c);
+}
+
+.cities-subcollection-link:hover { color: var(--gold, #c9a84c); }
+.cities-subcollection-arrow { font-size: 1.1em; color: var(--gold, #c9a84c); }
+
+/* Area cards grid */
+.cities-areas-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.cities-area-card {
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  background: #fafafa;
+}
+
+.cities-area-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  border-color: var(--gold, #c9a84c);
+}
+
+.cities-area-img {
+  height: 130px;
+  overflow: hidden;
+}
+
+.cities-area-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.cities-area-card:hover .cities-area-img img { transform: scale(1.06); }
+
+.cities-area-body {
+  padding: 12px 14px;
+}
+
+.cities-area-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary, #111);
+  margin: 0 0 6px;
+  line-height: 1.3;
+}
+
+.cities-area-cta {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--gold, #c9a84c);
+}
+
+@media (max-width: 768px) {
+  .cities-areas-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .cities-area-img { height: 100px; }
+  .cities-cairo-header { padding: 14px 16px 12px; }
+  .cities-east-cairo { padding: 12px 16px 18px; }
+  .cities-area-body { padding: 10px 12px; }
+  .cities-area-name { font-size: 0.82rem; }
+}
+
+@media (max-width: 480px) {
+  .cities-areas-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .cities-area-img { height: 85px; }
+  .cities-cairo-title { font-size: 1.1rem; }
+}

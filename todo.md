@@ -90,3 +90,7 @@
 - [ ] Location API endpoints: get by slug, get children by parent slug
 - [ ] Update homepage CitiesSection to link into new funnel
 - [ ] SEO meta tags (title, description, og:tags) per page level
+
+## PropertyFinder-Style Funnel UX
+- [x] Homepage: show Cairo with East Cairo as featured sub-section with nested cards
+- [x] LocationFunnelPage: breadcrumbs + sub-location chips with counts + quick filters + listings grid

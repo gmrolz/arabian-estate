@@ -1,22 +1,22 @@
 /**
- * LocationFunnelPage
- * Handles all 4 levels of the location funnel:
- *   /listings/:citySlug                                     → City level
- *   /listings/:citySlug/:collectionSlug                     → Collection level
- *   /listings/:citySlug/:collectionSlug/:neighborhoodSlug   → Neighborhood level
- *   /listings/:citySlug/:collectionSlug/:neighborhoodSlug/:compoundSlug → Compound level
+ * LocationFunnelPage — PropertyFinder-style layout
+ * Routes:
+ *   /listings/:citySlug
+ *   /listings/:citySlug/:collectionSlug
+ *   /listings/:citySlug/:collectionSlug/:neighborhoodSlug
+ *   /listings/:citySlug/:collectionSlug/:neighborhoodSlug/:compoundSlug
  *
- * Each page shows:
- *   - Breadcrumbs (Home > Listings > City > Collection > ...)
- *   - Hero with location name + count
- *   - Child location cards (if any)
- *   - Listing cards for this level
+ * Layout (PropertyFinder-inspired):
+ *   1. Breadcrumbs
+ *   2. Page title + unit count
+ *   3. Sub-location chips (clickable pills with counts)
+ *   4. Quick filters bar (type, price, rooms)
+ *   5. Listings grid
+ *   6. CTA section
  */
-import { useParams, Link, Navigate } from 'react-router-dom';
+import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
 import { useLocale } from '../context/LocaleContext';
-import Breadcrumbs from '../components/Breadcrumbs';
-import PropertyCard from '../components/PropertyCard';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -37,7 +37,6 @@ async function fetchChildren(nodeId) {
 }
 
 async function fetchAllDescendantIds(nodeId) {
-  // BFS to get all descendant location IDs
   const ids = [];
   const queue = [nodeId];
   while (queue.length > 0) {
@@ -67,7 +66,7 @@ async function fetchListingsByCompound(compoundName) {
   return d?.result?.data?.json ?? [];
 }
 
-// ─── Region images map ───────────────────────────────────────────────────────
+// ─── Region images ───────────────────────────────────────────────────────────
 const REGION_IMAGES = {
   'east-cairo': 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-new-capital-378KSLviMbPW84dsXFFurd.webp',
   'west-cairo': 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-cairo-6EJu2WXYNx8bbVMTZuSKvH.webp',
@@ -82,28 +81,32 @@ const REGION_IMAGES = {
   'galala': 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-galala-VR6RnhGf8SFFkrZFR8TENb.webp',
 };
 
-function getNodeImage(slug, listings) {
-  if (REGION_IMAGES[slug]) return REGION_IMAGES[slug];
-  // Fall back to first listing image
-  const withImg = listings.find((l) => l.images?.[0]);
-  return withImg?.images?.[0] || null;
-}
+// ─── PropertyCard (inline lightweight version) ───────────────────────────────
+import PropertyCard from '../components/PropertyCard';
 
 // ─── Main Component ──────────────────────────────────────────────────────────
-
 export default function LocationFunnelPage() {
   const { citySlug, collectionSlug, neighborhoodSlug, compoundSlug } = useParams();
-  const { t, lp, locale } = useLocale();
+  const { lp, locale } = useLocale();
+  const navigate = useNavigate();
+  const isRTL = locale === 'ar';
 
   const [state, setState] = useState({
-    nodes: [],        // [cityNode, collectionNode, neighborhoodNode]
-    children: [],     // child nodes of current level
+    nodes: [],
+    children: [],
+    childDescendantIds: {}, // { childId: Set<locationId> }
     listings: [],
     loading: true,
     notFound: false,
   });
 
-  // Determine the current level and slugs
+  // Filters
+  const [filterType, setFilterType] = useState('');
+  const [filterMinPrice, setFilterMinPrice] = useState('');
+  const [filterMaxPrice, setFilterMaxPrice] = useState('');
+  const [filterRooms, setFilterRooms] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+
   const slugChain = useMemo(() => {
     const chain = [];
     if (citySlug) chain.push(citySlug);
@@ -113,57 +116,45 @@ export default function LocationFunnelPage() {
   }, [citySlug, collectionSlug, neighborhoodSlug]);
 
   const isCompoundLevel = Boolean(compoundSlug);
-  const currentSlug = compoundSlug ? neighborhoodSlug : (neighborhoodSlug || collectionSlug || citySlug);
 
   useEffect(() => {
     let cancelled = false;
-
     async function load() {
       setState((s) => ({ ...s, loading: true }));
-
-      // Resolve all nodes in the slug chain
       const nodePromises = slugChain.map((s) => fetchLocationBySlug(s));
       const nodes = await Promise.all(nodePromises);
-
       if (cancelled) return;
-
-      // If any node is null, it's a 404
       if (nodes.some((n) => n === null)) {
         setState((s) => ({ ...s, loading: false, notFound: true }));
         return;
       }
-
       const currentNode = nodes[nodes.length - 1];
-
       if (isCompoundLevel) {
-        // Compound level: filter listings by compoundName
         const listings = await fetchListingsByCompound(compoundSlug.replace(/-/g, ' '));
-        if (!cancelled) {
-          setState({ nodes, children: [], listings, loading: false, notFound: false });
-        }
+        if (!cancelled) setState({ nodes, children: [], listings, loading: false, notFound: false });
       } else {
-        // Get all descendant IDs for this node
-        const descendantIds = await fetchAllDescendantIds(currentNode.id);
-        // Get direct children for navigation cards
-        const children = await fetchChildren(currentNode.id);
-        // Get listings for all descendants
+        const [descendantIds, children] = await Promise.all([
+          fetchAllDescendantIds(currentNode.id),
+          fetchChildren(currentNode.id),
+        ]);
+        // Build descendant ID sets per child for accurate chip counts
+        const childDescendantIds = {};
+        await Promise.all(children.map(async (child) => {
+          const ids = await fetchAllDescendantIds(child.id);
+          childDescendantIds[child.id] = new Set(ids);
+        }));
         const listings = await fetchListingsByLocationIds(descendantIds);
-
-        if (!cancelled) {
-          setState({ nodes, children, listings, loading: false, notFound: false });
-        }
+        if (!cancelled) setState({ nodes, children, childDescendantIds, listings, loading: false, notFound: false });
       }
     }
-
     load();
     return () => { cancelled = true; };
   }, [slugChain.join(','), isCompoundLevel, compoundSlug]);
 
   if (state.notFound) return <Navigate to={lp('/listings')} replace />;
 
-  const { nodes, children, listings, loading } = state;
+  const { nodes, children, childDescendantIds, listings, loading } = state;
   const currentNode = nodes[nodes.length - 1];
-  const isRTL = locale === 'ar';
 
   // ─── Breadcrumbs ──────────────────────────────────────────────────────────
   const breadcrumbs = [
@@ -182,25 +173,32 @@ export default function LocationFunnelPage() {
     breadcrumbs.push({ label: compoundSlug.replace(/-/g, ' '), path: null });
   }
 
-  // ─── SEO title ────────────────────────────────────────────────────────────
   const pageTitle = isCompoundLevel
     ? compoundSlug.replace(/-/g, ' ')
-    : currentNode
-      ? (isRTL ? currentNode.nameAr : currentNode.nameEn)
-      : '...';
+    : currentNode ? (isRTL ? currentNode.nameAr : currentNode.nameEn) : '...';
 
-  const heroTitle = isCompoundLevel
-    ? compoundSlug.replace(/-/g, ' ')
-    : currentNode
-      ? (isRTL ? currentNode.nameAr : currentNode.nameEn)
-      : '';
+  // ─── Child URL builder ────────────────────────────────────────────────────
+  const childUrl = (child) => {
+    const base = lp('/listings');
+    if (!collectionSlug) return `${base}/${citySlug}/${child.slug}`;
+    if (!neighborhoodSlug) return `${base}/${citySlug}/${collectionSlug}/${child.slug}`;
+    return `${base}/${citySlug}/${collectionSlug}/${neighborhoodSlug}/${child.slug}`;
+  };
 
-  const heroImage = currentNode ? getNodeImage(currentNode.slug, listings) : null;
+  const slugifyCompound = (name) =>
+    name.toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/g, '-').replace(/^-|-$/g, '');
 
-  // ─── Compound cards from listings (for neighborhood level) ────────────────
+  const compoundUrl = (compoundName) => {
+    const base = lp('/listings');
+    const cs = slugifyCompound(compoundName);
+    if (neighborhoodSlug) return `${base}/${citySlug}/${collectionSlug}/${neighborhoodSlug}/${cs}`;
+    if (collectionSlug) return `${base}/${citySlug}/${collectionSlug}/${cs}`;
+    return `${base}/${citySlug}/${cs}`;
+  };
+
+  // ─── Compound cards (when at leaf level with no children) ─────────────────
   const compoundCards = useMemo(() => {
     if (isCompoundLevel || children.length > 0) return [];
-    // Group listings by compoundName to show compound cards
     const map = {};
     listings.forEach((l) => {
       const key = l.compoundName || l.project || '';
@@ -212,150 +210,228 @@ export default function LocationFunnelPage() {
     return Object.values(map).sort((a, b) => b.count - a.count);
   }, [listings, isCompoundLevel, children.length]);
 
-  const slugifyCompound = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  // ─── Child listing counts per child node (includes all descendants) ─────────
+  const childCounts = useMemo(() => {
+    const map = {};
+    children.forEach((child) => {
+      const descendantSet = childDescendantIds[child.id];
+      if (descendantSet) {
+        map[child.id] = listings.filter((l) => l.locationId && descendantSet.has(l.locationId)).length;
+      } else {
+        // Fallback: direct match
+        map[child.id] = listings.filter((l) => l.locationId === child.id).length;
+      }
+    });
+    return map;
+  }, [listings, children, childDescendantIds]);
 
-  // ─── Build child card URL ─────────────────────────────────────────────────
-  const childUrl = (child) => {
-    const base = lp('/listings');
-    if (!collectionSlug) return `${base}/${citySlug}/${child.slug}`;
-    if (!neighborhoodSlug) return `${base}/${citySlug}/${collectionSlug}/${child.slug}`;
-    return `${base}/${citySlug}/${collectionSlug}/${neighborhoodSlug}/${child.slug}`;
-  };
+  // ─── Filtered listings ────────────────────────────────────────────────────
+  const filteredListings = useMemo(() => {
+    return listings.filter((l) => {
+      if (filterType && l.type !== filterType) return false;
+      if (filterRooms && String(l.rooms) !== String(filterRooms)) return false;
+      if (filterMinPrice && l.price < Number(filterMinPrice)) return false;
+      if (filterMaxPrice && l.price > Number(filterMaxPrice)) return false;
+      return true;
+    });
+  }, [listings, filterType, filterRooms, filterMinPrice, filterMaxPrice]);
 
-  const compoundUrl = (compoundName) => {
-    const base = lp('/listings');
-    const cs = slugifyCompound(compoundName);
-    if (neighborhoodSlug) return `${base}/${citySlug}/${collectionSlug}/${neighborhoodSlug}/${cs}`;
-    if (collectionSlug) return `${base}/${citySlug}/${collectionSlug}/${cs}`;
-    return `${base}/${citySlug}/${cs}`;
-  };
+  const hasActiveFilter = filterType || filterRooms || filterMinPrice || filterMaxPrice;
+
+  // ─── Property types from current listings ─────────────────────────────────
+  const availableTypes = useMemo(() => {
+    const types = new Set();
+    listings.forEach((l) => { if (l.type) types.add(l.type); });
+    return Array.from(types);
+  }, [listings]);
+
+  const heroImage = currentNode ? (REGION_IMAGES[currentNode.slug] || null) : null;
+
+  // SEO
+  if (typeof document !== 'undefined') {
+    document.title = `${pageTitle} — Arabian Estate`;
+  }
 
   return (
-    <div className="listing-page location-funnel-page" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Update document title for SEO */}
-      {typeof document !== 'undefined' && (document.title = `${pageTitle} — Arabian Estate`)}
+    <div className="pf-page" dir={isRTL ? 'rtl' : 'ltr'}>
 
-      <Breadcrumbs items={breadcrumbs} />
-
-      {/* ─── Hero Banner ─────────────────────────────────────────────────── */}
-      <section className="funnel-hero" style={heroImage ? { backgroundImage: `url(${heroImage})` } : {}}>
-        <div className="funnel-hero-overlay" />
-        <div className="container funnel-hero-content">
-          <div className="section-tag">{isRTL ? 'عقارات فاخرة' : 'Premium Properties'}</div>
-          <h1 className="funnel-hero-title">{heroTitle}</h1>
-          <p className="funnel-hero-count">
-            {loading ? '...' : `${listings.length} ${isRTL ? 'وحدة متاحة' : 'units available'}`}
-          </p>
-        </div>
-      </section>
-
-      <section className="best-choices" style={{ paddingTop: '48px' }}>
+      {/* ─── Breadcrumbs ─────────────────────────────────────────────────── */}
+      <div className="pf-breadcrumbs">
         <div className="container">
-
-          {/* ─── Child Location Cards ─────────────────────────────────────── */}
-          {!loading && children.length > 0 && (
-            <div style={{ marginBottom: '48px' }}>
-              <div className="section-header">
-                <h2 className="section-title">
-                  {isRTL ? 'المناطق' : 'Areas'} — <span>{heroTitle}</span>
-                </h2>
-              </div>
-              <div className="listings-hub-grid">
-                {children.map((child) => {
-                  const img = REGION_IMAGES[child.slug] || null;
-                  return (
-                    <Link key={child.id} to={childUrl(child)} className="listings-hub-card">
-                      <div className="listings-hub-card-inner">
-                        {img ? (
-                          <div className="listings-hub-card-img">
-                            <img src={img} alt={isRTL ? child.nameAr : child.nameEn} loading="lazy" />
-                          </div>
-                        ) : (
-                          <div className="listings-hub-card-placeholder" />
-                        )}
-                        <div className="listings-hub-card-body">
-                          <h3 className="listings-hub-card-title">{isRTL ? child.nameAr : child.nameEn}</h3>
-                          <span className="listings-hub-card-cta">{isRTL ? 'عرض العقارات ←' : 'View listings →'}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* ─── Compound Cards (when at neighborhood level with no children) ── */}
-          {!loading && !isCompoundLevel && compoundCards.length > 0 && (
-            <div style={{ marginBottom: '48px' }}>
-              <div className="section-header">
-                <h2 className="section-title">
-                  {isRTL ? 'الكمباوندات' : 'Compounds'} — <span>{heroTitle}</span>
-                </h2>
-              </div>
-              <div className="listings-hub-grid">
-                {compoundCards.map((c) => (
-                  <Link key={c.name} to={compoundUrl(c.name)} className="listings-hub-card">
-                    <div className="listings-hub-card-inner">
-                      {c.image ? (
-                        <div className="listings-hub-card-img">
-                          <img src={c.image} alt={c.name} loading="lazy" />
-                        </div>
-                      ) : (
-                        <div className="listings-hub-card-placeholder" />
-                      )}
-                      <div className="listings-hub-card-body">
-                        <h3 className="listings-hub-card-title">{c.name}</h3>
-                        <p className="listings-hub-card-count">{c.count} {isRTL ? 'وحدة' : 'units'}</p>
-                        <span className="listings-hub-card-cta">{isRTL ? 'عرض الوحدات ←' : 'View units →'}</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* ─── Listings Grid ────────────────────────────────────────────── */}
-          {!loading && listings.length > 0 && (
-            <div>
-              <div className="section-header">
-                <h2 className="section-title">
-                  {isRTL ? 'الوحدات المتاحة' : 'Available Units'} — <span>{heroTitle}</span>
-                </h2>
-              </div>
-              <div className="best-grid">
-                {listings.map((listing) => (
-                  <PropertyCard key={listing.id} listing={listing} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* ─── Empty State ──────────────────────────────────────────────── */}
-          {!loading && listings.length === 0 && children.length === 0 && (
-            <div className="funnel-empty">
-              <p>{isRTL ? 'لا توجد وحدات متاحة حالياً في هذه المنطقة' : 'No units available in this area yet'}</p>
-              <Link to={lp('/listings')} className="btn-primary" style={{ marginTop: '16px', display: 'inline-block' }}>
-                {isRTL ? 'عرض جميع المناطق' : 'View all areas'}
-              </Link>
-            </div>
-          )}
-
-          {/* ─── Loading State ────────────────────────────────────────────── */}
-          {loading && (
-            <div className="funnel-loading">
-              <div className="loading-spinner" />
-              <p>{isRTL ? 'جاري التحميل...' : 'Loading...'}</p>
-            </div>
-          )}
-
+          <nav aria-label="breadcrumb">
+            {breadcrumbs.map((crumb, i) => (
+              <span key={i} className="pf-crumb">
+                {i > 0 && <span className="pf-crumb-sep">{isRTL ? '›' : '›'}</span>}
+                {crumb.path ? (
+                  <Link to={crumb.path}>{crumb.label}</Link>
+                ) : (
+                  <span className="pf-crumb-current">{crumb.label}</span>
+                )}
+              </span>
+            ))}
+          </nav>
         </div>
-      </section>
+      </div>
+
+      <div className="container pf-main">
+
+        {/* ─── Page Header ───────────────────────────────────────────────── */}
+        <div className="pf-header">
+          <h1 className="pf-title">
+            {isRTL ? 'عقارات للبيع في' : 'Properties for sale in'} {pageTitle}
+          </h1>
+          {!loading && (
+            <p className="pf-count">
+              {filteredListings.length.toLocaleString()} {isRTL ? 'وحدة متاحة' : 'properties'}
+            </p>
+          )}
+        </div>
+
+        {/* ─── Sub-location Chips ────────────────────────────────────────── */}
+        {!loading && children.length > 0 && (
+          <div className="pf-chips-row">
+            {children.map((child) => {
+              // Count listings for this child and its descendants
+              const count = childCounts[child.id] || 0;
+              return (
+                <Link key={child.id} to={childUrl(child)} className="pf-chip">
+                  {isRTL ? child.nameAr : child.nameEn}
+                  {count > 0 && <span className="pf-chip-count">({count})</span>}
+                </Link>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ─── Compound Chips (leaf level) ───────────────────────────────── */}
+        {!loading && !isCompoundLevel && compoundCards.length > 0 && children.length === 0 && (
+          <div className="pf-chips-row">
+            {compoundCards.map((c) => (
+              <Link key={c.name} to={compoundUrl(c.name)} className="pf-chip">
+                {c.name}
+                <span className="pf-chip-count">({c.count})</span>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {/* ─── Filters Bar ───────────────────────────────────────────────── */}
+        {!loading && listings.length > 0 && (
+          <div className="pf-filters-bar">
+            <div className="pf-filters-row">
+              {/* Type filter */}
+              <select
+                className="pf-filter-select"
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+              >
+                <option value="">{isRTL ? 'نوع العقار' : 'Property Type'}</option>
+                {availableTypes.map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+
+              {/* Rooms filter */}
+              <select
+                className="pf-filter-select"
+                value={filterRooms}
+                onChange={(e) => setFilterRooms(e.target.value)}
+              >
+                <option value="">{isRTL ? 'الغرف' : 'Beds'}</option>
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <option key={n} value={n}>{n} {isRTL ? 'غرف' : 'Beds'}</option>
+                ))}
+              </select>
+
+              {/* Price toggle */}
+              <button
+                className={`pf-filter-select pf-filter-btn${showFilters ? ' active' : ''}`}
+                onClick={() => setShowFilters((v) => !v)}
+              >
+                {isRTL ? 'السعر' : 'Price'}
+                <span style={{ marginInlineStart: '6px' }}>{showFilters ? '▲' : '▼'}</span>
+              </button>
+
+              {/* Clear filters */}
+              {hasActiveFilter && (
+                <button
+                  className="pf-filter-clear"
+                  onClick={() => { setFilterType(''); setFilterRooms(''); setFilterMinPrice(''); setFilterMaxPrice(''); }}
+                >
+                  {isRTL ? 'مسح الفلاتر' : 'Clear filters'}
+                </button>
+              )}
+            </div>
+
+            {/* Price range (expanded) */}
+            {showFilters && (
+              <div className="pf-price-range">
+                <input
+                  type="number"
+                  className="pf-price-input"
+                  placeholder={isRTL ? 'الحد الأدنى' : 'Min price'}
+                  value={filterMinPrice}
+                  onChange={(e) => setFilterMinPrice(e.target.value)}
+                />
+                <span className="pf-price-sep">—</span>
+                <input
+                  type="number"
+                  className="pf-price-input"
+                  placeholder={isRTL ? 'الحد الأقصى' : 'Max price'}
+                  value={filterMaxPrice}
+                  onChange={(e) => setFilterMaxPrice(e.target.value)}
+                />
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ─── Loading ───────────────────────────────────────────────────── */}
+        {loading && (
+          <div className="funnel-loading">
+            <div className="loading-spinner" />
+            <p>{isRTL ? 'جاري التحميل...' : 'Loading...'}</p>
+          </div>
+        )}
+
+        {/* ─── Listings Grid ─────────────────────────────────────────────── */}
+        {!loading && filteredListings.length > 0 && (
+          <div className="best-grid pf-listings-grid">
+            {filteredListings.map((listing) => (
+              <PropertyCard key={listing.id} listing={listing} />
+            ))}
+          </div>
+        )}
+
+        {/* ─── No results after filter ───────────────────────────────────── */}
+        {!loading && filteredListings.length === 0 && listings.length > 0 && (
+          <div className="funnel-empty">
+            <p>{isRTL ? 'لا توجد نتائج تطابق الفلاتر المحددة' : 'No results match your filters'}</p>
+            <button
+              className="btn-primary"
+              style={{ marginTop: '16px' }}
+              onClick={() => { setFilterType(''); setFilterRooms(''); setFilterMinPrice(''); setFilterMaxPrice(''); }}
+            >
+              {isRTL ? 'مسح الفلاتر' : 'Clear filters'}
+            </button>
+          </div>
+        )}
+
+        {/* ─── Empty state (no listings at all) ─────────────────────────── */}
+        {!loading && listings.length === 0 && children.length === 0 && (
+          <div className="funnel-empty">
+            <p>{isRTL ? 'لا توجد وحدات متاحة حالياً في هذه المنطقة' : 'No units available in this area yet'}</p>
+            <Link to={lp('/listings')} className="btn-primary" style={{ marginTop: '16px', display: 'inline-block' }}>
+              {isRTL ? 'عرض جميع المناطق' : 'View all areas'}
+            </Link>
+          </div>
+        )}
+
+      </div>
 
       {/* ─── CTA Section ─────────────────────────────────────────────────── */}
       {!loading && listings.length > 0 && (
-        <section className="funnel-cta-section">
+        <section className="funnel-cta-section" style={{ marginTop: '64px' }}>
           <div className="container funnel-cta-inner">
             <h2>{isRTL ? 'هل تبحث عن وحدة مناسبة؟' : 'Looking for the right unit?'}</h2>
             <p>{isRTL ? 'تواصل معنا الآن للحصول على أفضل الأسعار والعروض الحصرية' : 'Contact us now for the best prices and exclusive offers'}</p>
@@ -379,7 +455,7 @@ export default function LocationFunnelPage() {
           <Link to={lp('/listings')}>{isRTL ? 'العقارات' : 'Listings'}</Link>
           <Link to="/admin">Admin</Link>
         </div>
-        <p className="footer-copy">© {new Date().getFullYear()} Arabian Estate</p>
+        <p className="footer-copy">© 2025 Arabian Estate. All rights reserved.</p>
       </footer>
     </div>
   );
