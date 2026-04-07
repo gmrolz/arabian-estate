@@ -106,6 +106,7 @@ export default function LocationFunnelPage() {
   const [filterMaxPrice, setFilterMaxPrice] = useState('');
   const [filterRooms, setFilterRooms] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [chipsExpanded, setChipsExpanded] = useState(false);
 
   const slugChain = useMemo(() => {
     const chain = [];
@@ -289,29 +290,52 @@ export default function LocationFunnelPage() {
 
         {/* ─── Sub-location Chips ────────────────────────────────────────── */}
         {!loading && children.length > 0 && (
-          <div className="pf-chips-row">
-            {children.map((child) => {
-              // Count listings for this child and its descendants
-              const count = childCounts[child.id] || 0;
-              return (
-                <Link key={child.id} to={childUrl(child)} className="pf-chip">
-                  {isRTL ? child.nameAr : child.nameEn}
-                  {count > 0 && <span className="pf-chip-count">({count})</span>}
-                </Link>
-              );
-            })}
+          <div className="pf-chips-wrapper">
+            <div className={`pf-chips-row${chipsExpanded ? ' expanded' : ''}`}>
+              {children.map((child) => {
+                const count = childCounts[child.id] || 0;
+                return (
+                  <Link key={child.id} to={childUrl(child)} className="pf-chip">
+                    {isRTL ? child.nameAr : child.nameEn}
+                    {count > 0 && <span className="pf-chip-count">({count})</span>}
+                  </Link>
+                );
+              })}
+              {children.length > 4 && (
+                <button
+                  className="pf-chips-show-more"
+                  onClick={() => setChipsExpanded((v) => !v)}
+                >
+                  {chipsExpanded
+                    ? (isRTL ? '▲ أقل' : '▲ Less')
+                    : (isRTL ? `▼ المزيد (${children.length - 4}+)` : `▼ More (${children.length - 4}+)`)}
+                </button>
+              )}
+            </div>
           </div>
         )}
 
         {/* ─── Compound Chips (leaf level) ───────────────────────────────── */}
         {!loading && !isCompoundLevel && compoundCards.length > 0 && children.length === 0 && (
-          <div className="pf-chips-row">
-            {compoundCards.map((c) => (
-              <Link key={c.name} to={compoundUrl(c.name)} className="pf-chip">
-                {c.name}
-                <span className="pf-chip-count">({c.count})</span>
-              </Link>
-            ))}
+          <div className="pf-chips-wrapper">
+            <div className={`pf-chips-row${chipsExpanded ? ' expanded' : ''}`}>
+              {compoundCards.map((c) => (
+                <Link key={c.name} to={compoundUrl(c.name)} className="pf-chip">
+                  {c.name}
+                  <span className="pf-chip-count">({c.count})</span>
+                </Link>
+              ))}
+              {compoundCards.length > 4 && (
+                <button
+                  className="pf-chips-show-more"
+                  onClick={() => setChipsExpanded((v) => !v)}
+                >
+                  {chipsExpanded
+                    ? (isRTL ? '▲ أقل' : '▲ Less')
+                    : (isRTL ? `▼ المزيد (${compoundCards.length - 4}+)` : `▼ More (${compoundCards.length - 4}+)`)}
+                </button>
+              )}
+            </div>
           </div>
         )}
 
