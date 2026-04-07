@@ -266,22 +266,19 @@ export default function AdminListingEdit() {
     setUploadLoading(false);
     
     if (uploadedUrls.length > 0) {
-      // Update form with new images
-      setForm((prev) => {
-        if (!prev) return null;
-        const newImages = [...(prev.images || []), ...uploadedUrls];
-        return { ...prev, images: newImages };
-      });
-      
-      // Persist images to DB after state update
+      // Persist images to DB immediately with all uploaded URLs
       try {
-        // Get the complete image array (existing + new)
-        const completeImages = [...(form?.images || []), ...uploadedUrls];
-        const { error } = await setListingImages(listingId, completeImages);
+        const { error } = await setListingImages(listingId, uploadedUrls);
         if (error) {
           showToast(`Images uploaded but failed to save to database: ${error.message}`, 'warning');
         } else {
           showToast(`${uploadedUrls.length} image(s) uploaded successfully.`, 'success');
+          // Update form with new images after successful persistence
+          setForm((prev) => {
+            if (!prev) return null;
+            const newImages = [...(prev.images || []), ...uploadedUrls];
+            return { ...prev, images: newImages };
+          });
         }
       } catch (err) {
         console.error('Failed to persist images:', err);
@@ -328,22 +325,21 @@ export default function AdminListingEdit() {
       if (!response.ok || !data.url) {
         showToast(`Failed to upload image: ${data.error || 'Unknown error'}`, 'error');
       } else {
-        // Update form with new image
-        setForm((prev) => {
-          if (!prev) return null;
-          const newImages = [...(prev.images || []), data.url];
-          return { ...prev, images: newImages };
-        });
+
         
-        // Persist image to DB after state update
+        // Persist image to DB immediately
         try {
-          // Get the complete image array (existing + new)
-          const completeImages = [...(form?.images || []), data.url];
-          const { error } = await setListingImages(listingId, completeImages);
+          const { error } = await setListingImages(listingId, [data.url]);
           if (error) {
             showToast(`Image uploaded but failed to save to database: ${error.message}`, 'warning');
           } else {
             showToast('Image uploaded from URL successfully.', 'success');
+            // Update form with new image after successful persistence
+            setForm((prev) => {
+              if (!prev) return null;
+              const newImages = [...(prev.images || []), data.url];
+              return { ...prev, images: newImages };
+            });
           }
         } catch (err) {
           console.error('Failed to persist image:', err);
