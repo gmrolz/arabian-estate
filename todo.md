@@ -95,3 +95,4 @@
 - [x] Homepage: show Cairo with East Cairo as featured sub-section with nested cards
 - [x] LocationFunnelPage: breadcrumbs + sub-location chips with counts + quick filters + listings grid
 - [x] Chips row: single line with Show More / See Less toggle
+- [x] Fix chips bar: expand downward to show all hidden chips below first row

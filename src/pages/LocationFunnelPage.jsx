@@ -301,17 +301,17 @@ export default function LocationFunnelPage() {
                   </Link>
                 );
               })}
-              {children.length > 4 && (
-                <button
-                  className="pf-chips-show-more"
-                  onClick={() => setChipsExpanded((v) => !v)}
-                >
-                  {chipsExpanded
-                    ? (isRTL ? '▲ أقل' : '▲ Less')
-                    : (isRTL ? `▼ المزيد (${children.length - 4}+)` : `▼ More (${children.length - 4}+)`)}
-                </button>
-              )}
             </div>
+            {children.length > 4 && (
+              <button
+                className="pf-chips-show-more"
+                onClick={() => setChipsExpanded((v) => !v)}
+              >
+                {chipsExpanded
+                  ? (isRTL ? '▲ عرض أقل' : '▲ Show Less')
+                  : (isRTL ? `▼ عرض المزيد (${children.length - 4}+)` : `▼ Show More (${children.length - 4}+)`)}
+              </button>
+            )}
           </div>
         )}
 
@@ -325,17 +325,17 @@ export default function LocationFunnelPage() {
                   <span className="pf-chip-count">({c.count})</span>
                 </Link>
               ))}
-              {compoundCards.length > 4 && (
-                <button
-                  className="pf-chips-show-more"
-                  onClick={() => setChipsExpanded((v) => !v)}
-                >
-                  {chipsExpanded
-                    ? (isRTL ? '▲ أقل' : '▲ Less')
-                    : (isRTL ? `▼ المزيد (${compoundCards.length - 4}+)` : `▼ More (${compoundCards.length - 4}+)`)}
-                </button>
-              )}
             </div>
+            {compoundCards.length > 4 && (
+              <button
+                className="pf-chips-show-more"
+                onClick={() => setChipsExpanded((v) => !v)}
+              >
+                {chipsExpanded
+                  ? (isRTL ? '▲ عرض أقل' : '▲ Show Less')
+                  : (isRTL ? `▼ عرض المزيد (${compoundCards.length - 4}+)` : `▼ Show More (${compoundCards.length - 4}+)`)}
+              </button>
+            )}
           </div>
         )}
 
