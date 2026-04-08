@@ -41,6 +41,15 @@ const createListingSchema = z.object({
   price: z.string().default(""),
   finishing: z.string().default("Semi Finished"),
   delivery: z.string().default(""),
+  paymentYears: z.number().int().nullable().optional(),
+  paymentDownPct: z.number().int().nullable().optional(),
+  annualPayment: z.string().optional().default(""),
+  showPrice: z.boolean().optional().default(true),
+  showDownpayment: z.boolean().optional().default(true),
+  showMonthly: z.boolean().optional().default(true),
+  showFullPrice: z.boolean().optional().default(false),
+  showAnnual: z.boolean().optional().default(false),
+  showCompound: z.boolean().optional().default(true),
   featured: z.boolean().default(false),
   areaSlug: z.string().default("new-capital"),
   mapsUrl: z.string().optional().default(""),
@@ -72,6 +81,15 @@ const updateListingSchema = z.object({
   price: z.string().optional(),
   finishing: z.string().optional(),
   delivery: z.string().optional(),
+  paymentYears: z.number().int().nullable().optional(),
+  paymentDownPct: z.number().int().nullable().optional(),
+  annualPayment: z.string().optional(),
+  showPrice: z.boolean().optional(),
+  showDownpayment: z.boolean().optional(),
+  showMonthly: z.boolean().optional(),
+  showFullPrice: z.boolean().optional(),
+  showAnnual: z.boolean().optional(),
+  showCompound: z.boolean().optional(),
   featured: z.boolean().optional(),
   areaSlug: z.string().optional(),
   mapsUrl: z.string().optional(),
@@ -100,6 +118,12 @@ function formatRow(row: any) {
     ...row,
     featured: row.featured === 1,
     active: row.active === 1,
+    showPrice: row.showPrice === 1,
+    showDownpayment: row.showDownpayment === 1,
+    showMonthly: row.showMonthly === 1,
+    showFullPrice: row.showFullPrice === 1,
+    showAnnual: row.showAnnual === 1,
+    showCompound: row.showCompound === 1,
     images: parseImages(row),
   };
 }
@@ -226,6 +250,15 @@ export const listingsRouter = router({
         price: input.price,
         finishing: input.finishing,
         delivery: input.delivery,
+        paymentYears: input.paymentYears ?? null,
+        paymentDownPct: input.paymentDownPct ?? null,
+        annualPayment: input.annualPayment ?? "",
+        showPrice: input.showPrice !== false ? 1 : 0,
+        showDownpayment: input.showDownpayment !== false ? 1 : 0,
+        showMonthly: input.showMonthly !== false ? 1 : 0,
+        showFullPrice: input.showFullPrice ? 1 : 0,
+        showAnnual: input.showAnnual ? 1 : 0,
+        showCompound: input.showCompound !== false ? 1 : 0,
         featured: input.featured ? 1 : 0,
         active: input.active ? 1 : 0,
         areaSlug: input.areaSlug,
@@ -248,7 +281,7 @@ export const listingsRouter = router({
 
       for (const [key, value] of Object.entries(data)) {
         if (value === undefined) continue;
-        if (key === "featured" || key === "active") {
+        if (key === "featured" || key === "active" || key === "showPrice" || key === "showDownpayment" || key === "showMonthly" || key === "showFullPrice" || key === "showAnnual" || key === "showCompound") {
           updateData[key] = value ? 1 : 0;
         } else if (key === "images") {
           updateData[key] = serializeImages(value as string | string[]);

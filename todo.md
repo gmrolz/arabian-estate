@@ -132,3 +132,13 @@
 - [x] FEATURE: Unified PropertyCard with flexible pricing display (full price, DP+installment, hide price, or all 3) - COMPLETE
 - [x] FEATURE: Admin checkboxes to control which price elements to show on card - COMPLETE
 - [x] FEATURE: Admin preview card must match frontend card exactly - COMPLETE: Uses real PropertyCard component
+
+## Pricing Visibility - Database-Driven Control
+- [x] Verify show_full_price, show_downpayment, show_monthly, show_annual columns exist in DB schema - CONFIRMED: All columns exist in drizzle/schema.ts
+- [x] Update admin backend (buildListingRow / handleSave) to persist visibility flags to DB - DONE: Added to buildListingRow, handleSave, and upsertListing
+- [x] Update admin form to load visibility flags from DB when editing existing listing - DONE: Added to controlListings mapping and form initialization
+- [x] Update frontend PropertyCard to read and respect DB flags (show/hide full price, DP, monthly, annual) - DONE: Added to normalizeRow and normalizeListingRow
+- [x] Ensure admin preview card is synced with actual card behavior - DONE: Uses real PropertyCard component
+- [x] Test full flow: admin toggle → DB save → frontend display - DONE: 7 vitest tests passing
+- [x] Update server listingsRouter: Added visibility fields to create/update Zod schemas, formatRow, and create mutation
+- [x] Update server listingsRouter: Added boolean-to-int conversion for visibility fields in update mutation

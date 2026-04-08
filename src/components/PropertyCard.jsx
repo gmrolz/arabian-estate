@@ -162,6 +162,7 @@ export default function PropertyCard({ listing, featured = false }) {
         downpayment, monthly_inst, price, finishing, delivery,
         payment_years, payment_down_pct,
         images, location, title, id: listingId,
+        show_price = true,
         show_downpayment = true, show_monthly = true,
         show_full_price = false, show_annual = false, show_compound = true, annual_payment,
         maps_url, mapsUrl,
@@ -220,7 +221,7 @@ export default function PropertyCard({ listing, featured = false }) {
                 t={t}
                 listingId={listingId}
                 siteId={listing.site_id ?? siteId}
-                show_full_price={show_full_price}
+                show_full_price={show_price && show_full_price}
                 price={price}
             />
 
@@ -244,6 +245,25 @@ export default function PropertyCard({ listing, featured = false }) {
 
                 <div className="card-pricing">
                     {(() => {
+                        // Master show_price toggle: if false, hide all pricing
+                        if (!show_price) {
+                            return (
+                                <div className="price-row price-hidden">
+                                    <a
+                                        href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hi, I'm interested in ${title}. Can you please share the pricing details?`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn-inquire-price"
+                                        onClick={() => {
+                                            if (listingId && hasSupabase()) trackEvent(listingId, 'inquire_price', {}, listing.site_id ?? siteId);
+                                        }}
+                                    >
+                                        استعلم عن السعر
+                                    </a>
+                                </div>
+                            );
+                        }
+
                         const hasPricingToShow = 
                             (show_downpayment && downpayment) ||
                             (show_monthly && monthly_inst) ||
