@@ -165,11 +165,11 @@ export default function AdminListingEdit() {
       setForm(null);
       return;
     }
-    const images = (listing.images || []).map((img) => ({ url: getUrl(img), sort_order: img.sort_order ?? 0 }));
-    images.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+    // Images are already in the correct order from the database
+    const imageUrls = (listing.images || []).map((img) => getUrl(img));
     const formatted = {
       ...listing,
-      images: images.map((i) => i.url),
+      images: imageUrls,
       price: listing.price && !String(listing.price).includes('%') ? formatNumberReadable(String(listing.price)) : listing.price,
       downpayment: listing.downpayment && !String(listing.downpayment).includes('%') ? formatNumberReadable(String(listing.downpayment)) : listing.downpayment,
       monthly_inst: listing.monthly_inst ? formatNumberReadable(String(listing.monthly_inst)) : listing.monthly_inst,

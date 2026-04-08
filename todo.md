@@ -121,3 +121,4 @@
 - [x] BUG: Sort order changes not persisting - FIXED: Added admin listings refresh after save to keep data in sync
 - [x] BUG: Image deletion in edit mode not working - FIXED: Added images array to handleSave row object
 - [x] FEATURE: Add image reordering - ALREADY IMPLEMENTED: moveImage function with up/down buttons
+- [x] BUG: Image reordering not persisting - FIXED: Removed incorrect sort_order extraction that was losing image order
