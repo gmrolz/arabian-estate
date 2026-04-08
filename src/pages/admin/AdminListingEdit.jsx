@@ -173,6 +173,10 @@ export default function AdminListingEdit() {
       price: listing.price && !String(listing.price).includes('%') ? formatNumberReadable(String(listing.price)) : listing.price,
       downpayment: listing.downpayment && !String(listing.downpayment).includes('%') ? formatNumberReadable(String(listing.downpayment)) : listing.downpayment,
       monthly_inst: listing.monthly_inst ? formatNumberReadable(String(listing.monthly_inst)) : listing.monthly_inst,
+      compound_name: listing.compoundName || listing.compound_name || '',
+      maps_url: listing.mapsUrl || listing.maps_url || '',
+      unit_type: listing.unitType || listing.unit_type || 'Apartment',
+      area_slug: listing.areaSlug || listing.area_slug || 'new-capital',
     };
     setForm(formatted);
   }, [loading, isNew, id, listings]);

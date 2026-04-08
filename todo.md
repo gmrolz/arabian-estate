@@ -117,3 +117,4 @@
 - [x] BUG: Admin page mobile - eye icon covers save button when editing - FIXED: Moved preview button from bottom 24px to 120px
 - [x] FEATURE: Add "Duplex" to unit_type selector in admin form - Added to dropdown options
 - [x] FEATURE: Ensure Duplex displays correctly on frontend PropertyCard - Displays via unit_type field
+- [x] BUG: Compound name not persisting - FIXED: Added field mapping from camelCase compoundName to snake_case compound_name
