@@ -383,6 +383,7 @@ export default function AdminListingEdit() {
       area_slug: form.area_slug || 'new-capital',
       maps_url: form.maps_url || '',
       sort_order: form.sort_order ?? 0,
+      images: form.images || [],
     };
     const { data, error } = await upsertListing(row);
     setSaving(false);

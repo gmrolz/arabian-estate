@@ -119,3 +119,5 @@
 - [x] FEATURE: Ensure Duplex displays correctly on frontend PropertyCard - Displays via unit_type field
 - [x] BUG: Compound name not persisting - FIXED: Added field mapping from camelCase compoundName to snake_case compound_name
 - [x] BUG: Sort order changes not persisting - FIXED: Added admin listings refresh after save to keep data in sync
+- [x] BUG: Image deletion in edit mode not working - FIXED: Added images array to handleSave row object
+- [x] FEATURE: Add image reordering - ALREADY IMPLEMENTED: moveImage function with up/down buttons
