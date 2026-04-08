@@ -145,7 +145,7 @@ function ImageCarousel({ images, alt, featured, priceTag, t, listingId, siteId, 
             )}
 
             {/* Badges */}
-            {show_full_price && price && <span className="card-badge badge-price">EGP {formatNumberReadable(price)}</span>}
+            {show_full_price && price && <span className="card-badge badge-price">EGP {formatPriceShort(price)}</span>}
             {featured && <span className="badge-featured">{t('card.featured')}</span>}
         </div>
     );

@@ -142,3 +142,7 @@
 - [x] Test full flow: admin toggle → DB save → frontend display - DONE: 7 vitest tests passing
 - [x] Update server listingsRouter: Added visibility fields to create/update Zod schemas, formatRow, and create mutation
 - [x] Update server listingsRouter: Added boolean-to-int conversion for visibility fields in update mutation
+
+## Price Badge Display
+- [x] BUG: Price badge on image should show short format (8.8M) not full format (9,000,000) - FIXED: Changed badge to use formatPriceShort()
+- [x] FEATURE: Full price row should keep full format (9,000,000) for clarity - DONE: Full price row uses formatNumberReadable()
