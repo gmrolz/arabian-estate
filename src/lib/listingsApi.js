@@ -469,6 +469,15 @@ export function normalizeListingRow(row, locale = 'en') {
     images,
     sort_order: row.sortOrder ?? row.sort_order ?? 0,
     active: row.active === 1 || row.active === true,
+    // Pricing visibility fields (convert from DB integers/camelCase to snake_case booleans)
+    show_downpayment: row.showDownpayment === 1 || row.showDownpayment === true || row.show_downpayment === true,
+    show_monthly: row.showMonthly === 1 || row.showMonthly === true || row.show_monthly === true,
+    show_full_price: row.showFullPrice === 1 || row.showFullPrice === true || row.show_full_price === true,
+    show_annual: row.showAnnual === 1 || row.showAnnual === true || row.show_annual === true,
+    show_compound: row.showCompound === 1 || row.showCompound === true || row.show_compound === true,
+    annual_payment: row.annualPayment ?? row.annual_payment ?? '',
+    payment_years: row.paymentYears ?? row.payment_years ?? null,
+    payment_down_pct: row.paymentDownPct ?? row.payment_down_pct ?? null,
     // Include all other fields that might be needed
     ...row,
   };

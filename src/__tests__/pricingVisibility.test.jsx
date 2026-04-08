@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import PropertyCard from '../components/PropertyCard';
-import { ListingPreviewCard } from '../components/ListingPreviewCard';
 import { LocaleProvider } from '../context/LocaleContext';
 import { SiteProvider } from '../context/SiteContext';
 
@@ -133,8 +132,8 @@ describe('Pricing Visibility Logic', () => {
     });
   });
 
-  describe('ListingPreviewCard - Admin Preview', () => {
-    it('should sync with PropertyCard logic - show Pay Now and Monthly by default', () => {
+  describe('PropertyCard Admin Preview (via PreviewCard wrapper)', () => {
+    it('should work as admin preview - show Pay Now and Monthly by default', () => {
       const listing = {
         ...baseListing,
         show_price: true,
@@ -144,7 +143,7 @@ describe('Pricing Visibility Logic', () => {
         show_annual: false,
       };
 
-      render(<ListingPreviewCard listing={listing} />, { wrapper });
+      render(<PropertyCard listing={listing} />, { wrapper });
 
       // Should show Pay Now and Monthly
       expect(screen.getByText(/Pay Now|الدفعة الأولى/)).toBeInTheDocument();
@@ -164,7 +163,7 @@ describe('Pricing Visibility Logic', () => {
         show_annual: false,
       };
 
-      render(<ListingPreviewCard listing={listing} />, { wrapper });
+      render(<PropertyCard listing={listing} />, { wrapper });
 
       // Should show "Ask for Price"
       expect(screen.getByText(/استعلم عن السعر|Ask for Price/)).toBeInTheDocument();
@@ -180,7 +179,7 @@ describe('Pricing Visibility Logic', () => {
         show_annual: true,
       };
 
-      render(<ListingPreviewCard listing={listing} />, { wrapper });
+      render(<PropertyCard listing={listing} />, { wrapper });
 
       // Should show all pricing
       expect(screen.getByText(/Pay Now|الدفعة الأولى/)).toBeInTheDocument();

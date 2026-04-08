@@ -15,10 +15,12 @@ import { useAdminToast } from '../../context/AdminToastContext';
 import { useSite } from '../../context/SiteContext';
 import { CAIRO_AREAS, EGYPT_REGIONS } from '../../data/newCapitalListings';
 import { formatNumberReadable } from '../../lib/format';
-import { ListingPreviewCard } from '../../components/ListingPreviewCard';
+import { normalizeListingRow } from '../../lib/listingsApi';
+import PropertyCard from '../../components/PropertyCard';
 import { CascadingLocationSelector } from '../../components/CascadingLocationSelector';
+import { useLocale } from '../../context/LocaleContext';
 import '../../styles/listing-preview.css';
-import { useState as useStateHook } from 'react';
+import { useState as useStateHook, useMemo } from 'react';
 
 // NOTE: LocationSelector component now handles location selection
 // The old REGIONS and CAIRO_SUB_AREAS are kept for backward compatibility
@@ -88,6 +90,25 @@ function getUrl(img) {
   return typeof img === 'string' ? img : img?.url ?? '';
 }
 
+function PreviewCard({ listing }) {
+  const { locale } = useLocale();
+  const { siteId } = useSite();
+  
+  // Normalize the form data to match PropertyCard expectations
+  const normalizedListing = useMemo(() => {
+    if (!listing) return null;
+    return normalizeListingRow(listing, locale);
+  }, [listing, locale]);
+  
+  if (!normalizedListing) return null;
+  
+  return (
+    <div className="admin-preview-wrapper">
+      <PropertyCard listing={normalizedListing} siteId={siteId} />
+    </div>
+  );
+}
+
 export default function AdminListingEdit() {
   const { id } = useParams();
   const location = useLocation();
@@ -139,7 +160,6 @@ export default function AdminListingEdit() {
         area: '',
         rooms: '',
         toilets: '',
-        unit_type: 'Apartment',
         downpayment: '',
         monthly_inst: '',
         price: '',
@@ -396,7 +416,6 @@ export default function AdminListingEdit() {
       area: form.area ? Number(form.area) : null,
       rooms: form.rooms ? Number(form.rooms) : null,
       toilets: form.toilets ? Number(form.toilets) : null,
-      unit_type: form.unit_type || 'Apartment',
       downpayment: form.downpayment || null,
       monthly_inst: form.monthly_inst || null,
       price: form.price || null,
@@ -934,7 +953,7 @@ export default function AdminListingEdit() {
       
       {/* Desktop Preview Panel */}
       <div className="admin-edit-preview-panel">
-        {form && <ListingPreviewCard listing={form} />}
+        {form && <PreviewCard listing={form} />}
       </div>
     </div>
     
@@ -959,7 +978,7 @@ export default function AdminListingEdit() {
         </button>
       </div>
       <div className="preview-drawer-content">
-        {form && <ListingPreviewCard listing={form} />}
+        {form && <PreviewCard listing={form} />}
       </div>
     </div>
     </>

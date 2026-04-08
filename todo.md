@@ -124,3 +124,11 @@
 - [x] BUG: Image reordering not persisting - FIXED: Removed incorrect sort_order extraction that was losing image order
 - [x] FEATURE: Auto-save and notify when image is deleted - Implemented with success notification
 - [x] FEATURE: Auto-save and notify when image order is changed - Implemented with success notification
+
+## Unified Card & Pricing System
+- [x] BUG: Price tag not showing full price on frontend card - FIXED: Updated ImageCarousel to show full formatted price when show_full_price is true
+- [x] BUG: Arabic and English showing different price sections - not linked - FIXED: Added show_ field mapping to normalizeListingRow
+- [x] BUG: Admin preview card doesn't match frontend card - FIXED: Replaced ListingPreviewCard with PropertyCard in AdminListingEdit
+- [x] FEATURE: Unified PropertyCard with flexible pricing display (full price, DP+installment, hide price, or all 3) - COMPLETE
+- [x] FEATURE: Admin checkboxes to control which price elements to show on card - COMPLETE
+- [x] FEATURE: Admin preview card must match frontend card exactly - COMPLETE: Uses real PropertyCard component

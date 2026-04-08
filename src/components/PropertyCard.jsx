@@ -22,7 +22,7 @@ function formatPriceShort(priceStr) {
 }
 
 /* ─── Image Carousel ─────────────────────────────────── */
-function ImageCarousel({ images, alt, featured, priceTag, t, listingId, siteId }) {
+function ImageCarousel({ images, alt, featured, priceTag, t, listingId, siteId, show_full_price, price }) {
     const [idx, setIdx] = useState(0);
     const [isInView, setIsInView] = useState(false);
     const [dragging, setDragging] = useState(false);
@@ -145,7 +145,7 @@ function ImageCarousel({ images, alt, featured, priceTag, t, listingId, siteId }
             )}
 
             {/* Badges */}
-            {priceTag && <span className="card-badge badge-price">EGP {priceTag}</span>}
+            {show_full_price && price && <span className="card-badge badge-price">EGP {formatNumberReadable(price)}</span>}
             {featured && <span className="badge-featured">{t('card.featured')}</span>}
         </div>
     );
@@ -220,6 +220,8 @@ export default function PropertyCard({ listing, featured = false }) {
                 t={t}
                 listingId={listingId}
                 siteId={listing.site_id ?? siteId}
+                show_full_price={show_full_price}
+                price={price}
             />
 
             <div className="card-body">
