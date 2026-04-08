@@ -115,3 +115,5 @@
 - [x] FEATURE: Ensure villa types display correctly on frontend PropertyCard - Already displays via unit_type field
 - [x] BUG: Title showing only in Arabic - FIXED: Removed incorrect locale.replace() in LocationFunnelPage and added locale to dependency array
 - [x] BUG: Admin page mobile - eye icon covers save button when editing - FIXED: Moved preview button from bottom 24px to 120px
+- [x] FEATURE: Add "Duplex" to unit_type selector in admin form - Added to dropdown options
+- [x] FEATURE: Ensure Duplex displays correctly on frontend PropertyCard - Displays via unit_type field
