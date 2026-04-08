@@ -400,6 +400,13 @@ export default function AdminListingEdit() {
         else next.push(updated);
         return next;
       });
+      
+      // Refresh admin listings to ensure sort_order and other fields are in sync
+      const refreshRes = await controlListings(siteId);
+      if (refreshRes.data) {
+        setListings(refreshRes.data);
+      }
+      
       refetchListings?.();
       navigate(`/admin/listings/${data.id}`);
       showToast(isNew ? 'Listing added' : 'Listing saved', 'success');
