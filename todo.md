@@ -122,3 +122,5 @@
 - [x] BUG: Image deletion in edit mode not working - FIXED: Added images array to handleSave row object
 - [x] FEATURE: Add image reordering - ALREADY IMPLEMENTED: moveImage function with up/down buttons
 - [x] BUG: Image reordering not persisting - FIXED: Removed incorrect sort_order extraction that was losing image order
+- [x] FEATURE: Auto-save and notify when image is deleted - Implemented with success notification
+- [x] FEATURE: Auto-save and notify when image order is changed - Implemented with success notification

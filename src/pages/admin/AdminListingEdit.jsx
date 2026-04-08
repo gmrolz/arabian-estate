@@ -189,17 +189,42 @@ export default function AdminListingEdit() {
     setTranslateLoading(false);
   };
 
-  const moveImage = (index, direction) => {
+  const moveImage = async (index, direction) => {
     if (!form?.images?.length) return;
     const next = [...form.images];
     const j = index + direction;
     if (j < 0 || j >= next.length) return;
     [next[index], next[j]] = [next[j], next[index]];
     setForm((prev) => (prev ? { ...prev, images: next } : null));
+    
+    // Auto-save image order
+    if (form?.id) {
+      try {
+        const row = buildListingRow();
+        row.images = next;
+        await upsertListing(row);
+        showToast('Image order updated', 'success');
+      } catch (error) {
+        showToast('Failed to update image order', 'error');
+      }
+    }
   };
 
-  const removeImage = (index) => {
-    setForm((prev) => (prev ? { ...prev, images: prev.images.filter((_, i) => i !== index) } : null));
+  const removeImage = async (index) => {
+    const newImages = form?.images?.filter((_, i) => i !== index) || [];
+    setForm((prev) => (prev ? { ...prev, images: newImages } : null));
+    
+    // Auto-save after deletion
+    if (form?.id) {
+      try {
+        const row = buildListingRow();
+        row.images = newImages;
+        await upsertListing(row);
+        showToast('Image deleted successfully', 'success');
+      } catch (error) {
+        showToast('Failed to delete image', 'error');
+      }
+    }
   };
 
   const buildListingRow = () => ({
