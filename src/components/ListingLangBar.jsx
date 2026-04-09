@@ -2,8 +2,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { useLocale } from '../context/LocaleContext';
 import { useHeaderVisibility } from '../context/HeaderVisibilityContext';
 
-const FlagEn = () => <img src="/flags/en.svg" alt="" width="24" height="16" className="flag-img" />;
-const FlagAr = () => <img src="/flags/ar.svg" alt="" width="24" height="16" className="flag-img" />;
+const FlagEn = () => <img src="/flags/en.svg" alt="English" width="24" height="16" className="flag-img" />;
+const FlagAr = () => <img src="/flags/ar.svg" alt="العربية" width="24" height="16" className="flag-img" />;
 
 const CAIRO_AREA_SLUGS = ['new-capital', 'new-cairo', 'mostakbal-city'];
 function isListingGridPage(pathname) {

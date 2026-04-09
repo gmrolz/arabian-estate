@@ -146,3 +146,9 @@
 ## Price Badge Display
 - [x] BUG: Price badge on image should show short format (8.8M) not full format (9,000,000) - FIXED: Changed badge to use formatPriceShort()
 - [x] FEATURE: Full price row should keep full format (9,000,000) for clarity - DONE: Full price row uses formatNumberReadable()
+
+
+## SEO Fixes - Homepage
+- [x] BUG: No keywords detected on homepage - FIXED: Added meta keywords tag with real estate, apartments, villas, New Capital, Egypt, luxury properties, investment
+- [x] BUG: Page title too short (14 chars) - FIXED: Updated to "Arabian Estate - Premium Real Estate Egypt" (43 characters)
+- [x] BUG: 6 images missing alt text on homepage - FIXED: Added alt text to 5 flag images in Header.jsx and ListingLangBar.jsx (English, العربية)
