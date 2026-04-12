@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function AdminLocations() {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedParents, setExpandedParents] = useState(new Set());
-  const [showAddForm, setShowAddForm] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(null); // null or parentId
   const [newLocation, setNewLocation] = useState({
     nameEn: '',
     nameAr: '',
@@ -44,52 +44,33 @@ export default function AdminLocations() {
     setExpandedParents(newExpanded);
   };
 
-  const handleAddLocation = async (e) => {
+  const handleAddLocation = async (e, parentId) => {
     e.preventDefault();
     try {
+      const parentLocation = locations.find(l => l.id === parentId);
+      const newLevel = parentLocation ? parentLocation.level + 1 : 2;
+      
       const slug = newLocation.nameEn.toLowerCase().replace(/\s+/g, '-');
       const payload = {
         nameEn: newLocation.nameEn,
         nameAr: newLocation.nameAr,
         slug,
-        level: newLocation.level,
-        parentId: newLocation.parentId,
+        level: newLevel,
+        parentId: parentId || null,
       };
       const response = await fetch('/api/locations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to add location');
-      }
+      if (!response.ok) throw new Error('Failed to add location');
       
+      await fetchLocations();
+      setShowAddForm(null);
       setNewLocation({ nameEn: '', nameAr: '', level: 2, parentId: null });
-      setShowAddForm(false);
-      await fetchLocations();
     } catch (err) {
-      setError(err.message);
+      alert(`Error: ${err.message}`);
       console.error('Error adding location:', err);
-    }
-  };
-
-  const handleDeleteLocation = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this location?')) return;
-    
-    try {
-      const response = await fetch(`/api/locations/${id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to delete location');
-      }
-      await fetchLocations();
-    } catch (err) {
-      setError(err.message);
-      console.error('Error deleting location:', err);
     }
   };
 
@@ -113,9 +94,40 @@ export default function AdminLocations() {
               </span>
               <span className="location-level">Level {item.level}</span>
               <span className="listing-count">({item.listingCount} listings)</span>
+              <button
+                className="add-here-btn"
+                onClick={() => {
+                  setShowAddForm(item.id);
+                  setNewLocation({ nameEn: '', nameAr: '', level: item.level + 1, parentId: item.id });
+                }}
+              >
+                + Add here
+              </button>
             </div>
-
           </div>
+          
+          {showAddForm === item.id && (
+            <div className="add-location-form" style={{ marginLeft: `${(level + 1) * 20}px` }}>
+              <form onSubmit={(e) => handleAddLocation(e, item.id)}>
+                <input
+                  type="text"
+                  placeholder="English name"
+                  value={newLocation.nameEn}
+                  onChange={(e) => setNewLocation({ ...newLocation, nameEn: e.target.value })}
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Arabic name"
+                  value={newLocation.nameAr}
+                  onChange={(e) => setNewLocation({ ...newLocation, nameAr: e.target.value })}
+                  required
+                />
+                <button type="submit">Add</button>
+                <button type="button" onClick={() => setShowAddForm(null)}>Cancel</button>
+              </form>
+            </div>
+          )}
           
           {expandedParents.has(item.id) && buildHierarchy(items, item.id, level + 1)}
         </div>
@@ -128,207 +140,136 @@ export default function AdminLocations() {
     <div className="admin-page admin-locations">
       <div className="admin-header">
         <h1>Location Management</h1>
-        <button
-          className="btn-primary"
-          onClick={() => setShowAddForm(!showAddForm)}
-        >
-          {showAddForm ? 'Cancel' : '+ Add Location'}
-        </button>
       </div>
 
       {error && <div className="error-message">{error}</div>}
 
-      {showAddForm && (
-        <form className="add-location-form" onSubmit={handleAddLocation}>
-          <div className="form-group">
-            <label>English Name *</label>
-            <input
-              type="text"
-              value={newLocation.nameEn}
-              onChange={(e) => setNewLocation({ ...newLocation, nameEn: e.target.value })}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Arabic Name *</label>
-            <input
-              type="text"
-              value={newLocation.nameAr}
-              onChange={(e) => setNewLocation({ ...newLocation, nameAr: e.target.value })}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Level *</label>
-            <select
-              value={newLocation.level}
-              onChange={(e) => setNewLocation({ ...newLocation, level: parseInt(e.target.value) })}
-            >
-              <option value={1}>1 - Governorate</option>
-              <option value={2}>2 - City</option>
-              <option value={3}>3 - District</option>
-              <option value={4}>4 - Sub-area</option>
-              <option value={5}>5 - Compound</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Parent Location (optional)</label>
-            <select
-              value={newLocation.parentId || ''}
-              onChange={(e) => setNewLocation({ ...newLocation, parentId: e.target.value ? parseInt(e.target.value) : null })}
-            >
-              <option value="">None (Top Level)</option>
-              {locations.filter(l => l.level < newLocation.level).map(l => (
-                <option key={l.id} value={l.id}>
-                  {l.nameEn} ({l.level})
-                </option>
-              ))}
-            </select>
-          </div>
-          <button type="submit" className="btn-primary">Add Location</button>
-        </form>
-      )}
-
       <div className="locations-tree">
-        <h2>Location Hierarchy</h2>
-        {locations.length === 0 ? (
-          <p>No locations found</p>
-        ) : (
-          buildHierarchy(locations)
-        )}
+        {buildHierarchy(locations)}
       </div>
 
       <style>{`
         .admin-locations {
           padding: 20px;
         }
-        
-        .admin-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-        }
-        
-        .add-location-form {
-          background: #f5f5f5;
-          padding: 15px;
-          border-radius: 8px;
-          margin-bottom: 20px;
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 15px;
-        }
-        
-        .form-group {
-          display: flex;
-          flex-direction: column;
-        }
-        
-        .form-group label {
-          font-weight: 600;
-          margin-bottom: 5px;
-          font-size: 14px;
-        }
-        
-        .form-group input,
-        .form-group select {
-          padding: 8px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-          font-size: 14px;
-        }
-        
+
         .locations-tree {
-          background: white;
+          background: #f9f9f9;
           border: 1px solid #ddd;
           border-radius: 8px;
-          padding: 15px;
+          padding: 20px;
+          max-height: 600px;
+          overflow-y: auto;
         }
-        
+
         .location-item {
-          margin-bottom: 10px;
+          margin: 10px 0;
         }
-        
+
         .location-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 10px;
-          background: #f9f9f9;
-          border-radius: 4px;
-          border-left: 3px solid #c90411;
-        }
-        
-        .location-info {
           display: flex;
           align-items: center;
           gap: 10px;
+        }
+
+        .location-info {
+          display: flex;
+          align-items: center;
+          gap: 12px;
           flex: 1;
         }
-        
+
         .expand-btn {
           background: none;
           border: none;
           cursor: pointer;
-          font-size: 12px;
-          padding: 0;
-          width: 20px;
-          text-align: center;
+          font-size: 14px;
+          padding: 4px 8px;
+          color: #666;
         }
-        
+
         .location-name {
-          font-weight: 600;
-          flex: 1;
+          font-weight: 500;
+          min-width: 200px;
         }
-        
+
         .location-level {
-          background: #e8e8e8;
-          padding: 2px 8px;
-          border-radius: 3px;
           font-size: 12px;
+          color: #999;
+          background: #eee;
+          padding: 2px 8px;
+          border-radius: 4px;
         }
-        
+
         .listing-count {
           font-size: 12px;
           color: #666;
         }
-        
-        .delete-btn {
-          background: #ff4444;
+
+        .add-here-btn {
+          background: #007bff;
           color: white;
           border: none;
+          padding: 6px 12px;
           border-radius: 4px;
-          padding: 5px 10px;
           cursor: pointer;
-          font-size: 14px;
+          font-size: 12px;
         }
-        
-        .delete-btn:hover {
-          background: #cc0000;
+
+        .add-here-btn:hover {
+          background: #0056b3;
         }
-        
-        .btn-primary {
-          background: #c90411;
-          color: white;
+
+        .add-location-form {
+          background: #f0f8ff;
+          border: 1px solid #b3d9ff;
+          border-radius: 4px;
+          padding: 12px;
+          margin: 10px 0;
+          display: flex;
+          gap: 8px;
+        }
+
+        .add-location-form input {
+          flex: 1;
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 12px;
+        }
+
+        .add-location-form button {
+          padding: 8px 12px;
           border: none;
-          padding: 10px 20px;
           border-radius: 4px;
           cursor: pointer;
-          font-size: 14px;
-          font-weight: 600;
+          font-size: 12px;
         }
-        
-        .btn-primary:hover {
-          background: #a00310;
+
+        .add-location-form button[type="submit"] {
+          background: #28a745;
+          color: white;
         }
-        
+
+        .add-location-form button[type="submit"]:hover {
+          background: #218838;
+        }
+
+        .add-location-form button[type="button"] {
+          background: #6c757d;
+          color: white;
+        }
+
+        .add-location-form button[type="button"]:hover {
+          background: #5a6268;
+        }
+
         .error-message {
-          background: #fee;
-          color: #c00;
-          padding: 10px;
+          background: #f8d7da;
+          color: #721c24;
+          padding: 12px;
           border-radius: 4px;
-          margin-bottom: 15px;
+          margin-bottom: 20px;
         }
       `}</style>
     </div>
