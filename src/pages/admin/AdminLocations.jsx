@@ -114,13 +114,7 @@ export default function AdminLocations() {
               <span className="location-level">Level {item.level}</span>
               <span className="listing-count">({item.listingCount} listings)</span>
             </div>
-            <button
-              className="delete-btn"
-              onClick={() => handleDeleteLocation(item.id)}
-              title="Delete location"
-            >
-              ✕
-            </button>
+
           </div>
           
           {expandedParents.has(item.id) && buildHierarchy(items, item.id, level + 1)}
