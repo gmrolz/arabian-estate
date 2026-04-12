@@ -160,6 +160,9 @@ export default function PropertyCard({ listing, featured = false }) {
     const title = isAr ? title_ar : title_en;
     const project = isAr ? project_ar : project_en;
     const developer = isAr ? developer_ar : developer_en;
+    
+    // Default show_price to true if not explicitly set
+    const effectiveShowPrice = show_price !== false && show_price !== 0 ? true : false;
 
     // Calculate payment duration in years
     const monthlyPaymentDuration = monthly_inst && price && downpayment 
@@ -205,7 +208,7 @@ export default function PropertyCard({ listing, featured = false }) {
                 t={t}
                 listingId={listingId}
                 siteId={listing.site_id ?? siteId}
-                show_full_price={show_price && show_full_price}
+                show_full_price={effectiveShowPrice && show_full_price}
                 price={price}
             />
 
@@ -230,7 +233,7 @@ export default function PropertyCard({ listing, featured = false }) {
                 <div className="card-pricing">
                     {(() => {
                         // Master show_price toggle: if false, hide all pricing
-                        if (!show_price) {
+                        if (!effectiveShowPrice) {
                             return (
                                 <div className="price-row price-hidden">
                                     <a

@@ -157,3 +157,5 @@
 ## Lead Tracking & Inquiry Enhancement
 - [x] FEATURE: Show listing ID in admin listings table (before edit button) for lead tracking - DONE: Added ID badge in admin-listing-card-actions
 - [x] FEATURE: Enhance WhatsApp inquiry message with detailed pricing (full price, DP, monthly, duration) - DONE: Added Listing ID, pricing details, payment duration calculation, and annual payment option to WhatsApp message
+
+- [x] BUG: PropertyCard showing map and hiding prices - FIXED: Rolled back to checkpoint 6e13e3f3 to restore old card layout with prices visible
