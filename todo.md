@@ -173,5 +173,14 @@
 - [x] BUG: WhatsApp button position varies on each card - should be at same location - FIXED: Updated card-footer to use flex-direction: column and margin-top: auto
 
 ## Carousel Navigation Issues
-- [x] BUG: Only 1 carousel button visible - both prev/next buttons should be visible - FIXED: Changed opacity from 0 to 0.8, increased button size to 36px, increased z-index to 10
+- [x] BUG: Only 1 carousel button visible - both prev/next buttons should be visible - FIXED: Changed CSS class names from .carousel-prev/.carousel-next to .carousel-btn-prev/.carousel-btn-next to match PropertyCard
 - [x] BUG: Carousel swipe/drag not working on mobile - touch drag should change images smoothly - FIXED: Added touch event handlers (onTouchStart, onTouchMove, onTouchEnd) with 30px threshold
+
+
+## Location Management System
+- [x] FEATURE: Add Al Almain city to locations database - DONE: Added with Arabic name "الالمين"
+- [x] FEATURE: Create admin locations management page - DONE: AdminLocations.jsx with hierarchy view, add/remove UI
+- [x] FEATURE: Display location hierarchy (city > area > neighborhood) - DONE: Tree view with expand/collapse, parent-child relationships
+- [x] FEATURE: Add location CRUD API endpoints (create, read, update, delete) - DONE: Already existed in server/routes/locations.ts
+- [x] FEATURE: Implement add/remove location UI in admin page - DONE: Add form with level selector, delete buttons with confirmation
+- [x] FEATURE: Test location management end-to-end - DONE: Added Locations link to admin navigation, routes configured

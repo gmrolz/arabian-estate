@@ -24,6 +24,7 @@ export default function AdminLayout() {
   const navLinks = [
     { to: '/admin/dashboard', label: 'Dashboard', end: false },
     { to: '/admin/listings', label: 'Listings', end: false },
+    { to: '/admin/locations', label: 'Locations', end: false },
   ];
 
   return (

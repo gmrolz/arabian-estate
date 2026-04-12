@@ -17,6 +17,7 @@ import AdminLoginGate from './pages/admin/AdminLoginGate';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminListings from './pages/admin/AdminListings';
 import AdminListingEdit from './pages/admin/AdminListingEdit';
+import AdminLocations from './pages/admin/AdminLocations';
 import NotFound from './pages/NotFound';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import ConversionsScripts from './components/ConversionsScripts';
@@ -74,6 +75,7 @@ function AppRoutes() {
           <Route path="listings" element={<AdminListings />} />
           <Route path="listings/new" element={<AdminListingEdit />} />
           <Route path="listings/:id" element={<AdminListingEdit />} />
+          <Route path="locations" element={<AdminLocations />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -344,3 +344,106 @@ export const listingsRouter = router({
     return rows.map(formatRow);
   }),
 });
+
+
+// ─── Location Management Endpoints ───
+
+// Public: Get all locations
+export const locationsRouter = router({
+  list: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const { locations: locationsTable } = await import("../drizzle/schema");
+    const rows = await db.select().from(locationsTable);
+    return rows;
+  }),
+
+  // Public: Get location by ID
+  getById: publicProcedure
+    .input(z.object({ id: z.number().int().positive() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return null;
+      
+      const { locations: locationsTable } = await import("../drizzle/schema");
+      const { eq } = await import("drizzle-orm");
+      const rows = await db
+        .select()
+        .from(locationsTable)
+        .where(eq(locationsTable.id, input.id));
+      
+      return rows.length > 0 ? rows[0] : null;
+    }),
+
+  // Admin: Create location
+  create: publicProcedure
+    .input(z.object({
+      nameEn: z.string().min(1),
+      nameAr: z.string().min(1),
+      level: z.number().int().min(1).max(5),
+      parentId: z.number().int().nullable().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      const { locations: locationsTable } = await import("../drizzle/schema");
+      const slug = input.nameEn.toLowerCase().replace(/\s+/g, '-');
+      
+      const result = await db.insert(locationsTable).values({
+        nameEn: input.nameEn,
+        nameAr: input.nameAr,
+        slug,
+        level: input.level,
+        parentId: input.parentId ?? null,
+        listingCount: 0,
+      });
+      
+      return { id: (result as any).insertId, success: true };
+    }),
+
+  // Admin: Update location
+  update: publicProcedure
+    .input(z.object({
+      id: z.number().int().positive(),
+      nameEn: z.string().optional(),
+      nameAr: z.string().optional(),
+      level: z.number().int().min(1).max(5).optional(),
+      parentId: z.number().int().nullable().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      const { locations: locationsTable } = await import("../drizzle/schema");
+      const { eq } = await import("drizzle-orm");
+      
+      const updateData: any = {};
+      if (input.nameEn) updateData.nameEn = input.nameEn;
+      if (input.nameAr) updateData.nameAr = input.nameAr;
+      if (input.level) updateData.level = input.level;
+      if (input.parentId !== undefined) updateData.parentId = input.parentId;
+      
+      if (Object.keys(updateData).length === 0) {
+        return { id: input.id, success: true };
+      }
+      
+      await db.update(locationsTable).set(updateData).where(eq(locationsTable.id, input.id));
+      return { id: input.id, success: true };
+    }),
+
+  // Admin: Delete location
+  delete: publicProcedure
+    .input(z.object({ id: z.number().int().positive() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      const { locations: locationsTable } = await import("../drizzle/schema");
+      const { eq } = await import("drizzle-orm");
+      
+      await db.delete(locationsTable).where(eq(locationsTable.id, input.id));
+      return { success: true };
+    }),
+});
