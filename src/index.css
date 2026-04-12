@@ -1533,11 +1533,11 @@ button {
   background: rgba(201, 4, 17, 0.25);
 }
 
-.carousel-prev {
+.carousel-btn-prev {
   left: 10px;
 }
 
-.carousel-next {
+.carousel-btn-next {
   right: 10px;
 }
 
