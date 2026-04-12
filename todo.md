@@ -157,3 +157,7 @@
 ## Lead Tracking & Inquiry Enhancement
 - [x] FEATURE: Show listing ID in admin listings table (before edit button) for lead tracking - DONE: Added ID badge in admin-listing-card-actions
 - [x] FEATURE: Enhance WhatsApp inquiry message with detailed pricing (full price, DP, monthly, duration) - DONE: Added Listing ID, pricing details, payment duration calculation, and annual payment option to WhatsApp message
+
+
+## Bug Fixes - Current Session
+- [x] BUG: API error 400 - paymentDownPct expects int but receives number - FIXED: Changed Zod schema from z.number().int() to z.number() to accept decimal values like 1.5
