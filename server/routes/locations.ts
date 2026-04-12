@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { getDb } from '../db';
-import { locations } from '../../drizzle/schema';
-import { eq, like, and, or } from 'drizzle-orm';
+import { locations, listings } from '../../drizzle/schema';
+import { eq, like, and, or, count } from 'drizzle-orm';
 
 const router = Router();
 
 /**
  * GET /api/locations
- * Get all governorates (level 1)
+ * Get all governorates (level 1) with listing counts
  */
 router.get('/', async (req, res) => {
   try {
@@ -22,7 +22,21 @@ router.get('/', async (req, res) => {
       .from(locations)
       .where(eq(locations.level, 1));
 
-    res.json(governorates);
+    // Calculate listing counts for each location
+    const withCounts = await Promise.all(
+      governorates.map(async (loc) => {
+        const result = await db
+          .select({ count: count() })
+          .from(listings)
+          .where(eq(listings.locationId, loc.id));
+        return {
+          ...loc,
+          listingCount: result[0]?.count || 0,
+        };
+      })
+    );
+
+    res.json(withCounts);
   } catch (error) {
     console.error('[Locations] Get governorates error:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -116,14 +130,29 @@ router.get('/by-slug/:slug', async (req, res) => {
 
 /**
  * GET /api/locations/all
- * Get all locations (all levels) — used by admin for building the location map
+ * Get all locations (all levels) with listing counts — used by admin for building the location map
  */
 router.get('/all', async (req, res) => {
   try {
     const db = await getDb();
     if (!db) return res.status(503).json({ error: 'Database not available' });
     const all = await db.select().from(locations);
-    res.json(all);
+    
+    // Calculate listing counts for each location
+    const withCounts = await Promise.all(
+      all.map(async (loc) => {
+        const result = await db
+          .select({ count: count() })
+          .from(listings)
+          .where(eq(listings.locationId, loc.id));
+        return {
+          ...loc,
+          listingCount: result[0]?.count || 0,
+        };
+      })
+    );
+    
+    res.json(withCounts);
   } catch (error) {
     console.error('[Locations] Get all error:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -185,7 +214,7 @@ router.get('/by-path', async (req, res) => {
 
 /**
  * GET /api/locations/:id/children
- * Get all children of a location
+ * Get all children of a location with listing counts
  */
 router.get('/:id/children', async (req, res) => {
   try {
@@ -206,7 +235,21 @@ router.get('/:id/children', async (req, res) => {
       .from(locations)
       .where(eq(locations.parentId, parentId));
 
-    res.json(children);
+    // Calculate listing counts for each child
+    const withCounts = await Promise.all(
+      children.map(async (loc) => {
+        const result = await db
+          .select({ count: count() })
+          .from(listings)
+          .where(eq(listings.locationId, loc.id));
+        return {
+          ...loc,
+          listingCount: result[0]?.count || 0,
+        };
+      })
+    );
+
+    res.json(withCounts);
   } catch (error) {
     console.error('[Locations] Get children error:', error);
     res.status(500).json({ error: 'Internal server error' });
