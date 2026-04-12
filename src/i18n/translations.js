@@ -151,7 +151,7 @@ export const translations = {
     // Property card
     card: {
       delivery: 'Delivery',
-      downPayment: 'Pay now',
+      downPayment: 'Down Payment',
       monthly: 'Monthly',
       perMonth: '/ month',
       paymentPlan: 'Plan',
@@ -353,7 +353,7 @@ export const translations = {
 
     card: {
       delivery: 'التسليم',
-      downPayment: 'ادفع الآن',
+      downPayment: 'المقدم',
       monthly: 'الشهري',
       perMonth: '/ شهر',
       paymentPlan: 'الخطة',

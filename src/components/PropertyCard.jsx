@@ -6,7 +6,7 @@ import { hasSupabase } from '../lib/supabase';
 import { trackEvent } from '../lib/listingsApi';
 import { trackLeadConversion } from '../lib/conversions';
 import { formatNumberReadable } from '../lib/format';
-import GoogleMapsModal from './GoogleMapsModal';
+
 
 const WHATSAPP_NUMBER = '201000257941';
 const PHONE_NUMBER = '+201000257941';
@@ -138,7 +138,6 @@ export default function PropertyCard({ listing, featured = false }) {
     const { t, locale } = useLocale();
     const { siteId } = useSite();
     const cardRef = useRef(null);
-    const [mapOpen, setMapOpen] = useState(false);
 
     // Extract fields
     const {
@@ -279,7 +278,7 @@ export default function PropertyCard({ listing, featured = false }) {
                             <>
                                 {show_downpayment && downpayment && (
                                     <div className="price-row">
-                                        <span>{t('card.payNow')}</span>
+                                        <span>{t('card.downPayment')}</span>
                                         <span>EGP {formatNumberReadable(downpayment)}</span>
                                     </div>
                                 )}
@@ -307,20 +306,6 @@ export default function PropertyCard({ listing, featured = false }) {
                 </div>
 
                 <div className="card-actions">
-                    {location && (
-                        <button
-                            type="button"
-                            className="btn-map"
-                            onClick={() => setMapOpen(true)}
-                            title={t('aria.viewMap')}
-                        >
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                <circle cx="12" cy="10" r="3"/>
-                            </svg>
-                            Map
-                        </button>
-                    )}
                     <a
                         href={waLink}
                         target="_blank"
@@ -353,13 +338,7 @@ export default function PropertyCard({ listing, featured = false }) {
                 </div>
             </div>
 
-            {mapOpen && location && (
-                <GoogleMapsModal
-                    location={location}
-                    title={title}
-                    onClose={() => setMapOpen(false)}
-                />
-            )}
+
         </div>
     );
 }

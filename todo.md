@@ -159,3 +159,8 @@
 - [x] FEATURE: Enhance WhatsApp inquiry message with detailed pricing (full price, DP, monthly, duration) - DONE: Added Listing ID, pricing details, payment duration calculation, and annual payment option to WhatsApp message
 
 - [x] BUG: PropertyCard showing map and hiding prices - FIXED: Rolled back to checkpoint 6e13e3f3 to restore old card layout with prices visible
+- [x] BUG: Cards showing "Ask for Price" instead of pricing - FIXED: Added default behavior in PropertyCard so show_price defaults to true
+
+## Card UI Improvements
+- [ ] FEATURE: Improve "card.payNow" text label to something more descriptive
+- [ ] FEATURE: Remove Map button from property card for now
