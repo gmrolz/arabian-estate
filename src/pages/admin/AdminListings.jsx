@@ -220,6 +220,7 @@ export default function AdminListings() {
                     </Link>
 
                     <div className="admin-listing-card-actions">
+                      <div className="admin-listing-id-badge">ID: {l.id}</div>
                       <Link to={`/admin/listings/${l.id}`} className="admin-btn admin-btn-sm admin-btn-primary">
                         Edit
                       </Link>

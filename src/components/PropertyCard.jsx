@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useLocale } from '../context/LocaleContext';
 import { useSite } from '../context/SiteContext';
 import { getAreaFromListing } from '../data/newCapitalListings';
@@ -48,163 +48,147 @@ function ImageCarousel({ images, alt, featured, priceTag, t, listingId, siteId, 
         if (!listingId || !hasSupabase() || !isInView || trackedIndices.current.has(idx)) return;
         trackedIndices.current.add(idx);
         trackEvent(listingId, 'photo_view', { photo_index: idx }, siteId);
-    }, [idx, isInView, listingId, siteId]);
+    }, [idx, listingId, isInView, siteId]);
 
-    useEffect(() => {
-        const el = wrapRef.current;
-        if (!el) return;
-        const onMove = (e) => {
-            if (!e.touches?.[0]) return;
-            const { x: sx, y: sy } = startRef.current;
-            const curX = e.touches[0].clientX;
-            const curY = e.touches[0].clientY;
-            const deltaX = Math.abs(curX - sx);
-            const deltaY = Math.abs(curY - sy);
-            if (deltaX > deltaY && deltaX > 10) e.preventDefault();
-        };
-        el.addEventListener('touchmove', onMove, { passive: false });
-        return () => el.removeEventListener('touchmove', onMove);
-    }, []);
+    const handlePrev = () => setIdx((i) => (i - 1 + total) % total);
+    const handleNext = () => setIdx((i) => (i + 1) % total);
 
-    const prev = useCallback((e) => {
-        e.stopPropagation();
-        setIdx(i => (i - 1 + total) % total);
-    }, [total]);
-
-    const next = useCallback((e) => {
-        e.stopPropagation();
-        setIdx(i => (i + 1) % total);
-    }, [total]);
-
-    /* touch/mouse swipe */
-    const onDragStart = (e) => {
+    const handleMouseDown = (e) => {
+        if (e.button !== 0) return;
         setDragging(true);
-        const x = e.touches ? e.touches[0].clientX : e.clientX;
-        const y = e.touches ? e.touches[0].clientY : e.clientY;
-        startRef.current = { x, y };
+        startRef.current = { x: e.clientX, y: e.clientY };
     };
-    const onDragEnd = (e) => {
+
+    const handleMouseMove = (e) => {
         if (!dragging) return;
-        setDragging(false);
-        const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
-        const diff = startRef.current.x - endX;
-        if (diff > 40) setIdx(i => (i + 1) % total);
-        else if (diff < -40) setIdx(i => (i - 1 + total) % total);
+        const dx = e.clientX - startRef.current.x;
+        const dy = e.clientY - startRef.current.y;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+            if (dx > 0) handlePrev();
+            else handleNext();
+            setDragging(false);
+        }
     };
+
+    const handleMouseUp = () => setDragging(false);
 
     return (
         <div
-            ref={wrapRef}
             className="carousel-wrap"
-            dir="ltr"
-            onMouseDown={onDragStart}
-            onMouseUp={onDragEnd}
-            onTouchStart={onDragStart}
-            onTouchEnd={onDragEnd}
+            ref={wrapRef}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
         >
-            {/* Images */}
-            <div className="carousel-track" style={{ transform: `translateX(-${idx * 100}%)` }}>
-                {list.map((src, i) => (
+            <div className="carousel-inner">
+                {list.map((img, i) => (
                     <img
                         key={i}
-                        src={src}
-                        alt={`${alt} – photo ${i + 1}`}
-                        onError={(e) => { e.target.src = FALLBACK_IMG; }}
-                        loading="lazy"
-                        draggable={false}
-                        className="carousel-img"
+                        src={typeof img === 'string' ? img : img.url}
+                        alt={alt}
+                        className={`carousel-img ${i === idx ? 'active' : ''}`}
+                        loading={i === idx ? 'eager' : 'lazy'}
                     />
                 ))}
             </div>
 
-            {/* Arrows — only show if more than 1 photo */}
             {total > 1 && (
                 <>
-                    <button className="carousel-btn carousel-prev" onClick={prev} aria-label={t('aria.prevPhoto')}>
+                    <button
+                        type="button"
+                        className="carousel-btn carousel-btn-prev"
+                        onClick={handlePrev}
+                        aria-label="Previous image"
+                    >
                         ‹
                     </button>
-                    <button className="carousel-btn carousel-next" onClick={next} aria-label={t('aria.nextPhoto')}>
+                    <button
+                        type="button"
+                        className="carousel-btn carousel-btn-next"
+                        onClick={handleNext}
+                        aria-label="Next image"
+                    >
                         ›
                     </button>
-
-                    {/* Dot indicators */}
                     <div className="carousel-dots">
                         {list.map((_, i) => (
                             <button
                                 key={i}
-                                className={`carousel-dot${i === idx ? ' active' : ''}`}
-                                onClick={(e) => { e.stopPropagation(); setIdx(i); }}
-                                aria-label={`${t('aria.photo')} ${i + 1}`}
+                                type="button"
+                                className={`carousel-dot ${i === idx ? 'active' : ''}`}
+                                onClick={() => setIdx(i)}
+                                aria-label={`Go to image ${i + 1}`}
                             />
                         ))}
                     </div>
-
-                    {/* Counter */}
-                    <div className="carousel-counter">{idx + 1} / {total}</div>
                 </>
             )}
 
-            {/* Badges */}
-            {show_full_price && price && <span className="card-badge badge-price">EGP {formatPriceShort(price)}</span>}
-            {featured && <span className="badge-featured">{t('card.featured')}</span>}
+            {featured && <div className="carousel-badge carousel-badge-featured">{t('card.featured')}</div>}
+            {show_full_price && priceTag && (
+                <div className="carousel-badge carousel-badge-price">{priceTag}</div>
+            )}
         </div>
     );
 }
 
-/* ─── Property Card ──────────────────────────────────── */
+/* ─── Main PropertyCard Component ─────────────────────────────────── */
 export default function PropertyCard({ listing, featured = false }) {
-    const { t, locale, locationLabel } = useLocale();
+    const { t, locale } = useLocale();
     const { siteId } = useSite();
     const cardRef = useRef(null);
-    const viewTracked = useRef(false);
-    const {
-        project, developer, area, rooms, toilets,
-        downpayment, monthly_inst, price, finishing, delivery,
-        payment_years, payment_down_pct,
-        images, location, title, id: listingId,
-        show_price = true,
-        show_downpayment = true, show_monthly = true,
-        show_full_price = false, show_annual = false, show_compound = true, annual_payment,
-        maps_url, mapsUrl,
-        unit_type,
-    } = listing;
-    const resolvedMapsUrl = maps_url || mapsUrl || null;
-    const [showMap, setShowMap] = useState(false);
+    const [mapOpen, setMapOpen] = useState(false);
 
-    useEffect(() => {
-        if (!listingId || !hasSupabase() || viewTracked.current) return;
-        const el = cardRef.current;
-        if (!el) return;
-        const obs = new IntersectionObserver(
-            ([e]) => {
-                if (!e.isIntersecting || viewTracked.current) return;
-                viewTracked.current = true;
-                trackEvent(listingId, 'view', {}, listing.site_id ?? siteId);
-            },
-            { threshold: 0.2, rootMargin: '50px' }
-        );
-        obs.observe(el);
-        return () => obs.disconnect();
-    }, [listingId]);
+    // Extract fields
+    const {
+        id: listingId,
+        title_ar, title_en,
+        project_ar, project_en,
+        developer_ar, developer_en,
+        location,
+        area, rooms, toilets,
+        finishing,
+        delivery,
+        price, downpayment, monthly_inst, annual_payment,
+        images,
+        show_price, show_downpayment, show_monthly, show_full_price, show_annual, show_compound,
+        compoundName,
+    } = listing;
+
+    const isAr = locale === 'ar';
+    const title = isAr ? title_ar : title_en;
+    const project = isAr ? project_ar : project_en;
+    const developer = isAr ? developer_ar : developer_en;
+
+    // Calculate payment duration in years
+    const monthlyPaymentDuration = monthly_inst && price && downpayment 
+        ? Math.round((price - downpayment) / monthly_inst / 12)
+        : null;
 
     const waMessage = encodeURIComponent(
         [
             `*Unit Inquiry – Arabian Estate*`,
+            `*Listing ID: ${listingId}*`,
             ``,
             `*${title || project}*`,
             `Project: ${project}`,
             `Developer: ${developer}`,
             `Location: ${location}`,
             ``,
+            `*Unit Specifications:*`,
             `Area: ${area} m²`,
             `Bedrooms: ${rooms}`,
             `Bathrooms: ${toilets}`,
             `Finishing: ${finishing}`,
             `Delivery: ${delivery}`,
             ``,
+            `*Pricing Details:*`,
             `Total Price: EGP ${formatNumberReadable(price)}`,
-            `Pay now: EGP ${formatNumberReadable(downpayment)}`,
-            `Monthly: ${formatNumberReadable(monthly_inst)}`,
+            `Down Payment: EGP ${formatNumberReadable(downpayment)}`,
+            `Monthly Installment: EGP ${formatNumberReadable(monthly_inst)}`,
+            ...(monthlyPaymentDuration ? [`Payment Duration: ${monthlyPaymentDuration} years`] : []),
+            ...(annual_payment ? [`Annual Payment Option: EGP ${formatNumberReadable(annual_payment)}`] : []),
             ``,
             `Please send me more details and available payment plans. Thank you!`
         ].join('\n')
@@ -229,12 +213,12 @@ export default function PropertyCard({ listing, featured = false }) {
                 <div>
                     {title && <div className="card-title">{title}</div>}
                     <div className="card-project">{project}</div>
-                    <div className="card-developer">{developer} · {locationLabel(getAreaFromListing(listing))}</div>
+                    <div className="card-developer">{developer} · {location}</div>
                     {delivery && <div className="card-delivery">{t('card.delivery')}: {delivery}</div>}
                 </div>
 
                 <div className="card-specs">
-                    <span className="spec">{unit_type || 'Unit'}</span>
+                    <span className="spec">Unit</span>
                     <span className="spec">{area} m²</span>
                     <span className="spec">{rooms} {t('card.beds')}</span>
                     <span className="spec">{toilets} {t('card.bath')}</span>
@@ -291,101 +275,88 @@ export default function PropertyCard({ listing, featured = false }) {
                         return (
                             <>
                                 {show_downpayment && downpayment && (
-                                    <div className="price-row price-downpayment">
-                                        <span className="price-label">{t('card.downPayment')}</span>
-                                        <span className="price-amount">EGP {formatNumberReadable(downpayment)}</span>
+                                    <div className="price-row">
+                                        <span>{t('card.payNow')}</span>
+                                        <span>EGP {formatNumberReadable(downpayment)}</span>
                                     </div>
                                 )}
                                 {show_monthly && monthly_inst && (
-                                    <div className="price-row price-monthly">
-                                        <span className="price-label">{t('card.monthly')}</span>
-                                        <span className="price-amount">{formatNumberReadable(monthly_inst)} <span className="price-suffix">{t('card.perMonth')}</span></span>
+                                    <div className="price-row">
+                                        <span>{t('card.monthly')}</span>
+                                        <span>EGP {formatNumberReadable(monthly_inst)} /mo</span>
+                                    </div>
+                                )}
+                                {show_annual && annual_payment && (
+                                    <div className="price-row">
+                                        <span>{t('card.annual')}</span>
+                                        <span>EGP {formatNumberReadable(annual_payment)} /yr</span>
                                     </div>
                                 )}
                                 {show_full_price && price && (
                                     <div className="price-row price-full">
-                                        <span className="price-label">{locale === 'ar' ? 'السعر الاجمالي' : 'Full Unit Price'}</span>
-                                        <span className="price-amount">EGP {formatNumberReadable(price)}</span>
-                                    </div>
-                                )}
-                                {show_annual && annual_payment && (
-                                    <div className="price-row price-annual">
-                                        <span className="price-label">دفعة سنويه</span>
-                                        <span className="price-amount">EGP {formatNumberReadable(annual_payment)}/year</span>
+                                        <span>{t('card.fullPrice')}</span>
+                                        <span>EGP {formatNumberReadable(price)}</span>
                                     </div>
                                 )}
                             </>
                         );
                     })()}
-                    {(payment_years != null || payment_down_pct != null) && (
-                        <div className="price-row price-plan">
-                            <span className="price-label">{t('card.paymentPlan')}</span>
-                            <span className="price-amount">
-                                {payment_years === 0
-                                  ? t('card.cashPrice')
-                                  : (
-                                    <>
-                                      {payment_down_pct != null && `${payment_down_pct}% down`}
-                                      {payment_down_pct != null && payment_years != null && ' · '}
-                                      {payment_years != null && (payment_years === 1 ? t('card.oneYear') : t('card.years', { count: payment_years }))}
-                                    </>
-                                  )}
-                            </span>
-                        </div>
+                </div>
+
+                <div className="card-actions">
+                    {location && (
+                        <button
+                            type="button"
+                            className="btn-map"
+                            onClick={() => setMapOpen(true)}
+                            title={t('aria.viewMap')}
+                        >
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            Map
+                        </button>
                     )}
+                    <a
+                        href={waLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-whatsapp"
+                        onClick={() => {
+                            if (listingId && hasSupabase()) trackEvent(listingId, 'cta_whatsapp', {}, listing.site_id ?? siteId);
+                            if (trackLeadConversion() && listingId && hasSupabase()) trackEvent(listingId, 'lead', {}, listing.site_id ?? siteId);
+                        }}
+                    >
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                        </svg>
+                        {t('card.whatsapp')}
+                    </a>
+                    <a
+                        href={`tel:${PHONE_NUMBER}`}
+                        className="btn-call"
+                        title={t('aria.callUs')}
+                        onClick={() => {
+                            if (listingId && hasSupabase()) trackEvent(listingId, 'cta_call', {}, listing.site_id ?? siteId);
+                            if (trackLeadConversion() && listingId && hasSupabase()) trackEvent(listingId, 'lead', {}, listing.site_id ?? siteId);
+                        }}
+                    >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.61 21 3 13.39 3 4c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.02l-2.21 2.2z" />
+                        </svg>
+                        {t('card.call')}
+                    </a>
                 </div>
             </div>
 
-            {showMap && resolvedMapsUrl && (
-                <GoogleMapsModal url={resolvedMapsUrl} onClose={() => setShowMap(false)} />
+            {mapOpen && location && (
+                <GoogleMapsModal
+                    location={location}
+                    title={title}
+                    onClose={() => setMapOpen(false)}
+                />
             )}
-            <div className="card-footer">
-                {resolvedMapsUrl && (
-                    <button
-                        className="btn-map"
-                        onClick={() => {
-                            setShowMap(true);
-                            if (listingId && hasSupabase()) trackEvent(listingId, 'view_map', {}, listing.site_id ?? siteId);
-                        }}
-                        title="View on Map"
-                    >
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                            <circle cx="12" cy="10" r="3"/>
-                        </svg>
-                        Map
-                    </button>
-                )}
-                <a
-                    href={waLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-whatsapp"
-                    onClick={() => {
-                        if (listingId && hasSupabase()) trackEvent(listingId, 'cta_whatsapp', {}, listing.site_id ?? siteId);
-                        if (trackLeadConversion() && listingId && hasSupabase()) trackEvent(listingId, 'lead', {}, listing.site_id ?? siteId);
-                    }}
-                >
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-                    </svg>
-                    {t('card.whatsapp')}
-                </a>
-                <a
-                    href={`tel:${PHONE_NUMBER}`}
-                    className="btn-call"
-                    title={t('aria.callUs')}
-                    onClick={() => {
-                        if (listingId && hasSupabase()) trackEvent(listingId, 'cta_call', {}, listing.site_id ?? siteId);
-                        if (trackLeadConversion() && listingId && hasSupabase()) trackEvent(listingId, 'lead', {}, listing.site_id ?? siteId);
-                    }}
-                >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.61 21 3 13.39 3 4c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.02l-2.21 2.2z" />
-                    </svg>
-                    {t('card.call')}
-                </a>
-            </div>
         </div>
     );
 }

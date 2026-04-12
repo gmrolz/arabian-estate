@@ -152,3 +152,8 @@
 - [x] BUG: No keywords detected on homepage - FIXED: Added meta keywords tag with real estate, apartments, villas, New Capital, Egypt, luxury properties, investment
 - [x] BUG: Page title too short (14 chars) - FIXED: Updated to "Arabian Estate - Premium Real Estate Egypt" (43 characters)
 - [x] BUG: 6 images missing alt text on homepage - FIXED: Added alt text to 5 flag images in Header.jsx and ListingLangBar.jsx (English, العربية)
+
+
+## Lead Tracking & Inquiry Enhancement
+- [x] FEATURE: Show listing ID in admin listings table (before edit button) for lead tracking - DONE: Added ID badge in admin-listing-card-actions
+- [x] FEATURE: Enhance WhatsApp inquiry message with detailed pricing (full price, DP, monthly, duration) - DONE: Added Listing ID, pricing details, payment duration calculation, and annual payment option to WhatsApp message
