@@ -164,3 +164,10 @@
 ## Card UI Improvements
 - [x] FEATURE: Improve "card.payNow" text label to something more descriptive - DONE: Changed to "Down Payment" (EN) and "المقدم" (AR)
 - [x] FEATURE: Remove Map button from property card for now - DONE: Removed Map button, GoogleMapsModal import, and mapOpen state
+- [x] FEATURE: Add fullPrice translation - DONE: Added "Full Price" (EN) and "السعر الكامل" (AR)
+
+
+## Card Display Issues
+- [ ] BUG: Carousel/image slider not appearing on property cards
+- [ ] BUG: Card height varies based on pricing content - should be consistent
+- [ ] BUG: WhatsApp button position varies on each card - should be at same location
