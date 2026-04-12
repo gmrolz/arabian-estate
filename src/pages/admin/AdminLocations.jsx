@@ -21,7 +21,7 @@ export default function AdminLocations() {
   const fetchLocations = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/locations');
+      const response = await fetch('/api/locations/all');
       if (!response.ok) throw new Error('Failed to fetch locations');
       const data = await response.json();
       setLocations(data);
