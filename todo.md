@@ -162,5 +162,5 @@
 - [x] BUG: Cards showing "Ask for Price" instead of pricing - FIXED: Added default behavior in PropertyCard so show_price defaults to true
 
 ## Card UI Improvements
-- [ ] FEATURE: Improve "card.payNow" text label to something more descriptive
-- [ ] FEATURE: Remove Map button from property card for now
+- [x] FEATURE: Improve "card.payNow" text label to something more descriptive - DONE: Changed to "Down Payment" (EN) and "المقدم" (AR)
+- [x] FEATURE: Remove Map button from property card for now - DONE: Removed Map button, GoogleMapsModal import, and mapOpen state

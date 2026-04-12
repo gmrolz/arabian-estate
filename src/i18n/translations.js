@@ -163,6 +163,7 @@ export const translations = {
       featured: 'Featured',
       whatsapp: 'WhatsApp',
       call: 'Call',
+      fullPrice: 'Full Price',
     },
 
     // Footer
@@ -365,6 +366,7 @@ export const translations = {
       featured: 'مميز',
       whatsapp: 'واتساب',
       call: 'اتصال',
+      fullPrice: 'السعر الكامل',
     },
 
     footer: {
