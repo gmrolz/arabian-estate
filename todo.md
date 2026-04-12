@@ -184,3 +184,7 @@
 - [x] FEATURE: Add location CRUD API endpoints (create, read, update, delete) - DONE: Already existed in server/routes/locations.ts
 - [x] FEATURE: Implement add/remove location UI in admin page - DONE: Add form with level selector, delete buttons with confirmation
 - [x] FEATURE: Test location management end-to-end - DONE: Added Locations link to admin navigation, routes configured
+
+
+## Unit Types
+- [x] FEATURE: Add "Chalet" to unit_type selector in admin form - DONE: Added to AdminListingEdit dropdown
