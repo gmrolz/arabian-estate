@@ -168,6 +168,10 @@
 
 
 ## Card Display Issues
-- [ ] BUG: Carousel/image slider not appearing on property cards
-- [ ] BUG: Card height varies based on pricing content - should be consistent
-- [ ] BUG: WhatsApp button position varies on each card - should be at same location
+- [x] BUG: Carousel/image slider not appearing on property cards - FIXED: Updated CSS to use .carousel-inner with absolute positioning and opacity transitions
+- [x] BUG: Card height varies based on pricing content - should be consistent - FIXED: Added flex-shrink: 0 to card-pricing and min-height: 0 to card-body
+- [x] BUG: WhatsApp button position varies on each card - should be at same location - FIXED: Updated card-footer to use flex-direction: column and margin-top: auto
+
+## Carousel Navigation Issues
+- [ ] BUG: Only 1 carousel button visible - both prev/next buttons should be visible
+- [ ] BUG: Carousel swipe/drag not working on mobile - touch drag should change images smoothly

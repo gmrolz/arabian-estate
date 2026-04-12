@@ -72,6 +72,24 @@ function ImageCarousel({ images, alt, featured, priceTag, t, listingId, siteId, 
 
     const handleMouseUp = () => setDragging(false);
 
+    const handleTouchStart = (e) => {
+        setDragging(true);
+        startRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    };
+
+    const handleTouchMove = (e) => {
+        if (!dragging) return;
+        const dx = e.touches[0].clientX - startRef.current.x;
+        const dy = e.touches[0].clientY - startRef.current.y;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 30) {
+            if (dx > 0) handlePrev();
+            else handleNext();
+            setDragging(false);
+        }
+    };
+
+    const handleTouchEnd = () => setDragging(false);
+
     return (
         <div
             className="carousel-wrap"
@@ -80,6 +98,9 @@ function ImageCarousel({ images, alt, featured, priceTag, t, listingId, siteId, 
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
         >
             <div className="carousel-inner">
                 {list.map((img, i) => (
