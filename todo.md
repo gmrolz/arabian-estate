@@ -188,3 +188,7 @@
 
 ## Unit Types
 - [x] FEATURE: Add "Chalet" to unit_type selector in admin form - DONE: Added to AdminListingEdit dropdown
+
+
+## Image Upload Issues
+- [ ] BUG: Image upload returns HTML error page instead of JSON - Internal Server Error when uploading images

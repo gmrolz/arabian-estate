@@ -146,6 +146,17 @@ async function startServer() {
       createContext,
     })
   );
+
+  // Error handling middleware for API routes
+  app.use((err: any, req: any, res: any, next: any) => {
+    // Only handle errors for API routes
+    if (req.path.startsWith("/api/")) {
+      console.error("API Error:", err);
+      return res.status(500).json({ error: err.message || "Internal Server Error" });
+    }
+    next(err);
+  });
+
   // development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
