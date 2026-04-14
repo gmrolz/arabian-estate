@@ -192,3 +192,7 @@
 
 ## Image Upload Issues
 - [x] BUG: Image upload returns HTML error page instead of JSON - FIXED: Added error handling middleware to format API errors as JSON
+
+
+## New Feature Requests
+- [x] FEATURE: Add "Fully Finished + AC's" as a finishing option in admin form - DONE: Added to FINISHING_OPTIONS in AdminListingEdit.jsx
