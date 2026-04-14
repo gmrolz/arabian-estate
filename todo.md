@@ -191,4 +191,4 @@
 
 
 ## Image Upload Issues
-- [ ] BUG: Image upload returns HTML error page instead of JSON - Internal Server Error when uploading images
+- [x] BUG: Image upload returns HTML error page instead of JSON - FIXED: Added error handling middleware to format API errors as JSON
