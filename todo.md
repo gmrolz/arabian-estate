@@ -196,3 +196,9 @@
 
 ## New Feature Requests
 - [x] FEATURE: Add "Fully Finished + AC's" as a finishing option in admin form - DONE: Added to FINISHING_OPTIONS in AdminListingEdit.jsx
+
+
+## New Feature Requests (Phase 2)
+- [x] FEATURE: Add real image for Al-Shorouk (الشروق) instead of "Coming Soon" - DONE: Updated image URL in CitiesSection.jsx with real Shorouk City image (/manus-storage/cZtpTFiZxHdJ_9f446284.webp)
+- [x] FEATURE: Verify navigation links from homepage to Al-Sokhna (السخنة) and Red Sea (البحر الأحمر) - VERIFIED: Both links work correctly and display listings
+- [x] FEATURE: Verify Al-Sokhna and Red Sea are separated - VERIFIED: Already separated with different location IDs (30022 vs 30020) and display separate listings

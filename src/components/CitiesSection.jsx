@@ -31,7 +31,7 @@ const EAST_CAIRO_AREAS = [
     slug: 'area-shorouk-city',
     nameAr: 'مدينة الشروق',
     nameEn: 'Shorouk City',
-    image: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-cairo-UrRnHGgHSGXeGVBQkFJdAB.webp',
+    image: '/manus-storage/cZtpTFiZxHdJ_9f446284.webp',
   },
   {
     id: 30122,
