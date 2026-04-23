@@ -242,3 +242,14 @@
 - [x] TEST: Test WhatsApp lead conversion flow with pre-filled messages - DONE: Working correctly
 - [x] FEATURE: Train AI to answer from website content - DONE: System prompt with live data context
 - [x] FEATURE: Add lead conversion (WhatsApp/Contact) to AI responses - DONE: AI suggests WhatsApp contact in responses
+
+
+## New Feature Requests (Phase 7 - AI Chatbot Redesign - COMPLETE)
+- [x] FEATURE: Design AI icon button (white and red) - DONE: Created ai-icon-white-red.png
+- [x] FEATURE: Add AI icon button to center of Hero Section with animation - DONE: Added with pulse animation
+- [x] FEATURE: Remove inline chatbox from Hero Section - DONE: Replaced with icon button
+- [x] FEATURE: Create AIChat popup modal component - DONE: Created AIChat.jsx with full functionality
+- [x] FEATURE: Add listing display/search in popup modal - DONE: AI answers about listings from database
+- [x] FEATURE: Implement lead collection form in popup - DONE: Form appears after AI response
+- [x] FEATURE: Add WhatsApp integration for collected leads - DONE: Sends lead data to WhatsApp
+- [x] FEATURE: Test popup modal on mobile and desktop - DONE: Working perfectly on both
