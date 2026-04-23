@@ -10,6 +10,7 @@ import { serveStatic, setupVite } from "./vite";
 import multer from "multer";
 import { storagePut } from "../storage";
 import locationsRouter from "../routes/locations";
+import geminiRouter from "../geminiRouter";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -134,9 +135,11 @@ async function startServer() {
       return res.status(500).json({ error: err.message || "Upload failed" });
     }
   });
-
-  // Locations API
+  // Locations router
   app.use("/api/locations", locationsRouter);
+
+  // Gemini API router
+  app.use("/api/gemini", geminiRouter);
 
   // tRPC API
   app.use(

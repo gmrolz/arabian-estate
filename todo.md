@@ -227,10 +227,18 @@
 - [ ] FEATURE: Reorganize Red Sea locations: Ain Sokhna, Galala, Sharm El Sheikh, Hurghada, Gouna, Soma Bay, Sahl Hasheesh as unified region
 
 
-## New Feature Requests (Phase 6 - AI Chatbot)
+## New Feature Requests (Phase 6 - AI Chatbot - ACTIVE IMPLEMENTATION)
 - [x] FEATURE: Fix overlapping issue with Scroll and Explore Properties buttons - DONE: Repositioned buttons with proper z-index and bottom spacing
 - [x] FEATURE: Replace search form with AI Chatbox in Hero Section - DONE: Added interactive chatbox with message history
-- [x] FEATURE: Integrate Gemini API for AI responses - DONE: Connected to Gemini API with proper context
-- [ ] FEATURE: Add "Ask AI" card at the end of each page
-- [x] FEATURE: Train AI to answer from website content - DONE: Added context about Arabian Estate in system prompt
+- [x] RESEARCH: Diagnose why Gemini API not working - DONE: Found deprecated models (gemini-pro, gemini-1.5-flash), solution is gemini-2.5-flash with v1beta
+- [x] FEATURE: Fix geminiRouter.ts with correct model (gemini-2.5-flash) and live data context - DONE: Implemented with live listing data fetching
+- [x] FEATURE: Add multi-turn conversation history support to backend - DONE: Backend accepts conversationHistory array
+- [x] FEATURE: Add quick-reply suggestion chips in chatbox UI - DONE: Added 4 quick reply buttons
+- [x] FEATURE: Add WhatsApp CTA buttons in AI responses - DONE: Green WhatsApp button appears after each response
+- [ ] FEATURE: Create AskAICard component for page footers (deferred for Phase 7)
+- [ ] FEATURE: Add AskAICard to HomePage, LocationFunnelPage, and ListingsPage (deferred for Phase 7)
+- [x] FEATURE: Add rate limiting to Gemini API endpoint - DONE: Simple in-memory rate limiter
+- [x] TEST: Verify chatbot works with live data and correct model - DONE: Tested and working
+- [x] TEST: Test WhatsApp lead conversion flow with pre-filled messages - DONE: Working correctly
+- [x] FEATURE: Train AI to answer from website content - DONE: System prompt with live data context
 - [x] FEATURE: Add lead conversion (WhatsApp/Contact) to AI responses - DONE: AI suggests WhatsApp contact in responses
