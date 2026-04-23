@@ -37,6 +37,7 @@ const FINISHING_OPTIONS = [
   { value: '', label: '—' },
   { value: 'Fully Finished', label: 'Fully Finished' },
   { value: 'Fully Finished + AC\'s', label: 'Fully Finished + AC\'s' },
+  { value: 'Fully Finished + Kitchen + AC\'s', label: 'Fully Finished + Kitchen + AC\'s' },
   { value: 'Semi Finished', label: 'Semi Finished' },
   { value: 'Core and Shell', label: 'Core and Shell' },
 ];

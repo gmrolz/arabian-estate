@@ -213,3 +213,15 @@
 ## Bug Reports (Current Session)
 - [x] BUG: WhatsApp message shows "undefined" for developer name and project - FIXED: Added default values for developer and project, now shows "Arabian Estate" if missing
 - [x] BUG: Location not showing on property cards in frontend - FIXED: Added displayLocation variable and now shows location on all property cards
+
+
+## New Feature Requests (Phase 4)
+- [ ] FEATURE: Add "Fully Finished + Kitchen + AC's" as a finishing option in admin form
+- [ ] FEATURE: Upgrade Hero Section with 3D effect (CodePen-inspired design)
+
+
+## New Feature Requests (Phase 5)
+- [x] FEATURE: Replace Hero Section with CodePen design (Realestate template) - DONE: Implemented new hero section with search form and tabs
+- [x] FEATURE: Customize colors to Arabian Estate brand (red + gold) - DONE: Used #dc143c (crimson red) matching brand
+- [x] FEATURE: Create hero image matching brand and content - DONE: Using luxury property image from Unsplash
+- [ ] FEATURE: Reorganize Red Sea locations: Ain Sokhna, Galala, Sharm El Sheikh, Hurghada, Gouna, Soma Bay, Sahl Hasheesh as unified region
