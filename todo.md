@@ -225,3 +225,12 @@
 - [x] FEATURE: Customize colors to Arabian Estate brand (red + gold) - DONE: Used #dc143c (crimson red) matching brand
 - [x] FEATURE: Create hero image matching brand and content - DONE: Using luxury property image from Unsplash
 - [ ] FEATURE: Reorganize Red Sea locations: Ain Sokhna, Galala, Sharm El Sheikh, Hurghada, Gouna, Soma Bay, Sahl Hasheesh as unified region
+
+
+## New Feature Requests (Phase 6 - AI Chatbot)
+- [x] FEATURE: Fix overlapping issue with Scroll and Explore Properties buttons - DONE: Repositioned buttons with proper z-index and bottom spacing
+- [x] FEATURE: Replace search form with AI Chatbox in Hero Section - DONE: Added interactive chatbox with message history
+- [x] FEATURE: Integrate Gemini API for AI responses - DONE: Connected to Gemini API with proper context
+- [ ] FEATURE: Add "Ask AI" card at the end of each page
+- [x] FEATURE: Train AI to answer from website content - DONE: Added context about Arabian Estate in system prompt
+- [x] FEATURE: Add lead conversion (WhatsApp/Contact) to AI responses - DONE: AI suggests WhatsApp contact in responses
