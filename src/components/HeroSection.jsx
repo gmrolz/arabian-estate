@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocale } from '../context/LocaleContext';
+import Lottie from 'lottie-react';
+import aiRobotAnimation from '../animations/ai-robot.json';
 import AIChat from './AIChat';
 import '../styles/hero-section.css';
 
@@ -69,10 +71,11 @@ export default function HeroSection() {
         title={t('Chat with AI Assistant')}
         aria-label={t('Chat with AI Assistant')}
       >
-        <img
-          src="https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/ai-icon-white-red-n7vuJpARGSD9Ef6SYbk7Pc.webp"
-          alt="AI Assistant"
-          className="ai-icon-image"
+        <Lottie
+          animationData={aiRobotAnimation}
+          loop={true}
+          autoplay={true}
+          style={{ width: '100%', height: '100%' }}
         />
       </button>
 
