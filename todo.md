@@ -208,3 +208,8 @@
 - [x] FEATURE: Link North Coast (الساحل الشمالي) "Coming Soon" button to listings - DONE: Updated CitiesSection to fetch descendant IDs, now correctly shows 21 units
 - [x] FEATURE: Link South Sinai (جنوب سيناء) "Coming Soon" button to listings - DONE: Integrated into CitiesSection with descendant counting (will show when listings exist)
 - [x] FEATURE: Fix region counts to include descendant locations - DONE: CitiesSection now fetches and counts all descendant location IDs for collection regions
+
+
+## Bug Reports (Current Session)
+- [x] BUG: WhatsApp message shows "undefined" for developer name and project - FIXED: Added default values for developer and project, now shows "Arabian Estate" if missing
+- [x] BUG: Location not showing on property cards in frontend - FIXED: Added displayLocation variable and now shows location on all property cards

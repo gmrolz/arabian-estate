@@ -178,8 +178,9 @@ export default function PropertyCard({ listing, featured = false }) {
 
     const isAr = locale === 'ar';
     const title = isAr ? title_ar : title_en;
-    const project = isAr ? project_ar : project_en;
-    const developer = isAr ? developer_ar : developer_en;
+    const project = isAr ? project_ar : project_en || 'Arabian Estate';
+    const developer = isAr ? developer_ar : developer_en || 'Arabian Estate';
+    const displayLocation = location || 'Cairo, Egypt';
     
     // Default show_price to true if not explicitly set
     const effectiveShowPrice = show_price !== false && show_price !== 0 ? true : false;
@@ -192,12 +193,12 @@ export default function PropertyCard({ listing, featured = false }) {
     const waMessage = encodeURIComponent(
         [
             `*Unit Inquiry – Arabian Estate*`,
-            `*Listing ID: ${listingId}*`,
+            `*Listing ID: ${listingId || 'N/A'}*`,
             ``,
-            `*${title || project}*`,
-            `Project: ${project}`,
-            `Developer: ${developer}`,
-            `Location: ${location}`,
+            `*${title || project || 'Property'}*`,
+            `Project: ${project || 'Arabian Estate'}`,
+            `Developer: ${developer || 'Arabian Estate'}`,
+            `Location: ${displayLocation}`,
             ``,
             `*Unit Specifications:*`,
             `Area: ${area} m²`,
@@ -235,8 +236,8 @@ export default function PropertyCard({ listing, featured = false }) {
             <div className="card-body">
                 <div>
                     {title && <div className="card-title">{title}</div>}
-                    <div className="card-project">{project}</div>
-                    <div className="card-developer">{developer} · {location}</div>
+                    <div className="card-project">{project || 'Arabian Estate'}</div>
+                    <div className="card-developer">{developer || 'Arabian Estate'} · {displayLocation}</div>
                     {delivery && <div className="card-delivery">{t('card.delivery')}: {delivery}</div>}
                 </div>
 
