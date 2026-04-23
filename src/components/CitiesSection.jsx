@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useLocale } from '../context/LocaleContext';
 import { useListings } from '../context/ListingsContext';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 // East Cairo L4 area nodes with their DB IDs and funnel slugs
 const EAST_CAIRO_AREAS = [
@@ -85,10 +85,33 @@ const EAST_CAIRO_L4_IDS = [
   30045, 30046, 30047, 30048, 30049, 30050, 30051, 30052, 30053, 30054, 30122,
 ];
 
+// Helper to fetch all descendant IDs for a location
+async function fetchAllDescendantIds(nodeId) {
+  const ids = [];
+  const queue = [nodeId];
+  while (queue.length > 0) {
+    const current = queue.shift();
+    ids.push(current);
+    try {
+      const r = await fetch(`/api/locations/${current}/children`);
+      if (r.ok) {
+        const children = await r.json();
+        if (Array.isArray(children)) {
+          children.forEach((c) => queue.push(c.id));
+        }
+      }
+    } catch (e) {
+      // Silently fail
+    }
+  }
+  return ids;
+}
+
 export default function CitiesSection() {
   const { t, lp, locale } = useLocale();
   const { listings } = useListings();
   const isRTL = locale === 'ar';
+  const [descendantCounts, setDescendantCounts] = useState({});
 
   // Count listings by locationId (supports both exact L4 match and descendant match)
   const countByLocationId = useMemo(() => {
@@ -108,10 +131,36 @@ export default function CitiesSection() {
   // Filter East Cairo areas to only those with listings
   const visibleEastCairoAreas = EAST_CAIRO_AREAS.filter((a) => (countByLocationId[a.id] || 0) > 0);
 
-  // Filter other regions to only those with listings (need descendant IDs from API)
-  // For now, use a simple check: if any listing has locationId in the range for that collection
-  // We'll use the location tree from the API via a simple fetch
-  const visibleOtherRegions = OTHER_REGIONS; // Will show "Coming soon" for 0-count ones but hide if count = 0
+  // Fetch descendant IDs for collection regions on mount
+  useEffect(() => {
+    const fetchDescendants = async () => {
+      const counts = {};
+      for (const region of OTHER_REGIONS) {
+        try {
+          const descendantIds = await fetchAllDescendantIds(region.id);
+          const count = descendantIds.reduce((sum, id) => sum + (countByLocationId[id] || 0), 0);
+          counts[region.id] = count;
+        } catch (e) {
+          counts[region.id] = countByLocationId[region.id] || 0;
+        }
+      }
+      setDescendantCounts(counts);
+    };
+    fetchDescendants();
+  }, [countByLocationId]);
+
+  // Count listings for other regions by their collection IDs (including descendants)
+  const countForOtherRegions = useMemo(() => {
+    const map = {};
+    OTHER_REGIONS.forEach((region) => {
+      // Use descendant count if available, otherwise fall back to direct count
+      map[region.id] = descendantCounts[region.id] ?? (countByLocationId[region.id] || 0);
+    });
+    return map;
+  }, [countByLocationId, descendantCounts]);
+
+  // Filter other regions to only those with listings
+  const visibleOtherRegions = OTHER_REGIONS.filter((r) => (countForOtherRegions[r.id] || 0) > 0);
 
   return (
     <section className="cities-section" id="cities">
@@ -180,24 +229,27 @@ export default function CitiesSection() {
         {/* ─── Other Regions (only those with listings) ─────────────────── */}
         {visibleOtherRegions.length > 0 && (
           <div className="listings-hub-grid cities-section-grid" style={{ marginTop: '32px' }}>
-            {visibleOtherRegions.map((region) => (
-              <Link
-                key={region.slug}
-                to={lp(region.funnelPath)}
-                className="listings-hub-card"
-              >
-                <div className="listings-hub-card-inner">
-                  <div className="listings-hub-card-img">
-                    <img src={region.image} alt={isRTL ? region.nameAr : region.nameEn} loading="lazy" />
+            {visibleOtherRegions.map((region) => {
+              const count = countForOtherRegions[region.id] || 0;
+              return (
+                <Link
+                  key={region.slug}
+                  to={lp(region.funnelPath)}
+                  className="listings-hub-card"
+                >
+                  <div className="listings-hub-card-inner">
+                    <div className="listings-hub-card-img">
+                      <img src={region.image} alt={isRTL ? region.nameAr : region.nameEn} loading="lazy" />
+                    </div>
+                    <div className="listings-hub-card-body">
+                      <h3 className="listings-hub-card-title">{isRTL ? region.nameAr : region.nameEn}</h3>
+                      <p className="listings-hub-card-count">{count} {isRTL ? 'وحدة' : 'units'}</p>
+                      <span className="listings-hub-card-cta">{isRTL ? 'عرض العقارات ←' : 'View listings →'}</span>
+                    </div>
                   </div>
-                  <div className="listings-hub-card-body">
-                    <h3 className="listings-hub-card-title">{isRTL ? region.nameAr : region.nameEn}</h3>
-                    <p className="listings-hub-card-count">{isRTL ? 'قريباً' : 'Coming soon'}</p>
-                    <span className="listings-hub-card-cta">{isRTL ? 'استكشف' : 'Explore'}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         )}
 

@@ -202,3 +202,9 @@
 - [x] FEATURE: Add real image for Al-Shorouk (الشروق) instead of "Coming Soon" - DONE: Updated image URL in CitiesSection.jsx with real Shorouk City image (/manus-storage/cZtpTFiZxHdJ_9f446284.webp)
 - [x] FEATURE: Verify navigation links from homepage to Al-Sokhna (السخنة) and Red Sea (البحر الأحمر) - VERIFIED: Both links work correctly and display listings
 - [x] FEATURE: Verify Al-Sokhna and Red Sea are separated - VERIFIED: Already separated with different location IDs (30022 vs 30020) and display separate listings
+
+
+## New Feature Requests (Phase 3)
+- [x] FEATURE: Link North Coast (الساحل الشمالي) "Coming Soon" button to listings - DONE: Updated CitiesSection to fetch descendant IDs, now correctly shows 21 units
+- [x] FEATURE: Link South Sinai (جنوب سيناء) "Coming Soon" button to listings - DONE: Integrated into CitiesSection with descendant counting (will show when listings exist)
+- [x] FEATURE: Fix region counts to include descendant locations - DONE: CitiesSection now fetches and counts all descendant location IDs for collection regions
