@@ -7,6 +7,7 @@ import '../styles/hero-section.css';
 export default function HeroSection() {
   const { t, locale } = useLocale();
   const [showAIChat, setShowAIChat] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
 
   return (
     <>
@@ -21,106 +22,112 @@ export default function HeroSection() {
           <div className="hero-overlay"></div>
         </div>
 
-        {/* Hero Content - Mobile First */}
+        {/* Hero Content - Normal Professional Design */}
         <div className="hero-content">
-          {/* AI Icon Button - Large and Visible in Center */}
-          <button 
-            className="hero-ai-button"
-            onClick={() => setShowAIChat(true)}
-            aria-label={t('Chat with AI Assistant')}
-            title={t('Chat with AI Assistant')}
-          >
-            {/* AI Robot Icon - SVG */}
-            <svg 
-              viewBox="0 0 100 100" 
-              className="ai-icon-svg"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {/* Robot Head - Red */}
-              <rect x="15" y="25" width="70" height="55" rx="10" fill="#dc143c" stroke="white" strokeWidth="2.5"/>
-              
-              {/* Left Eye */}
-              <circle cx="32" cy="42" r="8" fill="white"/>
-              <circle cx="32" cy="42" r="4" fill="#dc143c"/>
-              
-              {/* Right Eye */}
-              <circle cx="68" cy="42" r="8" fill="white"/>
-              <circle cx="68" cy="42" r="4" fill="#dc143c"/>
-              
-              {/* Smile */}
-              <path d="M 32 58 Q 50 68 68 58" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-              
-              {/* Antenna Left */}
-              <line x1="32" y1="25" x2="28" y2="5" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
-              <circle cx="28" cy="3" r="2.5" fill="white"/>
-              
-              {/* Antenna Right */}
-              <line x1="68" y1="25" x2="72" y2="5" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
-              <circle cx="72" cy="3" r="2.5" fill="white"/>
-            </svg>
-            <span className="ai-button-pulse"></span>
-          </button>
-
-          {/* Main Text */}
-          <div className="hero-text">
+          <div className="hero-text-container">
             <h1 className="hero-title">
-              {t('We will help you find your')}
-              <br />
-              <span className="hero-highlight">{t('Premium Property')}</span>
+              {locale === 'en' ? 'Find Your Dream Property' : 'ابحث عن منزل أحلامك'}
             </h1>
             <p className="hero-subtitle">
-              {t('A trusted platform to buy, sell and rent premium properties in Egypt without intermediaries')}
+              {locale === 'en' 
+                ? 'Discover premium properties in Egypt with expert guidance and transparent deals'
+                : 'اكتشف العقارات الفاخرة في مصر مع إرشادات الخبراء والصفقات الشفافة'
+              }
             </p>
-          </div>
-
-          {/* CTA Button */}
-          <Link to="/listings" className="hero-cta-button">
-            {t('Explore Properties')} →
-          </Link>
-
-          {/* Scroll Indicator */}
-          <div className="hero-scroll-indicator">
-            <span>{t('Scroll')}</span>
-            <div className="scroll-dot"></div>
-          </div>
-        </div>
-
-        {/* Value Propositions - Bottom Banner */}
-        <div className="hero-promises">
-          <div className="promise-card">
-            <div className="promise-icon">✓</div>
-            <div className="promise-text">
-              <h3>No Commissions</h3>
-              <p>Direct deals</p>
-            </div>
-          </div>
-          <div className="promise-card">
-            <div className="promise-icon">👥</div>
-            <div className="promise-text">
-              <h3>Expert Support</h3>
-              <p>24/7 assistance</p>
-            </div>
-          </div>
-          <div className="promise-card">
-            <div className="promise-icon">💰</div>
-            <div className="promise-text">
-              <h3>Best Deals</h3>
-              <p>Exclusive offers</p>
-            </div>
-          </div>
-          <div className="promise-card">
-            <div className="promise-icon">🏆</div>
-            <div className="promise-text">
-              <h3>Trusted</h3>
-              <p>100+ properties</p>
+            
+            <div className="hero-cta-buttons">
+              <Link to="/listings" className="cta-button primary">
+                {locale === 'en' ? 'Explore Properties' : 'استكشف العقارات'}
+              </Link>
+              <button 
+                className="cta-button secondary"
+                onClick={() => setShowTutorial(true)}
+              >
+                {locale === 'en' ? 'Learn More' : 'تعرف على المزيد'}
+              </button>
             </div>
           </div>
         </div>
+
+        {/* Claude-style Chat Button - Bottom Right */}
+        <button 
+          className="claude-chat-button"
+          onClick={() => setShowAIChat(true)}
+          title={locale === 'en' ? 'Chat with AI Assistant' : 'دردش مع مساعد AI'}
+          aria-label={locale === 'en' ? 'Chat with AI Assistant' : 'دردش مع مساعد AI'}
+        >
+          <svg 
+            width="24" 
+            height="24" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+            className="chat-icon"
+          >
+            <path 
+              d="M21 15a2 2 0 0 1-2 2H7l-4 4v-4H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" 
+              stroke="white" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="chat-label">
+            {locale === 'en' ? 'Chat' : 'دردش'}
+          </span>
+        </button>
+
+        {/* Tutorial Tooltip */}
+        {showTutorial && (
+          <div className="tutorial-overlay" onClick={() => setShowTutorial(false)}>
+            <div className="tutorial-card">
+              <button 
+                className="tutorial-close"
+                onClick={() => setShowTutorial(false)}
+              >
+                ✕
+              </button>
+              <h3 className="tutorial-title">
+                {locale === 'en' ? 'How to Use Our AI Chat' : 'كيفية استخدام دردشة AI'}
+              </h3>
+              <div className="tutorial-content">
+                <div className="tutorial-step">
+                  <span className="step-number">1</span>
+                  <p>
+                    {locale === 'en' 
+                      ? 'Click the chat button in the bottom right corner'
+                      : 'انقر على زر الدردشة في الزاوية السفلية اليمنى'
+                    }
+                  </p>
+                </div>
+                <div className="tutorial-step">
+                  <span className="step-number">2</span>
+                  <p>
+                    {locale === 'en' 
+                      ? 'Ask about properties, locations, or prices'
+                      : 'اسأل عن العقارات أو المواقع أو الأسعار'
+                    }
+                  </p>
+                </div>
+                <div className="tutorial-step">
+                  <span className="step-number">3</span>
+                  <p>
+                    {locale === 'en' 
+                      ? 'Get personalized recommendations and connect with our team'
+                      : 'احصل على توصيات شخصية والتواصل مع فريقنا'
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* AI Chat Modal */}
-      {showAIChat && <AIChat onClose={() => setShowAIChat(false)} />}
+      {showAIChat && (
+        <AIChat onClose={() => setShowAIChat(false)} />
+      )}
     </>
   );
 }
