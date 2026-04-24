@@ -291,3 +291,7 @@
 - [x] FEATURE: Add tutorial/explanation on how to use chatbot - DONE: "Learn More" button opens tutorial overlay with 3 steps
 - [x] FEATURE: Make chat button more prominent and inviting - DONE: Fixed position in bottom-right, hover animation, clear label
 - [x] TEST: Verify new design on mobile and desktop - DONE: Fully responsive, 232 tests passing
+
+
+## Bug Fixes (Current Session)
+- [x] BUG: Chat button overlaps with language toggle - FIXED: Moved button up on mobile (bottom: 80px) to avoid overlap with language toggle

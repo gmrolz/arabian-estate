@@ -143,10 +143,18 @@
   flex-direction: column;
   gap: 4px;
   box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
-  z-index: 1000;
+  z-index: 999;
   transition: all 0.3s ease;
   font-size: 12px;
   font-weight: 600;
+}
+
+/* Adjust for mobile to avoid language toggle */
+@media (max-width: 768px) {
+  .claude-chat-button {
+    bottom: 80px;
+    right: 12px;
+  }
 }
 
 .claude-chat-button:hover {
