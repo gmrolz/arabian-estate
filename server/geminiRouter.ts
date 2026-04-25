@@ -48,17 +48,17 @@ function extractBudget(message: string): number | null {
   return null;
 }
 
-// Get live listing data for context
-async function getLiveListingContext(): Promise<string> {
+// Get live listing data for context (returns both context string and full listings)
+async function getLiveListingData(): Promise<{ context: string; listings: any[] }> {
   try {
     const db = await getDb();
     if (!db) {
-      return 'Database connection unavailable.';
+      return { context: 'Database connection unavailable.', listings: [] };
     }
     const allListings = await db.select().from(listings).limit(127);
 
     if (!allListings || allListings.length === 0) {
-      return 'No listings available at this time.';
+      return { context: 'No listings available at this time.', listings: [] };
     }
 
     // Extract key data
@@ -107,7 +107,7 @@ async function getLiveListingContext(): Promise<string> {
       delivery: l.delivery,
     }));
 
-    return `
+    const contextString = `
 CURRENT INVENTORY (${allListings.length} properties):
 - Price Range: EGP ${minPrice.toLocaleString()} - EGP ${maxPrice.toLocaleString()}
 - Locations: ${Array.from(areas).filter(Boolean).join(', ')}
@@ -121,9 +121,11 @@ ${sampleListings.map((l: any) => `- ${l.title} | EGP ${l.price} | ${l.location} 
 FULL LISTING DATABASE:
 ${JSON.stringify(listingDatabase)}
     `.trim();
+
+    return { context: contextString, listings: allListings };
   } catch (error) {
     console.error('Error fetching listing context:', error);
-    return 'Unable to fetch current inventory at this time.';
+    return { context: 'Unable to fetch current inventory at this time.', listings: [] };
   }
 }
 
@@ -152,8 +154,8 @@ router.post('/chat', async (req: any, res: any) => {
     // Extract budget from user message
     const userBudget = extractBudget(message);
 
-    // Get live listing context
-    const listingContext = await getLiveListingContext();
+    // Get live listing data
+    const { context: listingContext, listings: allListings } = await getLiveListingData();
 
     // Build system instruction with live data
     const systemInstruction = `You are the AI assistant for Arabian Estate (arabianestate.com), Egypt's premium real estate platform. Your goal is to help visitors find their perfect property and connect them with our sales team.
@@ -269,12 +271,43 @@ ${isArabic ? '- User is writing in Arabic, respond in Arabic' : '- User is writi
       data.candidates?.[0]?.content?.parts?.[0]?.text ||
       'I apologize, I could not process your request. Please contact us via WhatsApp for assistance.';
 
-    res.json({ response: aiResponse });
+    // Extract property suggestions from AI response or database
+    const suggestedListings = (allListings || []).slice(0, 3).map((l: any) => {
+      let images = [];
+      try {
+        images = typeof l.images === 'string' ? JSON.parse(l.images) : (l.images || []);
+      } catch (e) {
+        images = [];
+      }
+      return {
+        id: l.id,
+        titleEn: l.titleEn,
+        titleAr: l.titleAr,
+        projectEn: l.projectEn,
+        projectAr: l.projectAr,
+        location: l.location,
+        price: l.price,
+        area: l.area,
+        rooms: l.rooms,
+        toilets: l.toilets,
+        finishing: l.finishing,
+        delivery: l.delivery,
+        images: images,
+      };
+    });
+
+    res.json({ 
+      response: aiResponse,
+      cards: suggestedListings,
+      cardType: 'properties'
+    });
   } catch (error: any) {
     console.error('Gemini API error:', error);
     res.status(500).json({
       error: 'Internal server error',
       message: error?.message || 'Unknown error',
+      response: 'I apologize for the technical difficulty. Please try again or contact us via WhatsApp.',
+      cards: [],
     });
   }
 });

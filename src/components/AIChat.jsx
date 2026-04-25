@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useLocale } from '../context/LocaleContext';
 import '../styles/ai-chat.css';
 
@@ -33,6 +33,74 @@ const CTA_BUTTONS = {
 };
 
 const WHATSAPP_NUMBER = '201000257941';
+
+function formatPrice(price) {
+  if (!price) return 'N/A';
+  const num = parseInt(price.toString().replace(/,/g, ''), 10);
+  if (isNaN(num)) return price;
+  if (num >= 1e6) return (num / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+  if (num >= 1e3) return (num / 1e3).toFixed(0) + 'K';
+  return num.toString();
+}
+
+function PropertyCard({ listing, locale }) {
+  const isAr = locale === 'ar';
+  const title = isAr ? listing.titleAr : listing.titleEn;
+  const project = isAr ? listing.projectAr : listing.projectEn;
+  const firstImage = listing.images && listing.images.length > 0 ? listing.images[0] : null;
+  const FALLBACK_IMG = 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/placeholder-listing-gwAks4ueAQVz8qfmqQpEYM.webp';
+  const imageUrl = firstImage || FALLBACK_IMG;
+
+  const handleWhatsApp = () => {
+    const message = encodeURIComponent(
+      `Hi, I'm interested in: ${title}\nProject: ${project}\nLocation: ${listing.location}\nPrice: EGP ${listing.price}`
+    );
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+  };
+
+  return (
+    <div className="chat-property-card">
+      <div className="chat-card-image">
+        <img src={imageUrl} alt={title} loading="lazy" />
+        <div className="chat-card-badge">{formatPrice(listing.price)}</div>
+      </div>
+      <div className="chat-card-body">
+        <div className="chat-card-title">{title}</div>
+        <div className="chat-card-project">{project}</div>
+        <div className="chat-card-location">{listing.location}</div>
+
+        <div className="chat-card-specs">
+          <span className="chat-card-spec">{listing.area}m²</span>
+          <span className="chat-card-spec">{listing.rooms} {isAr ? 'غرف' : 'Beds'}</span>
+          <span className="chat-card-spec">{listing.toilets} {isAr ? 'حمام' : 'Bath'}</span>
+          <span className="chat-card-spec">{listing.finishing}</span>
+        </div>
+
+        <div className="chat-card-pricing">
+          <div className="chat-price-row">
+            <span className="chat-price-label">{isAr ? 'السعر' : 'Price'}</span>
+            <span className="chat-price-value">EGP {listing.price}</span>
+          </div>
+          {listing.delivery && (
+            <div className="chat-price-row">
+              <span className="chat-price-label">{isAr ? 'التسليم' : 'Delivery'}</span>
+              <span className="chat-price-value">{listing.delivery}</span>
+            </div>
+          )}
+        </div>
+
+        <div className="chat-card-cta">
+          <button className="chat-card-btn chat-card-btn-primary" onClick={handleWhatsApp}>
+            {isAr ? 'استفسر' : 'Inquire'}
+          </button>
+          <button className="chat-card-btn chat-card-btn-secondary" onClick={handleWhatsApp}>
+            {isAr ? 'WhatsApp' : 'WhatsApp'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function AIChat({ onClose }) {
   const { t, lp, locale, isRTL } = useLocale();
@@ -101,6 +169,8 @@ export default function AIChat({ onClose }) {
         id: Date.now() + 1,
         text: aiResponse,
         sender: 'ai',
+        cards: data.cards || [],
+        cardType: data.cardType || 'properties',
       };
       setMessages((prev) => [...prev, aiMessage]);
 
@@ -225,8 +295,18 @@ ${locale === 'ar' ? 'المتطلبات' : 'Requirements'}: ${leadData.requireme
           )}
 
           {messages.map((msg) => (
-            <div key={msg.id} className={`ai-chat-message ${msg.sender}`}>
-              <div className="message-content">{msg.text}</div>
+            <div key={msg.id}>
+              <div className={`ai-chat-message ${msg.sender}`}>
+                <div className="message-content">{msg.text}</div>
+              </div>
+              {/* Render property cards if available */}
+              {msg.cards && msg.cards.length > 0 && msg.sender === 'ai' && (
+                <div className="ai-chat-cards">
+                  {msg.cards.map((card) => (
+                    <PropertyCard key={card.id} listing={card} locale={locale} />
+                  ))}
+                </div>
+              )}
             </div>
           ))}
 
@@ -255,63 +335,58 @@ ${locale === 'ar' ? 'المتطلبات' : 'Requirements'}: ${leadData.requireme
             </div>
           )}
 
+          {/* Lead Form */}
+          {showLeadForm && (
+            <form className="lead-form" onSubmit={handleSubmitLead}>
+              <h3>{locale === 'ar' ? 'معلوماتك' : 'Your Information'}</h3>
+              <input
+                type="text"
+                placeholder={locale === 'ar' ? 'الاسم' : 'Name'}
+                value={leadData.name}
+                onChange={(e) => setLeadData({ ...leadData, name: e.target.value })}
+                required
+              />
+              <input
+                type="tel"
+                placeholder={locale === 'ar' ? 'الهاتف' : 'Phone'}
+                value={leadData.phone}
+                onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
+                required
+              />
+              <input
+                type="text"
+                placeholder={locale === 'ar' ? 'الميزانية (اختياري)' : 'Budget (optional)'}
+                value={leadData.budget}
+                onChange={(e) => setLeadData({ ...leadData, budget: e.target.value })}
+              />
+              <textarea
+                placeholder={locale === 'ar' ? 'المتطلبات (اختياري)' : 'Requirements (optional)'}
+                value={leadData.requirements}
+                onChange={(e) => setLeadData({ ...leadData, requirements: e.target.value })}
+                rows="3"
+              />
+              <button type="submit" className="submit-lead-btn">
+                {locale === 'ar' ? 'إرسال عبر WhatsApp' : 'Send via WhatsApp'}
+              </button>
+            </form>
+          )}
+
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Lead Form */}
-        {showLeadForm && (
-          <form className="lead-form" onSubmit={handleSubmitLead}>
-            <h3>{locale === 'ar' ? 'أخبرنا بمتطلباتك' : 'Tell us your requirements'}</h3>
-            <input
-              type="text"
-              placeholder={locale === 'ar' ? 'اسمك' : 'Your Name'}
-              value={leadData.name}
-              onChange={(e) => setLeadData({ ...leadData, name: e.target.value })}
-              required
-            />
-            <input
-              type="tel"
-              placeholder={locale === 'ar' ? 'رقم هاتفك' : 'Your Phone'}
-              value={leadData.phone}
-              onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
-              required
-            />
-            <input
-              type="text"
-              placeholder={locale === 'ar' ? 'ميزانيتك (اختياري)' : 'Your Budget (optional)'}
-              value={leadData.budget}
-              onChange={(e) => setLeadData({ ...leadData, budget: e.target.value })}
-            />
-            <textarea
-              placeholder={locale === 'ar' ? 'متطلباتك (الموقع، النوع، إلخ)' : 'Your requirements (budget, location, type, etc.)'}
-              value={leadData.requirements}
-              onChange={(e) => setLeadData({ ...leadData, requirements: e.target.value })}
-              rows="3"
-            />
-            <button type="submit" className="submit-lead-btn">
-              {locale === 'ar' ? 'إرسال إلى WhatsApp' : 'Send to WhatsApp'} 📱
-            </button>
-          </form>
-        )}
-
         {/* Input Form */}
-        {!showLeadForm && (
-          <form onSubmit={handleSendMessage} className="ai-chat-form">
-            <input
-              type="text"
-              placeholder={locale === 'ar' ? 'اكتب سؤالك...' : 'Type your question...'}
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              disabled={isLoading}
-              dir={isRTL ? 'rtl' : 'ltr'}
-            />
-            <button type="submit" disabled={isLoading || !inputValue.trim()}>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M2 10L18 2L10 18L8 11L2 10Z" fill="currentColor" />
-              </svg>
-            </button>
-          </form>
-        )}
+        <form className="ai-chat-form" onSubmit={handleSendMessage}>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder={locale === 'ar' ? 'اكتب رسالتك...' : 'Type your message...'}
+            disabled={isLoading}
+          />
+          <button type="submit" disabled={isLoading || !inputValue.trim()}>
+            {isLoading ? '...' : '→'}
+          </button>
+        </form>
       </div>
     </div>
   );

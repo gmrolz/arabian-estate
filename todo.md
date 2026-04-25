@@ -304,4 +304,8 @@
 - [x] Add BETA badge to chat header
 - [x] Match chat button styling with language toggle (same size, theme, colors)
 - [x] Add animated tooltip popup ("Chat Now" / "تحدث معنا") that appears for 3 seconds then disappears
+- [x] Redesign chatbot cards to match website property cards (image, price badge, specs, pricing, CTAs)
+- [x] Update Gemini backend to return structured property cards alongside AI response
+- [x] Implement PropertyCard component inside chatbot with full styling
+- [x] Add WhatsApp integration to chatbot cards
 - [ ] Test budget suggestion feature with various price ranges
