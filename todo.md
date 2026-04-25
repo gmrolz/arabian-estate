@@ -308,4 +308,10 @@
 - [x] Update Gemini backend to return structured property cards alongside AI response
 - [x] Implement PropertyCard component inside chatbot with full styling
 - [x] Add WhatsApp integration to chatbot cards
-- [ ] Test budget suggestion feature with various price ranges
+- [x] Test budget suggestion feature with various price ranges
+- [x] Add thumbnail gallery to property cards
+- [x] Make listing cards smaller (320px max-width on desktop)
+- [x] Add image carousel with left/right navigation
+- [x] Implement click-to-select thumbnails
+- [x] Make gallery mobile-friendly (swipe support)
+- [x] Hide carousel dots, show thumbnails instead

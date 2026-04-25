@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useLocale } from '../context/LocaleContext';
 import { useSite } from '../context/SiteContext';
 import { getAreaFromListing } from '../data/newCapitalListings';
@@ -19,6 +19,34 @@ function formatPriceShort(priceStr) {
     if (num >= 1e6) return (num / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
     if (num >= 1e3) return (num / 1e3).toFixed(0) + 'K';
     return String(num);
+}
+
+/* ─── Thumbnail Gallery Component ─────────────────────────────────── */
+function ThumbnailGallery({ images, currentIdx, onSelect, alt }) {
+    const list = (images && images.length > 0) ? images : [FALLBACK_IMG];
+    const total = list.length;
+
+    if (total <= 1) return null;
+
+    return (
+        <div className="carousel-thumbnails">
+            {list.map((img, i) => (
+                <button
+                    key={i}
+                    type="button"
+                    className={`carousel-thumbnail ${i === currentIdx ? 'active' : ''}`}
+                    onClick={() => onSelect(i)}
+                    aria-label={`View image ${i + 1}`}
+                >
+                    <img
+                        src={typeof img === 'string' ? img : img.url}
+                        alt={`${alt} thumbnail ${i + 1}`}
+                        loading="lazy"
+                    />
+                </button>
+            ))}
+        </div>
+    );
 }
 
 /* ─── Image Carousel ─────────────────────────────────── */
@@ -52,6 +80,7 @@ function ImageCarousel({ images, alt, featured, priceTag, t, listingId, siteId, 
 
     const handlePrev = () => setIdx((i) => (i - 1 + total) % total);
     const handleNext = () => setIdx((i) => (i + 1) % total);
+    const handleThumbnailClick = (newIdx) => setIdx(newIdx);
 
     const handleMouseDown = (e) => {
         if (e.button !== 0) return;
@@ -91,66 +120,71 @@ function ImageCarousel({ images, alt, featured, priceTag, t, listingId, siteId, 
     const handleTouchEnd = () => setDragging(false);
 
     return (
-        <div
-            className="carousel-wrap"
-            ref={wrapRef}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-        >
-            <div className="carousel-inner">
-                {list.map((img, i) => (
-                    <img
-                        key={i}
-                        src={typeof img === 'string' ? img : img.url}
-                        alt={alt}
-                        className={`carousel-img ${i === idx ? 'active' : ''}`}
-                        loading={i === idx ? 'eager' : 'lazy'}
-                    />
-                ))}
+        <>
+            <div
+                className="carousel-wrap"
+                ref={wrapRef}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+            >
+                <div className="carousel-inner">
+                    {list.map((img, i) => (
+                        <img
+                            key={i}
+                            src={typeof img === 'string' ? img : img.url}
+                            alt={alt}
+                            className={`carousel-img ${i === idx ? 'active' : ''}`}
+                            loading={i === idx ? 'eager' : 'lazy'}
+                        />
+                    ))}
+                </div>
+
+                {total > 1 && (
+                    <>
+                        <button
+                            type="button"
+                            className="carousel-btn carousel-btn-prev"
+                            onClick={handlePrev}
+                            aria-label="Previous image"
+                        >
+                            ‹
+                        </button>
+                        <button
+                            type="button"
+                            className="carousel-btn carousel-btn-next"
+                            onClick={handleNext}
+                            aria-label="Next image"
+                        >
+                            ›
+                        </button>
+                        <div className="carousel-dots">
+                            {list.map((_, i) => (
+                                <button
+                                    key={i}
+                                    type="button"
+                                    className={`carousel-dot ${i === idx ? 'active' : ''}`}
+                                    onClick={() => setIdx(i)}
+                                    aria-label={`Go to image ${i + 1}`}
+                                />
+                            ))}
+                        </div>
+                    </>
+                )}
+
+                {featured && <div className="carousel-badge carousel-badge-featured">{t('card.featured')}</div>}
+                {show_full_price && priceTag && (
+                    <div className="carousel-badge carousel-badge-price">{priceTag}</div>
+                )}
             </div>
 
-            {total > 1 && (
-                <>
-                    <button
-                        type="button"
-                        className="carousel-btn carousel-btn-prev"
-                        onClick={handlePrev}
-                        aria-label="Previous image"
-                    >
-                        ‹
-                    </button>
-                    <button
-                        type="button"
-                        className="carousel-btn carousel-btn-next"
-                        onClick={handleNext}
-                        aria-label="Next image"
-                    >
-                        ›
-                    </button>
-                    <div className="carousel-dots">
-                        {list.map((_, i) => (
-                            <button
-                                key={i}
-                                type="button"
-                                className={`carousel-dot ${i === idx ? 'active' : ''}`}
-                                onClick={() => setIdx(i)}
-                                aria-label={`Go to image ${i + 1}`}
-                            />
-                        ))}
-                    </div>
-                </>
-            )}
-
-            {featured && <div className="carousel-badge carousel-badge-featured">{t('card.featured')}</div>}
-            {show_full_price && priceTag && (
-                <div className="carousel-badge carousel-badge-price">{priceTag}</div>
-            )}
-        </div>
+            {/* Thumbnail Gallery */}
+            <ThumbnailGallery images={images} currentIdx={idx} onSelect={handleThumbnailClick} alt={alt} />
+        </>
     );
 }
 
@@ -359,8 +393,6 @@ export default function PropertyCard({ listing, featured = false }) {
                     </a>
                 </div>
             </div>
-
-
         </div>
     );
 }
