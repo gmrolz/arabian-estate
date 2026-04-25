@@ -302,4 +302,6 @@
 - [x] Enhance lead collection form with budget field
 - [x] Verify multilingual support (Arabic/English) in all chat responses
 - [x] Add BETA badge to chat header
+- [x] Match chat button styling with language toggle (same size, theme, colors)
+- [x] Add animated tooltip popup ("Chat Now" / "تحدث معنا") that appears for 3 seconds then disappears
 - [ ] Test budget suggestion feature with various price ranges
