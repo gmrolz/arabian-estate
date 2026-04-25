@@ -315,3 +315,4 @@
 - [x] Implement click-to-select thumbnails
 - [x] Make gallery mobile-friendly (swipe support)
 - [x] Hide carousel dots, show thumbnails instead
+- [x] Remove "Coming Soon" badges from listings page cities

@@ -45,10 +45,10 @@ export default function ListingsPage() {
                                         <div className="listings-hub-card-body">
                                             <h3 className="listings-hub-card-title">{label}</h3>
                                             <p className="listings-hub-card-count">
-                                                {count > 0 ? `${count} ${t('listings.listings')}` : t('listings.comingSoon')}
+                                                {count > 0 ? `${count} ${t('listings.listings')}` : `0 ${t('listings.listings')}`}
                                             </p>
                                             <span className="listings-hub-card-cta">
-                                                {count > 0 ? t('listings.viewAll') + ' →' : t('listings.explore')}
+                                                {t('listings.viewAll')} →
                                             </span>
                                         </div>
                                     </div>
