@@ -149,11 +149,17 @@
   font-weight: 600;
 }
 
-/* Adjust for mobile to avoid language toggle */
+/* Mobile: Match language toggle size (40x40) and position on opposite side (left) */
 @media (max-width: 768px) {
   .claude-chat-button {
-    bottom: 80px;
-    right: 12px;
+    bottom: 16px;
+    left: 16px;
+    right: auto;
+    width: 40px;
+    height: 40px;
+    font-size: 10px;
+    gap: 2px;
+    padding: max(0px, env(safe-area-inset-left));
   }
 }
 
@@ -175,6 +181,12 @@
 .chat-label {
   font-size: 10px;
   white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .chat-label {
+    font-size: 8px;
+  }
 }
 
 /* Tutorial Overlay */
@@ -328,6 +340,15 @@
 }
 
 [dir="rtl"] .claude-chat-button {
-  right: auto;
-  left: 24px;
+  right: 24px;
+  left: auto;
+}
+
+/* RTL Mobile: Flip to right side */
+@media (max-width: 768px) {
+  [dir="rtl"] .claude-chat-button {
+    right: 16px;
+    left: auto;
+    padding: max(0px, env(safe-area-inset-right));
+  }
 }

@@ -294,4 +294,12 @@
 
 
 ## Bug Fixes (Current Session)
-- [x] BUG: Chat button overlaps with language toggle - FIXED: Moved button up on mobile (bottom: 80px) to avoid overlap with language toggle
+- [x] BUG: Chat button overlaps with language toggle - FIXED: Moved button to LEFT side on mobile (40x40 size, matching language toggle)
+- [x] Chat button label updated to include "BETA" in both English and Arabic
+- [x] Enhance Gemini backend to suggest alternative properties within user's budget
+- [x] Add budget awareness to AI responses
+- [x] Implement sales-focused CTA buttons (Discuss Options, View Similar, Contact Agent, Schedule Consultation)
+- [x] Enhance lead collection form with budget field
+- [x] Verify multilingual support (Arabic/English) in all chat responses
+- [x] Add BETA badge to chat header
+- [ ] Test budget suggestion feature with various price ranges

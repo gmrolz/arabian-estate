@@ -24,6 +24,30 @@ function checkRateLimit(ip: string): boolean {
   return true;
 }
 
+// Extract budget from user message (supports both English and Arabic)
+function extractBudget(message: string): number | null {
+  const budgetPatterns = [
+    /budget[\s:]*(?:of\s+)?(?:egp\s+)?([0-9,]+)\s*(?:million|m)?/i,
+    /([0-9,]+)\s*(?:million|m)\s*(?:egp)?/i,
+    /under\s+([0-9,]+)/i,
+    /less than\s+([0-9,]+)/i,
+    /ميزانية\s+([0-9,]+)/,
+    /أقل من\s+([0-9,]+)/,
+  ];
+
+  for (const pattern of budgetPatterns) {
+    const match = message.match(pattern);
+    if (match) {
+      const numStr = match[1].replace(/,/g, '');
+      let budget = parseInt(numStr);
+      // If number looks like millions (e.g., 5 instead of 5000000), multiply
+      if (budget < 1000) budget *= 1000000;
+      return budget;
+    }
+  }
+  return null;
+}
+
 // Get live listing data for context
 async function getLiveListingContext(): Promise<string> {
   try {
@@ -69,6 +93,20 @@ async function getLiveListingContext(): Promise<string> {
       type: l.unitType,
     }));
 
+    // Create detailed listing database for budget filtering
+    const listingDatabase = allListings.map((l: any) => ({
+      id: l.id,
+      titleEn: l.titleEn,
+      titleAr: l.titleAr,
+      price: parseInt(l.price?.toString().replace(/,/g, '') || '0'),
+      location: l.location,
+      rooms: l.rooms,
+      area: l.area,
+      type: l.unitType,
+      finishing: l.finishing,
+      delivery: l.delivery,
+    }));
+
     return `
 CURRENT INVENTORY (${allListings.length} properties):
 - Price Range: EGP ${minPrice.toLocaleString()} - EGP ${maxPrice.toLocaleString()}
@@ -78,7 +116,10 @@ CURRENT INVENTORY (${allListings.length} properties):
 - Delivery Times: ${Array.from(delivery).filter(Boolean).join(', ')}
 
 Sample Properties:
-${sampleListings.map((l: any) => `- ${l.title} | ${l.price} | ${l.location} | ${l.rooms}BR | ${l.area}m²`).join('\n')}
+${sampleListings.map((l: any) => `- ${l.title} | EGP ${l.price} | ${l.location} | ${l.rooms}BR | ${l.area}m²`).join('\n')}
+
+FULL LISTING DATABASE:
+${JSON.stringify(listingDatabase)}
     `.trim();
   } catch (error) {
     console.error('Error fetching listing context:', error);
@@ -105,6 +146,12 @@ router.post('/chat', async (req: any, res: any) => {
       return res.status(400).json({ error: 'Message is too long (max 500 characters)' });
     }
 
+    // Detect language
+    const isArabic = /[\u0600-\u06FF]/.test(message);
+
+    // Extract budget from user message
+    const userBudget = extractBudget(message);
+
     // Get live listing context
     const listingContext = await getLiveListingContext();
 
@@ -116,28 +163,42 @@ PERSONALITY:
 - Speak like a luxury real estate consultant
 - Be concise (max 3-4 sentences per response)
 - Support both Arabic and English (respond in the language the user writes in)
+- Always be helpful and suggest alternatives if exact match not available
 
 ${listingContext}
+
+BUDGET-AWARE RESPONSES:
+${userBudget ? `- User's stated budget: EGP ${userBudget.toLocaleString()}` : '- Ask about budget if not provided'}
+- If a property is outside user's budget, ALWAYS suggest similar properties within their budget range
+- Use phrases like: "I found properties that match your budget better" or "Let me suggest some excellent options within your budget"
+- Suggest 2-3 alternatives from our inventory that fit their criteria
+- When budget is insufficient for a listing, offer: "Discuss Options" or "View Similar Properties" CTAs
 
 LEAD QUALIFICATION:
 When a user asks about properties, ask about:
 1. Preferred location
-2. Budget range
+2. Budget range (if not already mentioned)
 3. Number of bedrooms
 4. Preferred delivery time
+5. Property type (apartment, villa, chalet, duplex, etc.)
 
 CONVERSION RULES:
 - After 2-3 exchanges, ALWAYS suggest contacting via WhatsApp
-- Include a clear CTA: "Would you like me to connect you with our team on WhatsApp?"
+- Include a clear CTA: "Would you like me to connect you with our team on WhatsApp?" or "Shall I connect you with our sales team?"
+- Offer CTA buttons: "Discuss Options", "View Similar Properties", "Contact Agent", "Schedule Consultation"
 - If the user asks for specific pricing or availability, say: "For the latest pricing and availability, our team can help you directly on WhatsApp"
 - Never say "I don't know" — instead say "Our team can provide detailed information about that. Shall I connect you via WhatsApp?"
+- If budget is out of range, suggest: "I can show you excellent alternatives within your budget. Would you like to discuss options with our team?"
 
 WEBSITE LINKS:
 - All properties: /listings
 - New Administrative Capital: /listings/cairo/new-administrative-capital-collection
 - New Cairo: /listings/cairo/new-cairo-collection
 - North Coast: /listings/cairo/north-coast-collection
-- Red Sea: /listings/cairo/red-sea-collection`;
+- Red Sea: /listings/cairo/red-sea-collection
+
+RESPOND IN THE USER'S LANGUAGE:
+${isArabic ? '- User is writing in Arabic, respond in Arabic' : '- User is writing in English, respond in English'}`;
 
     // Build conversation contents
     const contents: any[] = [];

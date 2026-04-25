@@ -73,7 +73,7 @@ export default function HeroSection() {
             />
           </svg>
           <span className="chat-label">
-            {locale === 'en' ? 'Chat' : 'دردش'}
+            {locale === 'en' ? 'Chat' : 'تحدث معنا'}
           </span>
         </button>
 
