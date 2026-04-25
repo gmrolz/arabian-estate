@@ -316,3 +316,10 @@
 - [x] Make gallery mobile-friendly (swipe support)
 - [x] Hide carousel dots, show thumbnails instead
 - [x] Remove "Coming Soon" badges from listings page cities
+
+
+## Bug Fixes (New Session)
+- [x] BUG: Listing count mismatch - FIXED: Updated CitiesSection to use correct slugs (north-coast, red-sea, sokhna, galala)
+- [x] BUG: 404 error when clicking regions with 0 listings - FIXED: LocationFunnelPage now redirects to home instead of listings
+- [x] BUG: Slug mismatch - FIXED: Changed funnelPath from /listings/cairo/north-coast-collection to /listings/north-coast
+- [x] BUG: Verified listing count accuracy - Home and listings page now use same counting logic

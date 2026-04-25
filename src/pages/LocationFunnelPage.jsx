@@ -1,4 +1,4 @@
-/**
+/*
  * LocationFunnelPage — PropertyFinder-style layout
  * Routes:
  *   /listings/:citySlug
@@ -157,7 +157,7 @@ export default function LocationFunnelPage() {
     return () => { cancelled = true; };
   }, [slugChain.join(','), isCompoundLevel, compoundSlug, locale]);
 
-  if (state.notFound) return <Navigate to={lp('/listings')} replace />;
+  if (state.notFound) return <Navigate to={lp('/')} replace />;
 
   const { nodes, children, childDescendantIds, listings, loading } = state;
   const currentNode = nodes[nodes.length - 1];

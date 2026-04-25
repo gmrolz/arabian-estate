@@ -42,39 +42,39 @@ const EAST_CAIRO_AREAS = [
   },
 ];
 
-// Other regions with their L3 collection IDs
+// Other regions with their L3 collection IDs - FIXED: Use correct slugs matching LocationFunnelPage
 const OTHER_REGIONS = [
   {
     id: 30018,
-    slug: 'north-coast-collection',
+    slug: 'north-coast',
     nameAr: 'الساحل الشمالي',
     nameEn: 'North Coast',
     image: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-north-coast-F4fqLbUxVzighKm8nh2ZFt.webp',
-    funnelPath: '/listings/cairo/north-coast-collection',
+    funnelPath: '/listings/north-coast',
   },
   {
     id: 30022,
-    slug: 'ain-sokhna-collection',
+    slug: 'sokhna',
     nameAr: 'العين السخنة',
     nameEn: 'Ain Sokhna',
     image: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-sokhna-J3aMcmqTDxbDeCxX25zQJm.webp',
-    funnelPath: '/listings/cairo/ain-sokhna-collection',
+    funnelPath: '/listings/sokhna',
   },
   {
     id: 30020,
-    slug: 'red-sea-collection',
+    slug: 'red-sea',
     nameAr: 'البحر الأحمر',
     nameEn: 'Red Sea',
     image: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-hurghada-Gt2ntR2UHD7p5wLDpHVxGM.webp',
-    funnelPath: '/listings/cairo/red-sea-collection',
+    funnelPath: '/listings/red-sea',
   },
   {
     id: 30021,
-    slug: 'south-sinai-collection',
+    slug: 'galala',
     nameAr: 'جنوب سيناء',
     nameEn: 'South Sinai',
     image: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/region-galala-VR6RnhGf8SFFkrZFR8TENb.webp',
-    funnelPath: '/listings/cairo/south-sinai-collection',
+    funnelPath: '/listings/galala',
   },
 ];
 
