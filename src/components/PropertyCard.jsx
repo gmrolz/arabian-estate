@@ -18,8 +18,8 @@ function formatPriceShort(priceStr) {
     return String(num);
 }
 
-/* ─── Horizontal Carousel Gallery ─────────────────────────────────── */
-function HorizontalCarouselGallery({ images, alt, featured, priceTag, t, listingId, siteId, show_full_price, price }) {
+/* ─── Image Carousel with Thumbnails ─────────────────────────────────── */
+function ImageCarousel({ images, alt, featured, priceTag, t, listingId, siteId, show_full_price, price }) {
     const [idx, setIdx] = useState(0);
     const [isInView, setIsInView] = useState(false);
     const [dragging, setDragging] = useState(false);
@@ -70,78 +70,82 @@ function HorizontalCarouselGallery({ images, alt, featured, priceTag, t, listing
     const handleMouseUp = () => setDragging(false);
 
     return (
-        <div className="carousel-gallery-container" ref={wrapRef}>
-            {/* Left Thumbnails */}
-            <div className="carousel-thumbnails-vertical">
-                {list.map((img, i) => (
-                    <button
-                        key={i}
-                        type="button"
-                        className={`carousel-thumbnail-vertical ${i === idx ? 'active' : ''}`}
-                        onClick={() => handleThumbnailClick(i)}
-                        aria-label={`View image ${i + 1}`}
-                    >
-                        <img
-                            src={typeof img === 'string' ? img : img.url}
-                            alt={`${alt} thumbnail ${i + 1}`}
-                            loading="lazy"
-                        />
-                    </button>
-                ))}
-            </div>
-
-            {/* Main Carousel */}
-            <div className="carousel-wrap-horizontal">
+        <div className="carousel-container" ref={wrapRef}>
+            {/* Main Image */}
+            <div className="carousel-main">
                 {featured && <div className="carousel-badge-featured">{t('card.featured')}</div>}
                 {priceTag && <div className="carousel-badge-price">{priceTag}</div>}
 
                 <div
-                    className="carousel-inner-horizontal"
+                    className="carousel-wrap"
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
                     onMouseLeave={handleMouseUp}
                 >
+                    <div className="carousel-inner">
+                        {list.map((img, i) => (
+                            <img
+                                key={i}
+                                src={typeof img === 'string' ? img : img.url}
+                                alt={`${alt} ${i + 1}`}
+                                className={`carousel-img ${i === idx ? 'active' : ''}`}
+                                loading={i === idx ? 'eager' : 'lazy'}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Navigation Buttons */}
+                    {total > 1 && (
+                        <>
+                            <button
+                                type="button"
+                                className="carousel-btn carousel-btn-prev"
+                                onClick={handlePrev}
+                                aria-label="Previous image"
+                            >
+                                ‹
+                            </button>
+                            <button
+                                type="button"
+                                className="carousel-btn carousel-btn-next"
+                                onClick={handleNext}
+                                aria-label="Next image"
+                            >
+                                ›
+                            </button>
+                        </>
+                    )}
+
+                    {/* Image Counter */}
+                    {total > 1 && (
+                        <div className="carousel-counter">
+                            {idx + 1} / {total}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Thumbnail Gallery */}
+            {total > 1 && (
+                <div className="carousel-thumbnails">
                     {list.map((img, i) => (
-                        <img
+                        <button
                             key={i}
-                            src={typeof img === 'string' ? img : img.url}
-                            alt={`${alt} ${i + 1}`}
-                            className={`carousel-img-horizontal ${i === idx ? 'active' : ''}`}
-                            loading={i === idx ? 'eager' : 'lazy'}
-                        />
+                            type="button"
+                            className={`carousel-thumbnail ${i === idx ? 'active' : ''}`}
+                            onClick={() => handleThumbnailClick(i)}
+                            aria-label={`View image ${i + 1}`}
+                        >
+                            <img
+                                src={typeof img === 'string' ? img : img.url}
+                                alt={`${alt} thumbnail ${i + 1}`}
+                                loading="lazy"
+                            />
+                        </button>
                     ))}
                 </div>
-
-                {/* Navigation Buttons */}
-                {total > 1 && (
-                    <>
-                        <button
-                            type="button"
-                            className="carousel-btn carousel-btn-prev"
-                            onClick={handlePrev}
-                            aria-label="Previous image"
-                        >
-                            ‹
-                        </button>
-                        <button
-                            type="button"
-                            className="carousel-btn carousel-btn-next"
-                            onClick={handleNext}
-                            aria-label="Next image"
-                        >
-                            ›
-                        </button>
-                    </>
-                )}
-
-                {/* Image Counter */}
-                {total > 1 && (
-                    <div className="carousel-counter">
-                        {idx + 1} / {total}
-                    </div>
-                )}
-            </div>
+            )}
         </div>
     );
 }
@@ -174,8 +178,8 @@ export default function PropertyCard({ listing, featured, priceTag }) {
 
     return (
         <div className="property-card">
-            {/* Horizontal Carousel Gallery */}
-            <HorizontalCarouselGallery
+            {/* Image Carousel */}
+            <ImageCarousel
                 images={images}
                 alt={title || 'Property'}
                 featured={featured}

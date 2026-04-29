@@ -28,94 +28,36 @@
   }
 }
 
-/* ─── Horizontal Carousel Gallery Container ─────────────────────────────────── */
-.carousel-gallery-container {
-  display: flex;
-  gap: 8px;
-  background: #f9f9f9;
-  padding: 8px;
-  border-radius: 8px;
-  position: relative;
-  flex-shrink: 0;
-}
-
-/* ─── Vertical Thumbnails (Left Side) ─────────────────────────────── */
-.carousel-thumbnails-vertical {
+/* ─── Carousel Container ─────────────────────────────────── */
+.carousel-container {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: 300px;
-  scroll-behavior: smooth;
+  gap: 0;
   flex-shrink: 0;
 }
 
-.carousel-thumbnails-vertical::-webkit-scrollbar {
-  width: 4px;
-}
-
-.carousel-thumbnails-vertical::-webkit-scrollbar-track {
-  background: #f0f0f0;
-  border-radius: 2px;
-}
-
-.carousel-thumbnails-vertical::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 2px;
-}
-
-.carousel-thumbnails-vertical::-webkit-scrollbar-thumb:hover {
-  background: #999;
-}
-
-.carousel-thumbnail-vertical {
-  flex-shrink: 0;
-  width: 50px;
-  height: 50px;
-  border-radius: 6px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: all 0.2s ease;
-  opacity: 0.6;
-  background: white;
-}
-
-.carousel-thumbnail-vertical:hover {
-  opacity: 1;
-  border-color: #ddd;
-}
-
-.carousel-thumbnail-vertical.active {
-  border-color: #dc143c;
-  opacity: 1;
-  box-shadow: 0 2px 6px rgba(220, 20, 60, 0.3);
-}
-
-.carousel-thumbnail-vertical img {
+.carousel-main {
+  position: relative;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  flex-shrink: 0;
 }
 
-/* ─── Main Horizontal Carousel ─────────────────────────────────── */
-.carousel-wrap-horizontal {
+/* ─── Image Carousel ─────────────────────────────────── */
+.carousel-wrap {
   position: relative;
   width: 100%;
   aspect-ratio: 1;
   overflow: hidden;
   background: #f5f5f5;
   cursor: grab;
-  flex: 1;
-  border-radius: 8px;
+  flex-shrink: 0;
 }
 
-.carousel-wrap-horizontal:active {
+.carousel-wrap:active {
   cursor: grabbing;
 }
 
-.carousel-inner-horizontal {
+.carousel-inner {
   position: relative;
   width: 100%;
   height: 100%;
@@ -124,7 +66,7 @@
   justify-content: center;
 }
 
-.carousel-img-horizontal {
+.carousel-img {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -133,32 +75,66 @@
   transition: opacity 0.3s ease;
 }
 
-.carousel-img-horizontal.active {
+.carousel-img.active {
   opacity: 1;
 }
 
-/* ─── Carousel Badges ─────────────────────────────────── */
-.carousel-badge-featured,
-.carousel-badge-price {
-  position: absolute;
-  top: 12px;
-  z-index: 20;
-  background: rgba(220, 20, 60, 0.95);
-  color: white;
-  padding: 6px 12px;
+/* ─── Thumbnail Gallery ─────────────────────────────────── */
+.carousel-thumbnails {
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  background: #f9f9f9;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+}
+
+.carousel-thumbnails::-webkit-scrollbar {
+  height: 4px;
+}
+
+.carousel-thumbnails::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+.carousel-thumbnails::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
+
+.carousel-thumbnails::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+.carousel-thumbnail {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
   border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+  background: white;
 }
 
-.carousel-badge-featured {
-  left: 12px;
+.carousel-thumbnail:hover {
+  opacity: 1;
+  border-color: #ddd;
 }
 
-.carousel-badge-price {
-  right: 12px;
+.carousel-thumbnail.active {
+  border-color: #dc143c;
+  opacity: 1;
+  box-shadow: 0 2px 6px rgba(220, 20, 60, 0.3);
+}
+
+.carousel-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* ─── Carousel Navigation Buttons ─────────────────────────────────── */
@@ -177,13 +153,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 15;
+  z-index: 10;
   transition: all 0.3s ease;
   opacity: 0;
   line-height: 1;
 }
 
-.carousel-wrap-horizontal:hover .carousel-btn {
+.carousel-wrap:hover .carousel-btn {
   opacity: 1;
 }
 
@@ -200,6 +176,13 @@
   right: 8px;
 }
 
+/* Show buttons on mobile */
+@media (max-width: 768px) {
+  .carousel-btn {
+    opacity: 1;
+  }
+}
+
 /* ─── Image Counter ─────────────────────────────────── */
 .carousel-counter {
   position: absolute;
@@ -211,7 +194,31 @@
   border-radius: 4px;
   font-size: 12px;
   font-weight: 600;
-  z-index: 15;
+  z-index: 10;
+}
+
+/* ─── Carousel Badges ─────────────────────────────────── */
+.carousel-badge-featured,
+.carousel-badge-price {
+  position: absolute;
+  top: 12px;
+  z-index: 5;
+  background: rgba(220, 20, 60, 0.95);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.carousel-badge-featured {
+  left: 12px;
+}
+
+.carousel-badge-price {
+  right: 12px;
 }
 
 /* ─── Card Body ─────────────────────────────────── */
@@ -359,36 +366,23 @@
 
 /* ─── Mobile Responsive ─────────────────────────────────── */
 @media (max-width: 768px) {
-  .carousel-gallery-container {
-    flex-direction: column;
-    gap: 0;
-    padding: 0;
-  }
-
-  .carousel-thumbnails-vertical {
-    flex-direction: row;
-    max-height: none;
-    max-width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 8px;
-    gap: 6px;
-  }
-
-  .carousel-thumbnail-vertical {
-    width: 45px;
-    height: 45px;
-  }
-
-  .carousel-wrap-horizontal {
-    border-radius: 0;
-  }
-
   .carousel-btn {
     width: 36px;
     height: 36px;
     font-size: 24px;
-    opacity: 1;
+  }
+
+  .carousel-btn-prev {
+    left: 6px;
+  }
+
+  .carousel-btn-next {
+    right: 6px;
+  }
+
+  .carousel-thumbnail {
+    width: 45px;
+    height: 45px;
   }
 
   .card-specs {
@@ -416,11 +410,6 @@
 }
 
 @media (max-width: 480px) {
-  .carousel-thumbnail-vertical {
-    width: 40px;
-    height: 40px;
-  }
-
   .carousel-btn {
     width: 32px;
     height: 32px;
@@ -430,6 +419,11 @@
   .carousel-counter {
     font-size: 11px;
     padding: 3px 8px;
+  }
+
+  .carousel-thumbnail {
+    width: 40px;
+    height: 40px;
   }
 
   .card-specs {
