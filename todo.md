@@ -332,3 +332,4 @@
 - [x] Add image counter (X / Total)
 - [x] Add featured and price badges
 - [x] Smooth transitions and hover effects
+- [x] FIX: Carousel thumbnails were not styled on deployed site (CSS was in property-card.css but not imported) - Added styles to index.css

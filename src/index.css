@@ -1582,6 +1582,108 @@ button {
   backdrop-filter: blur(4px);
 }
 
+/* ── Carousel Container ── */
+.carousel-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.carousel-main {
+  position: relative;
+  width: 100%;
+}
+
+.carousel-badge-featured {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 5;
+  background: rgba(220, 20, 60, 0.95);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.carousel-badge-price {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 5;
+  background: rgba(220, 20, 60, 0.95);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* ── Carousel Thumbnails ── */
+.carousel-thumbnails {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 4px;
+  padding: 6px;
+  background: var(--bg-surface, #f5f5f5);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+}
+
+.carousel-thumbnails::-webkit-scrollbar {
+  height: 3px;
+}
+
+.carousel-thumbnails::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.carousel-thumbnails::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.15);
+  border-radius: 2px;
+}
+
+.carousel-thumbnail {
+  flex-shrink: 0 !important;
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  max-width: 48px !important;
+  max-height: 48px !important;
+  border-radius: 4px;
+  overflow: hidden !important;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  opacity: 0.6;
+  background: var(--bg-card, #fff);
+  padding: 0 !important;
+  display: block !important;
+}
+
+.carousel-thumbnail:hover {
+  opacity: 1;
+  border-color: rgba(0,0,0,0.15);
+}
+
+.carousel-thumbnail.active {
+  border-color: var(--gold, #c90411);
+  opacity: 1;
+  box-shadow: 0 0 8px rgba(201, 4, 17, 0.3);
+}
+
+.carousel-thumbnail img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
 /* Bigger cards + carousel on mobile */
 @media (max-width: 768px) {
   .carousel-wrap {
