@@ -333,3 +333,15 @@
 - [x] Add featured and price badges
 - [x] Smooth transitions and hover effects
 - [x] FIX: Carousel thumbnails were not styled on deployed site (CSS was in property-card.css but not imported) - Added styles to index.css
+
+## Chatbot Mobile Redesign & Conversational Lead Collection
+- [x] Make chatbot full-screen on mobile (100dvh, 100vw)
+- [x] Improve touch-friendly UI (larger buttons, better spacing, WhatsApp-style)
+- [x] Remove lead collection form entirely
+- [x] Update AI to collect lead data conversationally (name, phone, budget one by one)
+- [x] Update Gemini system prompt to ask for info naturally during chat
+- [x] Test chatbot on mobile and desktop
+- [x] Fix RTL positioning (chat card always bottom-right)
+- [x] Add body scroll lock when chat is open
+- [x] Add safe-area-inset support for notch phones
+- [x] Property cards as horizontal scrollable carousel in chat
