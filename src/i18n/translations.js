@@ -164,6 +164,15 @@ export const translations = {
       whatsapp: 'WhatsApp',
       call: 'Call',
       fullPrice: 'Full Price',
+      annual: 'Annual',
+      area: 'Area',
+      finishing: 'Finishing',
+      developer: 'Developer',
+      project: 'Project',
+      installments: 'Installments',
+      readyToMove: 'Ready to Move',
+      askPrice: 'Ask for Price',
+      yrs: 'yrs',
     },
 
     // Footer
@@ -367,6 +376,15 @@ export const translations = {
       whatsapp: 'واتساب',
       call: 'اتصال',
       fullPrice: 'السعر الكامل',
+      annual: 'السنوي',
+      area: 'المساحة',
+      finishing: 'التشطيب',
+      developer: 'المطور',
+      project: 'المشروع',
+      installments: 'التقسيط',
+      readyToMove: 'استلام فوري',
+      askPrice: 'استعلم عن السعر',
+      yrs: 'سنوات',
     },
 
     footer: {

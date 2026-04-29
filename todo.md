@@ -345,3 +345,19 @@
 - [x] Add body scroll lock when chat is open
 - [x] Add safe-area-inset support for notch phones
 - [x] Property cards as horizontal scrollable carousel in chat
+
+## Property Card Redesign - Better UX & Conversion
+- [x] Full price shown first (prominent), then down payment + monthly
+- [x] Icon-based specs: beds, baths, area (like reference image)
+- [x] Location with pin icon (📍 Area, City)
+- [x] Developer name visible on card
+- [x] Delivery date displayed
+- [x] Installment years displayed
+- [x] WhatsApp + Call CTAs (keep current)
+- [x] Clean, readable price section with proper hierarchy
+- [x] Better typography and spacing for readability
+- [x] Mobile-friendly card layout
+- [x] Type badge (APARTMENT) with developer name
+- [x] Moved CSS to dedicated property-card.css with proper import
+- [x] Disabled conflicting old card styles in index.css
+- [x] RTL support for Arabic layout
