@@ -6,12 +6,9 @@ import { hasSupabase } from '../lib/supabase';
 import { trackEvent } from '../lib/listingsApi';
 import { trackLeadConversion } from '../lib/conversions';
 import { formatNumberReadable } from '../lib/format';
-
-
 const WHATSAPP_NUMBER = '201000257941';
 const PHONE_NUMBER = '+201000257941';
 const FALLBACK_IMG = 'https://d2xsxph8kpxj0f.cloudfront.net/310419663026741040/Amy8eaCEPruFwakvoHY8Wk/placeholder-listing-gwAks4ueAQVz8qfmqQpEYM.webp';
-
 function formatPriceShort(priceStr) {
     if (!priceStr || typeof priceStr !== 'string') return '';
     const num = parseInt(priceStr.replace(/,/g, ''), 10);
@@ -21,43 +18,14 @@ function formatPriceShort(priceStr) {
     return String(num);
 }
 
-/* ─── Thumbnail Gallery Component ─────────────────────────────────── */
-function ThumbnailGallery({ images, currentIdx, onSelect, alt }) {
-    const list = (images && images.length > 0) ? images : [FALLBACK_IMG];
-    const total = list.length;
-
-    if (total <= 1) return null;
-
-    return (
-        <div className="carousel-thumbnails">
-            {list.map((img, i) => (
-                <button
-                    key={i}
-                    type="button"
-                    className={`carousel-thumbnail ${i === currentIdx ? 'active' : ''}`}
-                    onClick={() => onSelect(i)}
-                    aria-label={`View image ${i + 1}`}
-                >
-                    <img
-                        src={typeof img === 'string' ? img : img.url}
-                        alt={`${alt} thumbnail ${i + 1}`}
-                        loading="lazy"
-                    />
-                </button>
-            ))}
-        </div>
-    );
-}
-
-/* ─── Image Carousel ─────────────────────────────────── */
-function ImageCarousel({ images, alt, featured, priceTag, t, listingId, siteId, show_full_price, price }) {
+/* ─── Horizontal Carousel Gallery ─────────────────────────────────── */
+function HorizontalCarouselGallery({ images, alt, featured, priceTag, t, listingId, siteId, show_full_price, price }) {
     const [idx, setIdx] = useState(0);
     const [isInView, setIsInView] = useState(false);
     const [dragging, setDragging] = useState(false);
     const startRef = useRef({ x: 0, y: 0 });
     const wrapRef = useRef(null);
     const trackedIndices = useRef(new Set());
-
     const list = (images && images.length > 0) ? images : [FALLBACK_IMG];
     const total = list.length;
 
@@ -101,49 +69,51 @@ function ImageCarousel({ images, alt, featured, priceTag, t, listingId, siteId, 
 
     const handleMouseUp = () => setDragging(false);
 
-    const handleTouchStart = (e) => {
-        setDragging(true);
-        startRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    };
-
-    const handleTouchMove = (e) => {
-        if (!dragging) return;
-        const dx = e.touches[0].clientX - startRef.current.x;
-        const dy = e.touches[0].clientY - startRef.current.y;
-        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 30) {
-            if (dx > 0) handlePrev();
-            else handleNext();
-            setDragging(false);
-        }
-    };
-
-    const handleTouchEnd = () => setDragging(false);
-
     return (
-        <>
-            <div
-                className="carousel-wrap"
-                ref={wrapRef}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseUp}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-            >
-                <div className="carousel-inner">
+        <div className="carousel-gallery-container" ref={wrapRef}>
+            {/* Left Thumbnails */}
+            <div className="carousel-thumbnails-vertical">
+                {list.map((img, i) => (
+                    <button
+                        key={i}
+                        type="button"
+                        className={`carousel-thumbnail-vertical ${i === idx ? 'active' : ''}`}
+                        onClick={() => handleThumbnailClick(i)}
+                        aria-label={`View image ${i + 1}`}
+                    >
+                        <img
+                            src={typeof img === 'string' ? img : img.url}
+                            alt={`${alt} thumbnail ${i + 1}`}
+                            loading="lazy"
+                        />
+                    </button>
+                ))}
+            </div>
+
+            {/* Main Carousel */}
+            <div className="carousel-wrap-horizontal">
+                {featured && <div className="carousel-badge-featured">{t('card.featured')}</div>}
+                {priceTag && <div className="carousel-badge-price">{priceTag}</div>}
+
+                <div
+                    className="carousel-inner-horizontal"
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={handleMouseUp}
+                >
                     {list.map((img, i) => (
                         <img
                             key={i}
                             src={typeof img === 'string' ? img : img.url}
-                            alt={alt}
-                            className={`carousel-img ${i === idx ? 'active' : ''}`}
+                            alt={`${alt} ${i + 1}`}
+                            className={`carousel-img-horizontal ${i === idx ? 'active' : ''}`}
                             loading={i === idx ? 'eager' : 'lazy'}
                         />
                     ))}
                 </div>
 
+                {/* Navigation Buttons */}
                 {total > 1 && (
                     <>
                         <button
@@ -162,174 +132,111 @@ function ImageCarousel({ images, alt, featured, priceTag, t, listingId, siteId, 
                         >
                             ›
                         </button>
-                        <div className="carousel-dots">
-                            {list.map((_, i) => (
-                                <button
-                                    key={i}
-                                    type="button"
-                                    className={`carousel-dot ${i === idx ? 'active' : ''}`}
-                                    onClick={() => setIdx(i)}
-                                    aria-label={`Go to image ${i + 1}`}
-                                />
-                            ))}
-                        </div>
                     </>
                 )}
 
-                {featured && <div className="carousel-badge carousel-badge-featured">{t('card.featured')}</div>}
-                {show_full_price && priceTag && (
-                    <div className="carousel-badge carousel-badge-price">{priceTag}</div>
+                {/* Image Counter */}
+                {total > 1 && (
+                    <div className="carousel-counter">
+                        {idx + 1} / {total}
+                    </div>
                 )}
             </div>
-
-            {/* Thumbnail Gallery */}
-            <ThumbnailGallery images={images} currentIdx={idx} onSelect={handleThumbnailClick} alt={alt} />
-        </>
+        </div>
     );
 }
 
-/* ─── Main PropertyCard Component ─────────────────────────────────── */
-export default function PropertyCard({ listing, featured = false }) {
+export default function PropertyCard({ listing, featured, priceTag }) {
     const { t, locale } = useLocale();
     const { siteId } = useSite();
-    const cardRef = useRef(null);
+    const isRTL = locale === 'ar';
 
-    // Extract fields
     const {
         id: listingId,
-        title_ar, title_en,
-        project_ar, project_en,
-        developer_ar, developer_en,
-        location,
-        area, rooms, toilets,
+        title,
+        price,
+        area,
+        beds,
+        baths,
         finishing,
-        delivery,
-        price, downpayment, monthly_inst, annual_payment,
-        images,
-        show_price, show_downpayment, show_monthly, show_full_price, show_annual, show_compound,
-        compoundName,
+        images = [],
+        downpayment,
+        monthly_inst,
+        annual_payment,
+        show_downpayment,
+        show_monthly,
+        show_annual,
+        show_full_price,
+        location_name,
     } = listing;
 
-    const isAr = locale === 'ar';
-    const title = isAr ? title_ar : title_en;
-    const project = isAr ? project_ar : project_en || 'Arabian Estate';
-    const developer = isAr ? developer_ar : developer_en || 'Arabian Estate';
-    const displayLocation = location || 'Cairo, Egypt';
-    
-    // Default show_price to true if not explicitly set
-    const effectiveShowPrice = show_price !== false && show_price !== 0 ? true : false;
-
-    // Calculate payment duration in years
-    const monthlyPaymentDuration = monthly_inst && price && downpayment 
-        ? Math.round((price - downpayment) / monthly_inst / 12)
-        : null;
-
-    const waMessage = encodeURIComponent(
-        [
-            `*Unit Inquiry – Arabian Estate*`,
-            `*Listing ID: ${listingId || 'N/A'}*`,
-            ``,
-            `*${title || project || 'Property'}*`,
-            `Project: ${project || 'Arabian Estate'}`,
-            `Developer: ${developer || 'Arabian Estate'}`,
-            `Location: ${displayLocation}`,
-            ``,
-            `*Unit Specifications:*`,
-            `Area: ${area} m²`,
-            `Bedrooms: ${rooms}`,
-            `Bathrooms: ${toilets}`,
-            `Finishing: ${finishing}`,
-            `Delivery: ${delivery}`,
-            ``,
-            `*Pricing Details:*`,
-            `Total Price: EGP ${formatNumberReadable(price)}`,
-            `Down Payment: EGP ${formatNumberReadable(downpayment)}`,
-            `Monthly Installment: EGP ${formatNumberReadable(monthly_inst)}`,
-            ...(monthlyPaymentDuration ? [`Payment Duration: ${monthlyPaymentDuration} years`] : []),
-            ...(annual_payment ? [`Annual Payment Option: EGP ${formatNumberReadable(annual_payment)}`] : []),
-            ``,
-            `Please send me more details and available payment plans. Thank you!`
-        ].join('\n')
-    );
-    const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${waMessage}`;
+    const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=Hi, I'm interested in: ${encodeURIComponent(title || 'Property')}`;
 
     return (
-        <div className="property-card" ref={cardRef}>
-            <ImageCarousel
+        <div className="property-card">
+            {/* Horizontal Carousel Gallery */}
+            <HorizontalCarouselGallery
                 images={images}
-                alt={`${project} by ${developer}`}
+                alt={title || 'Property'}
                 featured={featured}
-                priceTag={formatPriceShort(price)}
+                priceTag={priceTag}
                 t={t}
                 listingId={listingId}
-                siteId={listing.site_id ?? siteId}
-                show_full_price={effectiveShowPrice && show_full_price}
+                siteId={siteId}
+                show_full_price={show_full_price}
                 price={price}
             />
 
+            {/* Card Content */}
             <div className="card-body">
-                <div>
-                    {title && <div className="card-title">{title}</div>}
-                    <div className="card-project">{project || 'Arabian Estate'}</div>
-                    <div className="card-developer">{developer || 'Arabian Estate'} · {displayLocation}</div>
-                    {delivery && <div className="card-delivery">{t('card.delivery')}: {delivery}</div>}
-                </div>
+                <h3 className="card-title">{title}</h3>
+                <p className="card-location">{location_name || getAreaFromListing(listing) || 'Location'}</p>
 
+                {/* Specs */}
                 <div className="card-specs">
-                    <span className="spec">Unit</span>
-                    <span className="spec">{area} m²</span>
-                    <span className="spec">{rooms} {t('card.beds')}</span>
-                    <span className="spec">{toilets} {t('card.bath')}</span>
-                    <span className="spec">{finishing}</span>
+                    {area && (
+                        <div className="spec">
+                            <span className="spec-label">{t('card.area')}</span>
+                            <span className="spec-value">{area} m²</span>
+                        </div>
+                    )}
+                    {beds && (
+                        <div className="spec">
+                            <span className="spec-label">{t('card.beds')}</span>
+                            <span className="spec-value">{beds}</span>
+                        </div>
+                    )}
+                    {baths && (
+                        <div className="spec">
+                            <span className="spec-label">{t('card.baths')}</span>
+                            <span className="spec-value">{baths}</span>
+                        </div>
+                    )}
+                    {finishing && (
+                        <div className="spec">
+                            <span className="spec-label">{t('card.finishing')}</span>
+                            <span className="spec-value">{finishing}</span>
+                        </div>
+                    )}
                 </div>
 
-                <hr className="card-divider" />
-
+                {/* Pricing */}
                 <div className="card-pricing">
                     {(() => {
-                        // Master show_price toggle: if false, hide all pricing
-                        if (!effectiveShowPrice) {
+                        if (!price) {
                             return (
-                                <div className="price-row price-hidden">
+                                <div className="price-row">
                                     <a
-                                        href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hi, I'm interested in ${title}. Can you please share the pricing details?`}
+                                        href={waLink}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="btn-inquire-price"
-                                        onClick={() => {
-                                            if (listingId && hasSupabase()) trackEvent(listingId, 'inquire_price', {}, listing.site_id ?? siteId);
-                                        }}
+                                        className="price-inquiry-link"
                                     >
                                         استعلم عن السعر
                                     </a>
                                 </div>
                             );
                         }
-
-                        const hasPricingToShow = 
-                            (show_downpayment && downpayment) ||
-                            (show_monthly && monthly_inst) ||
-                            (show_full_price && price) ||
-                            (show_annual && annual_payment);
-
-                        if (!hasPricingToShow) {
-                            return (
-                                <div className="price-row price-hidden">
-                                    <a
-                                        href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hi, I'm interested in ${title}. Can you please share the pricing details?`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn-inquire-price"
-                                        onClick={() => {
-                                            if (listingId && hasSupabase()) trackEvent(listingId, 'inquire_price', {}, listing.site_id ?? siteId);
-                                        }}
-                                    >
-                                        استعلم عن السعر
-                                    </a>
-                                </div>
-                            );
-                        }
-
                         return (
                             <>
                                 {show_downpayment && downpayment && (
@@ -361,6 +268,7 @@ export default function PropertyCard({ listing, featured = false }) {
                     })()}
                 </div>
 
+                {/* Actions */}
                 <div className="card-actions">
                     <a
                         href={waLink}

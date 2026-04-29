@@ -323,3 +323,12 @@
 - [x] BUG: 404 error when clicking regions with 0 listings - FIXED: LocationFunnelPage now redirects to home instead of listings
 - [x] BUG: Slug mismatch - FIXED: Changed funnelPath from /listings/cairo/north-coast-collection to /listings/north-coast
 - [x] BUG: Verified listing count accuracy - Home and listings page now use same counting logic
+
+## Current Session - Carousel Gallery
+- [x] Update PropertyCard carousel to show multiple images like list/gallery
+- [x] Add vertical thumbnail navigation on left/right side
+- [x] Implement swipe/arrow navigation for carousel
+- [x] Make carousel mobile-friendly with responsive layout
+- [x] Add image counter (X / Total)
+- [x] Add featured and price badges
+- [x] Smooth transitions and hover effects
