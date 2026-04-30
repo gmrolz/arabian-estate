@@ -364,3 +364,9 @@
 
 ## WhatsApp CTA Fix
 - [x] Fix WhatsApp message to include full listing details (title, price, down payment, monthly, area, beds, baths, location, developer, delivery, installments, finishing) instead of just title
+
+## Location Display Enhancement
+- [x] Show more detailed location data on property cards (mapped slugs to readable names in Arabic/English)
+- [x] Add compound name after the location (with building icon)
+- [x] Added compoundName to normalizeRow in listingsApi.js
+- [x] Added RTL support for compound row

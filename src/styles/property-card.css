@@ -48,8 +48,11 @@
 
 .card-title { margin: 0; font-size: 15px; font-weight: 600; color: #1a1a1a; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-.card-location-row { display: flex; align-items: center; gap: 5px; color: #777; font-size: 12.5px; line-height: 1.3; }
+.card-location-row { display: flex; align-items: center; gap: 5px; color: #555; font-size: 13px; line-height: 1.3; font-weight: 500; }
 .card-location-row svg { flex-shrink: 0; color: #dc143c; }
+
+.card-compound-row { display: flex; align-items: center; gap: 5px; color: #888; font-size: 12px; line-height: 1.3; margin-top: -2px; }
+.card-compound-row svg { flex-shrink: 0; color: #999; }
 
 .card-specs-row { display: flex; align-items: center; gap: 16px; padding: 8px 0; border-top: 1px solid #f0f0f0; }
 .card-spec-item { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #555; font-weight: 500; }
@@ -110,6 +113,7 @@
 }
 
 [dir="rtl"] .card-location-row { flex-direction: row-reverse; justify-content: flex-end; }
+[dir="rtl"] .card-compound-row { flex-direction: row-reverse; justify-content: flex-end; }
 [dir="rtl"] .card-specs-row { flex-direction: row-reverse; }
 [dir="rtl"] .card-spec-item { flex-direction: row-reverse; }
 [dir="rtl"] .card-delivery-row { flex-direction: row-reverse; }

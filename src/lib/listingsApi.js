@@ -130,6 +130,9 @@ function normalizeRow(row, locale = 'en') {
     annual_payment: row.annualPayment ?? row.annual_payment ?? '',
     payment_years: row.paymentYears ?? row.payment_years ?? null,
     payment_down_pct: row.paymentDownPct ?? row.payment_down_pct ?? null,
+    compoundName: row.compoundName ?? row.compound_name ?? '',
+    locationId: row.locationId ?? row.location_id ?? null,
+    mapsUrl: row.mapsUrl ?? row.maps_url ?? '',
   };
 }
 

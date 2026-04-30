@@ -189,7 +189,28 @@ export default function PropertyCard({ listing, featured, priceTag }) {
     const payYears = payment_years || paymentYears || listing.payment_years;
     const propType = unitType || unit_type || 'Apartment';
     const compound = compoundName || compound_name || '';
-    const locationDisplay = location_name || getAreaFromListing(listing) || location || '';
+    const rawLocation = location_name || location || '';
+    const areaSlug = getAreaFromListing(listing) || '';
+
+    // Build rich location display: "Area, City" format
+    const buildLocationDisplay = () => {
+        // Map area slugs to readable names
+        const areaNames = {
+            'new-capital': isRTL ? 'العاصمة الإدارية الجديدة' : 'New Administrative Capital',
+            'new-cairo': isRTL ? 'القاهرة الجديدة' : 'New Cairo',
+            'mostakbal-city': isRTL ? 'مدينة المستقبل' : 'Mostakbal City',
+            'north-coast': isRTL ? 'الساحل الشمالي' : 'North Coast',
+            'red-sea': isRTL ? 'البحر الأحمر' : 'Red Sea',
+            'sokhna': isRTL ? 'العين السخنة' : 'Ain Sokhna',
+            'galala': isRTL ? 'الجلالة' : 'Galala',
+            'hurghada': isRTL ? 'الغردقة' : 'Hurghada',
+            '6-october': isRTL ? '6 أكتوبر' : '6th of October',
+            'sheikh-zayed': isRTL ? 'الشيخ زايد' : 'Sheikh Zayed',
+        };
+        const areaName = areaNames[areaSlug] || rawLocation || areaSlug;
+        return areaName;
+    };
+    const locationDisplay = buildLocationDisplay();
 
     // Format delivery text
     const getDeliveryText = () => {
@@ -268,10 +289,20 @@ export default function PropertyCard({ listing, featured, priceTag }) {
                 <h3 className="card-title">{title}</h3>
 
                 {/* Location */}
-                {locationDisplay && (
+                {(locationDisplay || compound) && (
                     <div className="card-location-row">
                         <LocationIcon />
                         <span>{locationDisplay}</span>
+                    </div>
+                )}
+
+                {/* Compound Name */}
+                {compound && show_compound !== false && (
+                    <div className="card-compound-row">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01"/><path d="M9 12v.01"/><path d="M9 15v.01"/><path d="M9 18v.01"/>
+                        </svg>
+                        <span>{compound}</span>
                     </div>
                 )}
 
