@@ -370,3 +370,12 @@
 - [x] Add compound name after the location (with building icon)
 - [x] Added compoundName to normalizeRow in listingsApi.js
 - [x] Added RTL support for compound row
+
+## Chatbot Listing Relevance
+- [x] Show all relevant listings in chatbot based on conversation context (up to 10 matches)
+- [x] Filter listings by budget, location, bedrooms, property type, developer mentioned in chat
+- [x] Extract filters from FULL conversation history (not just last message)
+- [x] Score-based ranking: budget (30pts), bedrooms (25pts), location (25pts), type (20pts), developer (20pts)
+- [x] Fallback to featured listings when no specific filters detected
+- [x] Return filter info to frontend for transparency
+- [x] No design changes - just improved listing selection logic
