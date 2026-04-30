@@ -191,18 +191,58 @@ export default function PropertyCard({ listing, featured, priceTag }) {
     const compound = compoundName || compound_name || '';
     const locationDisplay = location_name || getAreaFromListing(listing) || location || '';
 
-    const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-        isRTL
-            ? `مرحباً، أنا مهتم بـ: ${title || 'عقار'}`
-            : `Hi, I'm interested in: ${title || 'Property'}`
-    )}`;
-
     // Format delivery text
     const getDeliveryText = () => {
         if (!delivery) return null;
         if (delivery === 'Ready to Move' || delivery === 'RTM') return t('card.readyToMove');
         return delivery;
     };
+
+    // Build full WhatsApp message with all listing details
+    const buildWhatsAppMessage = () => {
+        const monthlyDisplay = monthlyVal ? formatNumberReadable(monthlyVal) : null;
+        const dpDisplay = downpayment ? formatNumberReadable(downpayment) : null;
+        const priceDisplay = price ? formatNumberReadable(price) : null;
+        const deliveryText = getDeliveryText();
+
+        if (isRTL) {
+            let msg = `مرحباً، أنا مهتم بهذا العقار:\n`;
+            msg += `📌 ${title || 'عقار'}\n`;
+            if (locationDisplay) msg += `📍 الموقع: ${locationDisplay}\n`;
+            if (propType) msg += `🏠 النوع: ${propType}\n`;
+            if (developer) msg += `🏗️ المطور: ${developer}\n`;
+            if (beds) msg += `🛏️ غرف: ${beds}\n`;
+            if (baths) msg += `🚿 حمامات: ${baths}\n`;
+            if (area) msg += `📐 المساحة: ${area} م²\n`;
+            if (priceDisplay && show_full_price !== false) msg += `💰 السعر الكامل: ${priceDisplay} جنيه\n`;
+            if (dpDisplay && show_downpayment !== false) msg += `💵 المقدم: ${dpDisplay} جنيه\n`;
+            if (monthlyDisplay && show_monthly !== false) msg += `📅 القسط الشهري: ${monthlyDisplay} جنيه/شهر\n`;
+            if (deliveryText) msg += `🗓️ التسليم: ${deliveryText}\n`;
+            if (payYears) msg += `📊 فترة السداد: ${payYears} سنوات\n`;
+            if (finishing) msg += `✨ التشطيب: ${finishing}\n`;
+            msg += `\nأرجو التواصل معي لمزيد من التفاصيل.`;
+            return msg;
+        } else {
+            let msg = `Hi, I'm interested in this property:\n`;
+            msg += `📌 ${title || 'Property'}\n`;
+            if (locationDisplay) msg += `📍 Location: ${locationDisplay}\n`;
+            if (propType) msg += `🏠 Type: ${propType}\n`;
+            if (developer) msg += `🏗️ Developer: ${developer}\n`;
+            if (beds) msg += `🛏️ Beds: ${beds}\n`;
+            if (baths) msg += `🚿 Baths: ${baths}\n`;
+            if (area) msg += `📐 Area: ${area} m²\n`;
+            if (priceDisplay && show_full_price !== false) msg += `💰 Full Price: EGP ${priceDisplay}\n`;
+            if (dpDisplay && show_downpayment !== false) msg += `💵 Down Payment: EGP ${dpDisplay}\n`;
+            if (monthlyDisplay && show_monthly !== false) msg += `📅 Monthly: EGP ${monthlyDisplay}/month\n`;
+            if (deliveryText) msg += `🗓️ Delivery: ${deliveryText}\n`;
+            if (payYears) msg += `📊 Installments: ${payYears} years\n`;
+            if (finishing) msg += `✨ Finishing: ${finishing}\n`;
+            msg += `\nPlease contact me for more details.`;
+            return msg;
+        }
+    };
+
+    const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMessage())}`;
 
     return (
         <div className="property-card" dir={isRTL ? 'rtl' : 'ltr'}>

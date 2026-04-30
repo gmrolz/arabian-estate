@@ -361,3 +361,6 @@
 - [x] Moved CSS to dedicated property-card.css with proper import
 - [x] Disabled conflicting old card styles in index.css
 - [x] RTL support for Arabic layout
+
+## WhatsApp CTA Fix
+- [x] Fix WhatsApp message to include full listing details (title, price, down payment, monthly, area, beds, baths, location, developer, delivery, installments, finishing) instead of just title
