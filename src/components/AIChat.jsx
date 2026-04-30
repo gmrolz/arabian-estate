@@ -66,15 +66,63 @@ function ChatPropertyCard({ listing, locale }) {
   );
 }
 
+const STORAGE_KEY = 'arabian_estate_chat_history';
+
+function loadChatHistory() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to load chat history:', e);
+  }
+  return [];
+}
+
+function saveChatHistory(messages) {
+  try {
+    // Only save last 50 messages to avoid localStorage limits
+    const toSave = messages.slice(-50);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+  } catch (e) {
+    console.warn('Failed to save chat history:', e);
+  }
+}
+
+function clearChatHistory() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (e) {
+    console.warn('Failed to clear chat history:', e);
+  }
+}
+
 export default function AIChat({ onClose }) {
   const { locale } = useLocale();
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(() => loadChatHistory());
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const inputRef = useRef(null);
   const isAr = locale === 'ar';
+
+  // Save messages to localStorage whenever they change
+  useEffect(() => {
+    if (messages.length > 0) {
+      saveChatHistory(messages);
+    }
+  }, [messages]);
+
+  // Clear chat handler
+  const handleClearChat = () => {
+    setMessages([]);
+    clearChatHistory();
+  };
 
   // Smooth scroll to bottom
   const scrollToBottom = useCallback(() => {
@@ -202,9 +250,18 @@ export default function AIChat({ onClose }) {
               </span>
             </div>
           </div>
-          <button className="aichat-close" onClick={onClose} aria-label="Close">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
+          <div className="aichat-header-actions">
+            {messages.length > 0 && (
+              <button className="aichat-clear" onClick={handleClearChat} title={isAr ? 'مسح المحادثة' : 'Clear chat'}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            )}
+            <button className="aichat-close" onClick={onClose} aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
         </div>
 
         {/* Messages */}

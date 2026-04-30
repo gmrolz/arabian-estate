@@ -379,3 +379,10 @@
 - [x] Fallback to featured listings when no specific filters detected
 - [x] Return filter info to frontend for transparency
 - [x] No design changes - just improved listing selection logic
+
+## Chat History Persistence (LocalStorage)
+- [x] Save chat messages to localStorage on every new message
+- [x] Restore chat messages from localStorage when chat opens
+- [x] Keep conversation history across page refreshes and chat close/reopen
+- [x] Add a "Clear Chat" button (trash icon) in header to let user start fresh
+- [x] Limit storage to last 50 messages to avoid localStorage limits

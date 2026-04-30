@@ -126,6 +126,34 @@
   opacity: 0.8;
 }
 
+.aichat-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.aichat-clear {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.aichat-clear:hover,
+.aichat-clear:active {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
 .aichat-close {
   background: none;
   border: none;
