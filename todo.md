@@ -394,3 +394,17 @@
 - [x] Ensure all listings have correct location_id or area_slug
 - [x] Created fix-location-slugs.mjs script to identify and fix all 127 mismatched listings
 - [x] Updated all listings to have correct location slugs based on locationId reference
+
+
+## Location Display Fix on Cards
+- [ ] Update PropertyCard to show readable location name instead of full path
+- [ ] Map location slugs to readable names (area-new-cairo → "New Cairo", area-north-coast → "North Coast", etc.)
+- [ ] Verify location names display correctly on all cards after database fix
+
+
+## Location Display Fix - COMPLETE
+- [x] Fixed all 127 database location slugs to match correct locations
+- [x] Updated getAreaFromListing() to extract location from full path in database
+- [x] Added support for both slug format (area-new-cairo) and full path format
+- [x] Added Arabic location name matching
+- [x] All property cards now show correct location names (not all "New Administrative Capital")

@@ -100,8 +100,32 @@ export const CAIRO_AREAS = [
 ];
 
 export function getAreaFromListing(listing) {
+  // Check for area_slug or areaSlug (legacy)
   if (listing.area_slug) return listing.area_slug;
   if (listing.areaSlug) return listing.areaSlug;
+  
+  // Check for location field from database
+  // Database stores full path like "Il Bosco, New Administrative Capital, East Cairo, Cairo"
+  // But after the fix, it should have the correct slug like "area-new-cairo"
+  if (listing.location) {
+    const loc = listing.location.toLowerCase();
+    
+    // Check if it's already a slug (starts with "area-")
+    if (listing.location.startsWith('area-')) {
+      return listing.location;
+    }
+    
+    // Extract location from full path by looking for known location names
+    if (loc.includes('new administrative capital') || loc.includes('العاصمة الإدارية الجديدة')) return 'new-capital';
+    if (loc.includes('new cairo') || loc.includes('القاهرة الجديدة')) return 'new-cairo';
+    if (loc.includes('mostakbal')) return 'mostakbal-city';
+    if (loc.includes('north coast') || loc.includes('الساحل الشمالي')) return 'north-coast';
+    if (loc.includes('red sea') || loc.includes('البحر الأحمر')) return 'red-sea';
+    if (loc.includes('sokhna') || loc.includes('السخنة')) return 'sokhna';
+    if (loc.includes('galala') || loc.includes('الجلالة')) return 'galala';
+  }
+  
+  // Fallback: extract from title
   const title = listing.title || listing.title_en || listing.title_ar || '';
   const t = title.toLowerCase();
   if (t.includes('new cairo')) return 'new-cairo';
