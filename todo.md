@@ -408,3 +408,8 @@
 - [x] Added support for both slug format (area-new-cairo) and full path format
 - [x] Added Arabic location name matching
 - [x] All property cards now show correct location names (not all "New Administrative Capital")
+
+## Location Display Debugging
+- [ ] Check actual location value in database for Mayan listing
+- [ ] Verify if Mayan should be in New Capital or different location
+- [ ] Fix location extraction if needed

@@ -592,14 +592,14 @@ export default function AdminListingEdit() {
             <CascadingLocationSelector
               locationId={form.locationId || null}
               compound={form.compound_name || ''}
-              onChange={({ locationId, compound, locationLabel }) =>
+              onChange={({ locationId, compound, locationLabel, slug }) =>
                 setForm(prev => ({
                   ...prev,
                   locationId,
                   compound_name: compound,
                   location: locationLabel || prev.location || '',
-                  // Keep area_slug in sync for backwards compatibility
-                  area_slug: prev.area_slug || 'new-capital',
+                  // Update area_slug to match the selected location
+                  area_slug: slug || prev.area_slug || 'new-capital',
                 }))
               }
             />

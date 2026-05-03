@@ -108,7 +108,17 @@ export function CascadingLocationSelector({ locationId, compound = '', onChange 
     setCollList([]); setAreaList([]);
     if (numId) loadChildren(numId, setCollList);
     const label = buildLocationLabel(numId, null, null, compoundName);
-    onChange({ locationId: numId, compound: compoundName, locationLabel: label });
+    // Fetch the location to get its slug
+    if (numId) {
+      fetch(`/api/locations/${numId}`)
+        .then(r => r.ok ? r.json() : null)
+        .then(loc => {
+          onChange({ locationId: numId, compound: compoundName, locationLabel: label, slug: loc?.slug });
+        })
+        .catch(() => onChange({ locationId: numId, compound: compoundName, locationLabel: label }));
+    } else {
+      onChange({ locationId: numId, compound: compoundName, locationLabel: label });
+    }
   }
 
   function handleColl(id) {
@@ -118,14 +128,36 @@ export function CascadingLocationSelector({ locationId, compound = '', onChange 
     setAreaList([]);
     if (numId) loadChildren(numId, setAreaList);
     const label = buildLocationLabel(selCity, numId, null, compoundName);
-    onChange({ locationId: numId || selCity, compound: compoundName, locationLabel: label });
+    // Fetch the location to get its slug
+    const locId = numId || selCity;
+    if (locId) {
+      fetch(`/api/locations/${locId}`)
+        .then(r => r.ok ? r.json() : null)
+        .then(loc => {
+          onChange({ locationId: locId, compound: compoundName, locationLabel: label, slug: loc?.slug });
+        })
+        .catch(() => onChange({ locationId: locId, compound: compoundName, locationLabel: label }));
+    } else {
+      onChange({ locationId: locId, compound: compoundName, locationLabel: label });
+    }
   }
 
   function handleArea(id) {
     const numId = id ? Number(id) : null;
     setSelArea(numId);
     const label = buildLocationLabel(selCity, selColl, numId, compoundName);
-    onChange({ locationId: numId || selColl || selCity, compound: compoundName, locationLabel: label });
+    // Fetch the location to get its slug
+    const locId = numId || selColl || selCity;
+    if (locId) {
+      fetch(`/api/locations/${locId}`)
+        .then(r => r.ok ? r.json() : null)
+        .then(loc => {
+          onChange({ locationId: locId, compound: compoundName, locationLabel: label, slug: loc?.slug });
+        })
+        .catch(() => onChange({ locationId: locId, compound: compoundName, locationLabel: label }));
+    } else {
+      onChange({ locationId: locId, compound: compoundName, locationLabel: label });
+    }
   }
 
   function handleCompound(val) {

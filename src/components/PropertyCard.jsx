@@ -190,7 +190,14 @@ export default function PropertyCard({ listing, featured, priceTag }) {
     const propType = unitType || unit_type || 'Apartment';
     const compound = compoundName || compound_name || '';
     const rawLocation = location_name || location || '';
-    const areaSlug = getAreaFromListing(listing) || '';
+    
+    // Priority: areaSlug (if not default) > extracted from location > fallback
+    let areaSlug = '';
+    if (listing.areaSlug && listing.areaSlug !== 'new-capital') {
+      areaSlug = listing.areaSlug;
+    } else {
+      areaSlug = getAreaFromListing(listing) || '';
+    }
 
     // Build rich location display: "Area, City" format
     const buildLocationDisplay = () => {
