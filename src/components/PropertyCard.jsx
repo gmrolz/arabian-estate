@@ -148,6 +148,7 @@ export default function PropertyCard({ listing, featured, priceTag }) {
     const { t, locale } = useLocale();
     const { siteId } = useSite();
     const isRTL = locale === 'ar';
+    const [locationName, setLocationName] = useState(null);
 
     const {
         id: listingId,
@@ -191,11 +192,26 @@ export default function PropertyCard({ listing, featured, priceTag }) {
     const compound = compoundName || compound_name || '';
     const rawLocation = location_name || location || '';
     
-    // Priority: areaSlug (if not default) > extracted from location > fallback
-    let areaSlug = '';
-    if (listing.areaSlug && listing.areaSlug !== 'new-capital') {
+    // Fetch location name from locationId if available
+    useEffect(() => {
+        if (listing.locationId && !locationName) {
+            fetch(`/api/locations/${listing.locationId}`)
+                .then(r => r.ok ? r.json() : null)
+                .then(loc => {
+                    if (loc?.slug) {
+                        setLocationName(loc.slug);
+                    }
+                })
+                .catch(() => {});
+        }
+    }, [listing.locationId, locationName]);
+    
+    // Priority: locationName from API > areaSlug (if not default) > extracted from location > fallback
+    let areaSlug = locationName || '';
+    if (!areaSlug && listing.areaSlug && listing.areaSlug !== 'new-capital') {
       areaSlug = listing.areaSlug;
-    } else {
+    }
+    if (!areaSlug) {
       areaSlug = getAreaFromListing(listing) || '';
     }
 
