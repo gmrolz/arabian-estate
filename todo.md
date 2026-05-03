@@ -386,3 +386,11 @@
 - [x] Keep conversation history across page refreshes and chat close/reopen
 - [x] Add a "Clear Chat" button (trash icon) in header to let user start fresh
 - [x] Limit storage to last 50 messages to avoid localStorage limits
+
+
+## Database Location Slug Fix
+- [x] Check all listings in database and verify location slugs are correct
+- [x] Fix listings that are incorrectly marked as "new-capital" when they're in other locations
+- [x] Ensure all listings have correct location_id or area_slug
+- [x] Created fix-location-slugs.mjs script to identify and fix all 127 mismatched listings
+- [x] Updated all listings to have correct location slugs based on locationId reference
