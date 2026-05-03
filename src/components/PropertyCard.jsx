@@ -220,15 +220,25 @@ export default function PropertyCard({ listing, featured, priceTag }) {
         // Map area slugs to readable names
         const areaNames = {
             'new-capital': isRTL ? 'العاصمة الإدارية الجديدة' : 'New Administrative Capital',
+            'area-new-capital': isRTL ? 'العاصمة الإدارية الجديدة' : 'New Administrative Capital',
             'new-cairo': isRTL ? 'القاهرة الجديدة' : 'New Cairo',
+            'area-new-cairo': isRTL ? 'القاهرة الجديدة' : 'New Cairo',
             'mostakbal-city': isRTL ? 'مدينة المستقبل' : 'Mostakbal City',
+            'area-mostakbal-city': isRTL ? 'مدينة المستقبل' : 'Mostakbal City',
             'north-coast': isRTL ? 'الساحل الشمالي' : 'North Coast',
+            'area-north-coast': isRTL ? 'الساحل الشمالي' : 'North Coast',
             'red-sea': isRTL ? 'البحر الأحمر' : 'Red Sea',
+            'area-red-sea': isRTL ? 'البحر الأحمر' : 'Red Sea',
             'sokhna': isRTL ? 'العين السخنة' : 'Ain Sokhna',
+            'area-sokhna': isRTL ? 'العين السخنة' : 'Ain Sokhna',
             'galala': isRTL ? 'الجلالة' : 'Galala',
+            'area-galala': isRTL ? 'الجلالة' : 'Galala',
             'hurghada': isRTL ? 'الغردقة' : 'Hurghada',
+            'area-hurghada': isRTL ? 'الغردقة' : 'Hurghada',
             '6-october': isRTL ? '6 أكتوبر' : '6th of October',
+            'area-6-october': isRTL ? '6 أكتوبر' : '6th of October',
             'sheikh-zayed': isRTL ? 'الشيخ زايد' : 'Sheikh Zayed',
+            'area-sheikh-zayed': isRTL ? 'الشيخ زايد' : 'Sheikh Zayed',
         };
         const areaName = areaNames[areaSlug] || rawLocation || areaSlug;
         return areaName;
