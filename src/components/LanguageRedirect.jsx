@@ -16,8 +16,8 @@ export default function LanguageRedirect() {
     const hasChosen = sessionStorage.getItem('lang_chosen');
     if (hasChosen) return;
 
-    // Only redirect from Arabic root pages (not /en, not /admin)
-    if (pathname.startsWith('/en') || pathname.startsWith('/admin')) {
+    // Only redirect from Arabic root pages (not /en, not /ar, not /admin)
+    if (pathname.startsWith('/en') || pathname.startsWith('/ar') || pathname.startsWith('/admin')) {
       sessionStorage.setItem('lang_chosen', '1');
       return;
     }

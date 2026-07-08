@@ -50,8 +50,23 @@ function AppRoutes() {
         <Route path="/listings/:citySlug/:collectionSlug" element={<LocationFunnelPage />} />
         <Route path="/listings/:citySlug/:collectionSlug/:neighborhoodSlug" element={<LocationFunnelPage />} />
         <Route path="/listings/:citySlug/:collectionSlug/:neighborhoodSlug/:compoundSlug" element={<LocationFunnelPage />} />
+        {/* Arabic locale routes (mirror of root routes) */}
+        <Route path="/ar" element={<HomePage />} />
+        <Route path="/ar/listings" element={<ListingsPage />} />
+        <Route path="/ar/east-cairo" element={<EastCairoPage />} />
+        <Route path="/ar/new-capital" element={<Navigate to="/ar/east-cairo" replace />} />
+        <Route path="/ar/listings/cairo" element={<Navigate to="/ar/east-cairo" replace />} />
+        <Route path="/ar/listings/cairo/new-capital" element={<Navigate to="/ar/east-cairo" replace />} />
+        <Route path="/ar/listings/cairo/new-cairo" element={<Navigate to="/ar/east-cairo" replace />} />
+        <Route path="/ar/listings/cairo/mostakbal-city" element={<Navigate to="/ar/east-cairo" replace />} />
+        {/* Arabic location funnel routes — 4 levels deep */}
+        <Route path="/ar/listings/:citySlug" element={<LocationFunnelPage />} />
+        <Route path="/ar/listings/:citySlug/:collectionSlug" element={<LocationFunnelPage />} />
+        <Route path="/ar/listings/:citySlug/:collectionSlug/:neighborhoodSlug" element={<LocationFunnelPage />} />
+        <Route path="/ar/listings/:citySlug/:collectionSlug/:neighborhoodSlug/:compoundSlug" element={<LocationFunnelPage />} />
         {/* Legacy routes kept for backward compatibility */}
         <Route path="/listings/:region/compound/:compoundSlug" element={<CompoundPage />} />
+        <Route path="/ar/listings/:region/compound/:compoundSlug" element={<CompoundPage />} />
         <Route path="/en" element={<HomePage />} />
         <Route path="/en/listings" element={<ListingsPage />} />
         <Route path="/en/east-cairo" element={<EastCairoPage />} />

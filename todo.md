@@ -413,3 +413,10 @@
 - [ ] Check actual location value in database for Mayan listing
 - [ ] Verify if Mayan should be in New Capital or different location
 - [ ] Fix location extraction if needed
+
+
+## URL Routing Fix - Arabic Locale Support
+- [x] Fix Arabic locale URL routing for /ar/listings/cairo/east-cairo/area-new-capital
+  - Added explicit /ar routes to App.jsx for all location funnel pages (4 levels deep)
+  - Fixed LanguageRedirect to not redirect /ar paths (added /ar to excluded prefixes)
+  - Verified Arabic URL now works correctly and displays listings in Arabic
