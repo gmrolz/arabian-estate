@@ -2,8 +2,11 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci
+# Install pnpm
+RUN npm install -g pnpm
+
+COPY package*.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
@@ -15,7 +18,7 @@ ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
 ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
 ENV VITE_USE_VPS_DATA=$VITE_USE_VPS_DATA
 
-RUN npm run migrate-vps && npm run build
+RUN pnpm run migrate-vps && pnpm run build
 
 # Stage 2: Serve
 FROM nginx:alpine
