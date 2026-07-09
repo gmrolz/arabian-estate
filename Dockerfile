@@ -18,7 +18,7 @@ ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
 ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
 ENV VITE_USE_VPS_DATA=$VITE_USE_VPS_DATA
 
-RUN pnpm run migrate-vps && pnpm run build
+RUN pnpm run build
 
 # Stage 2: Serve
 FROM nginx:alpine
