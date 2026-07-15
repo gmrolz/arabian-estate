@@ -420,3 +420,10 @@
   - Added explicit /ar routes to App.jsx for all location funnel pages (4 levels deep)
   - Fixed LanguageRedirect to not redirect /ar paths (added /ar to excluded prefixes)
   - Verified Arabic URL now works correctly and displays listings in Arabic
+
+## Local Export Request (User)
+- [ ] Export full SQL database dump (schema + all data)
+- [ ] Download all listing images to local folder
+- [ ] Package website source code for localhost use
+- [ ] Write local setup instructions (README)
+- [ ] Transfer everything to user's local Windows folder
