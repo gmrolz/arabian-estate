@@ -80,40 +80,20 @@ function vitePluginManusDebugCollector(): Plugin {
         if (req.method !== "POST") {
           return next();
         }
-        const handlePayload = (payload: any) => {
-          if (payload.consoleLogs?.length > 0) {
-            writeToLogFile("browserConsole", payload.consoleLogs);
-          }
-          if (payload.networkRequests?.length > 0) {
-            writeToLogFile("networkRequests", payload.networkRequests);
-          }
-          if (payload.sessionEvents?.length > 0) {
-            writeToLogFile("sessionReplay", payload.sessionEvents);
-          }
-          res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ success: true }));
-        };
-        const reqBody = (req as { body?: unknown }).body;
-        if (reqBody && typeof reqBody === "object") {
-          try {
-            handlePayload(reqBody);
-          } catch (e) {
-            res.writeHead(400, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ success: false, error: String(e) }));
-          }
-          return;
-        }
         let body = "";
         req.on("data", (chunk) => {
           body += chunk.toString();
         });
         req.on("end", () => {
           try {
-            const payload = JSON.parse(body);
-            handlePayload(payload);
-          } catch (e) {
+            const data = JSON.parse(body);
+            const { source, entries } = data;
+            writeToLogFile(source, entries);
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ ok: true }));
+          } catch (err) {
             res.writeHead(400, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ success: false, error: String(e) }));
+            res.end(JSON.stringify({ error: "Invalid JSON" }));
           }
         });
       });
@@ -136,6 +116,24 @@ export default defineConfig({
   build: {
     outDir: "dist/public",
     emptyOutDir: true,
+    minify: "terser",
+    rollupOptions: {
+      output: {
+        manualChunks: (id: string) => {
+          if (id.includes("node_modules/react") || id.includes("node_modules/react-dom") || id.includes("node_modules/react-router")) {
+            return "react-vendor";
+          }
+          if (id.includes("node_modules/@radix-ui")) {
+            return "ui-vendor";
+          }
+          if (id.includes("node_modules/react-hook-form") || id.includes("node_modules/@hookform")) {
+            return "form-vendor";
+          }
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
+    cssCodeSplit: true,
   },
   server: {
     host: true,
